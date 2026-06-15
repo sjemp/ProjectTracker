@@ -294,8 +294,8 @@
   /* ===== Home page two-col layout ===== */
   .home-body {
     display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 48px;
+    grid-template-columns: 1fr 240px;
+    gap: 56px;
     align-items: start;
   }
 
@@ -502,6 +502,7 @@
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
+    
   }
 
   .task-date {
@@ -2486,8 +2487,7 @@ function renderTaskCard(t) {
           ${dateLabel ? `<span class="task-date ${overdue ? 'overdue' : ''}">${dateLabel}</span>` : ''}
           <select class="pill-select status-${t.status}" aria-label="Status" onchange="updateTaskField('${t.id}', 'status', this.value)">${statusOptions}</select>
           <select class="pill-select ${URGENCY_PILL_CLASS[t.urgency] || ''}" aria-label="Urgency" onchange="updateTaskField('${t.id}', 'urgency', this.value)">${urgencyOptions}</select>
-        </div>
-        <div class="task-actions">
+          <span style="width:1px; height:16px; background:var(--border); flex-shrink:0;"></span>
           <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')">
             <i class="ti ti-chevron-down"></i>
           </button>
