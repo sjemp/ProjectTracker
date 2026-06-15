@@ -620,6 +620,13 @@
   .icon-btn:hover { background: var(--surface-2); color: var(--ink); }
   .icon-btn.danger:hover { color: var(--u-now-text); background: var(--u-now-bg); }
 
+  .icon-btn.edit {
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .icon-btn.edit:hover { color: var(--ink); background: var(--surface-2); }
+
   /* status pills */
   .status-not_started { background: var(--u-optional-bg); color: var(--u-optional-text); }
   .status-wip { background: var(--u-easy-bg); color: var(--u-easy-text); }
@@ -757,7 +764,21 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
+    cursor: pointer;
+    user-select: none;
   }
+
+  .group-heading:hover h3 { color: var(--studio-deep); }
+
+  .group-chevron {
+    color: var(--ink-faint);
+    font-size: 14px;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+  }
+
+  .group-block.collapsed .group-chevron { transform: rotate(-90deg); }
+  .group-block.collapsed .group-body { display: none; }
 
   .group-heading h3 {
     font-size: 15px;
@@ -1980,11 +2001,11 @@ let currentViewMode = 'cards';
 
 /* ============== STORAGE ============== */
 
-async function loadState() {
+function loadState() {
   try {
-    const result = await window.storage.get('studio-desk-state');
-    if (result && result.value) {
-      const parsed = JSON.parse(result.value);
+    const saved = localStorage.getItem('studio-desk-state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
       state.clients = parsed.clients || [];
       state.tasks = parsed.tasks || [];
       state.links = parsed.links || [];
@@ -1999,9 +2020,9 @@ async function loadState() {
   renderAll();
 }
 
-async function saveState() {
+function saveState() {
   try {
-    await window.storage.set('studio-desk-state', JSON.stringify(state));
+    localStorage.setItem('studio-desk-state', JSON.stringify(state));
   } catch (e) {
     console.error('Save failed', e);
   }
@@ -2473,7 +2494,7 @@ function renderTaskCard(t) {
           <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')">
             <i class="ti ti-chevron-down"></i>
           </button>
-          <button class="icon-btn" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
+          <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
           <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
         </div>
       </div>
@@ -2576,18 +2597,24 @@ function renderTasksView() {
     return;
   }
 
-  container.innerHTML = groups.map(g => `
-    <div class="group-block">
-      <div class="group-heading">
+  container.innerHTML = groups.map(g => {
+    const isDone = g.key === 'done' || g.key === 'complete';
+    const collapsedClass = isDone ? 'collapsed' : '';
+    return `
+    <div class="group-block ${collapsedClass}">
+      <div class="group-heading" onclick="this.parentElement.classList.toggle('collapsed')">
+        <i class="ti ti-chevron-down group-chevron"></i>
         ${g.dotClass ? `<span class="group-dot ${g.dotClass}"></span>` : ''}
         ${g.statusClass ? `<span class="pill ${g.statusClass}">${g.title}</span>` : `<h3>${escapeHtml(g.title)}</h3>`}
         <span class="group-count">${g.items.length}</span>
       </div>
-      <div class="task-stack">
-        ${g.items.map(t => renderTaskCard(t)).join('')}
+      <div class="group-body">
+        <div class="task-stack">
+          ${g.items.map(t => renderTaskCard(t)).join('')}
+        </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function renderTasksGrid(container, groups) {
@@ -2623,7 +2650,7 @@ function renderTasksGrid(container, groups) {
           <td>
             <div class="sheet-actions">
               <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')"><i class="ti ti-chevron-down"></i></button>
-              <button class="icon-btn" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
+              <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
               <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
             </div>
           </td>
@@ -2640,28 +2667,33 @@ function renderTasksGrid(container, groups) {
       `;
     }).join('');
 
+    const isDone = g.key === 'done' || g.key === 'complete';
+    const collapsedClass = isDone ? 'collapsed' : '';
     return `
-      <div class="group-block">
-        <div class="group-heading">
+      <div class="group-block ${collapsedClass}">
+        <div class="group-heading" onclick="this.parentElement.classList.toggle('collapsed')">
+          <i class="ti ti-chevron-down group-chevron"></i>
           ${g.dotClass ? `<span class="group-dot ${g.dotClass}"></span>` : ''}
           ${g.statusClass ? `<span class="pill ${g.statusClass}">${g.title}</span>` : `<h3>${escapeHtml(g.title)}</h3>`}
           <span class="group-count">${g.items.length}</span>
         </div>
-        <div class="sheet-wrap">
-          <table class="sheet">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Client</th>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Urgency</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
+        <div class="group-body">
+          <div class="sheet-wrap">
+            <table class="sheet">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Client</th>
+                  <th>Task</th>
+                  <th>Status</th>
+                  <th>Urgency</th>
+                  <th>Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
         </div>
       </div>
     `;
