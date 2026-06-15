@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shirl's Client Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBF1E9;
+    --surface: #FFFFFF;
+    --surface-2: #FDF6EF;
+    --ink: #3A2E2A;
+    --ink-soft: #8A736C;
+    --ink-faint: #C7B5AD;
+    --border: #F0DDD3;
+    --border-soft: #F7E9DE;
+    --studio: #E08A4F;
+    --studio-light: #FDEBDC;
+    --studio-deep: #B3582E;
+
+    /* Urgency palette - warm sunset: coral red, orange, gold, teal, sky blue, soft pink, sage green */
+    --u-now: #E5673E;
+    --u-now-bg: #FCE5DB;
+    --u-now-text: #A8401E;
+
+    --u-soon: #F0A630;
+    --u-soon-bg: #FCEED2;
+    --u-soon-text: #95620E;
+
+    --u-week: #F6C667;
+    --u-week-bg: #FDF3DE;
+    --u-week-text: #95620E;
+
+    --u-later: #E893A8;
+    --u-later-bg: #FCEAEF;
+    --u-later-text: #A1405A;
+
+    --u-easy: #6FAEC4;
+    --u-easy-bg: #E4F1F5;
+    --u-easy-text: #1F6A82;
+
+    --u-optional: #C2B6AE;
+    --u-optional-bg: #F4ECE6;
+    --u-optional-text: #7A6760;
+
+    --u-done: #8FB89C;
+    --u-done-bg: #E7F1E9;
+    --u-done-text: #4A7B5A;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-soft: 0 1px 2px rgba(58,46,42,0.04), 0 2px 8px rgba(58,46,42,0.04);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .brand {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 21px;
+    color: var(--studio-deep);
+    margin: 0 8px 28px 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-mark {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--studio);
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+    transform: translateY(-2px);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    color: var(--ink-soft);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .nav-item:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .nav-item.active {
+    background: var(--studio-light);
+    color: var(--studio-deep);
+  }
+
+  .nav-item i { font-size: 18px; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 12px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+
+  /* ===== Main ===== */
+  .main {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 1100px;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; animation: fadein 0.25s ease; }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Greeting view ===== */
+  .greeting-date {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--studio);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 6px;
+  }
+
+  .greeting-headline {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0 0 36px;
+    max-width: 660px;
+  }
+
+  .greeting-headline strong {
+    font-weight: 600;
+    color: var(--studio-deep);
+  }
+
+  .greeting-summary {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: -24px 0 36px;
+    max-width: 620px;
+  }
+
+  .greeting-summary i {
+    color: var(--studio);
+    margin-right: 6px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .stat-row-secondary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+    max-width: 460px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+  }
+
+  .stat-card.primary {
+    padding: 22px 24px;
+  }
+
+  .stat-card.secondary {
+    padding: 12px 16px;
+    background: var(--surface-2);
+    border-color: var(--border-soft);
+  }
+
+  .stat-num {
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  .stat-card.primary .stat-num {
+    font-size: 40px;
+  }
+
+  .stat-card.secondary .stat-num {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .stat-card.primary .stat-label {
+    font-size: 14px;
+  }
+
+  .stat-card.secondary .stat-label {
+    font-size: 12px;
+  }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+  }
+
+  /* ===== Home page two-col layout ===== */
+  .home-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .home-tasks { min-width: 0; }
+
+  .home-calendar { position: sticky; top: 24px; }
+
+  /* ===== Calendar ===== */
+  .cal-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .cal-month-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .cal-nav {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--ink-soft);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background 0.1s, color 0.1s;
+  }
+
+  .cal-nav:hover { background: var(--surface-2); color: var(--ink); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .cal-dow {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 2px 0 6px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: default;
+    position: relative;
+    gap: 2px;
+    padding: 2px 0;
+  }
+
+  .cal-day.other-month { color: var(--ink-faint); }
+
+  .cal-day.today {
+    background: var(--studio-deep);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .cal-day.has-tasks:not(.today) { background: var(--studio-light); }
+
+  .cal-day-num { line-height: 1; }
+
+  .cal-dots {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 28px;
+  }
+
+  .cal-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cal-legend {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .cal-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    .home-body { grid-template-columns: 1fr; }
+    .home-calendar { position: static; }
+  }
+
+  .empty-state {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  /* ===== Task card (used across views) ===== */
+  .task-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .task-card-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--u-now);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+
+  .task-card-wrap:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(42,38,34,0.05), 0 6px 14px rgba(42,38,34,0.06);
+  }
+
+  .task-card {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .task-main { flex: 1; min-width: 0; }
+
+  .task-client {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 6px;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .task-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 3px;
+    line-height: 1.4;
+  }
+
+  .task-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .task-date {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .task-date.overdue { color: var(--u-now-text); font-weight: 500; }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .pill-select {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 22px 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.4;
+    border: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  }
+
+  .pill-select:focus { outline: 2px solid var(--studio); outline-offset: 1px; }
+
+  .task-details-toggle {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    transition: background 0.12s, color 0.12s, transform 0.12s;
+  }
+
+  .task-details-toggle:hover { background: var(--surface-2); color: var(--ink); }
+  .task-details-toggle.open { color: var(--studio); transform: rotate(180deg); }
+
+  .task-details-panel {
+    display: none;
+    padding: 14px 16px 16px;
+    border-top: 1px solid var(--border-soft);
+    margin: 0 16px;
+  }
+
+  .task-details-panel.open { display: block; }
+
+  .task-details-panel label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .task-details-panel textarea {
+    width: 100%;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.6;
+  }
+
+  .task-details-panel textarea:focus {
+    outline: none;
+    border-color: var(--studio);
+  }
+
+  .task-details-hint {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: 6px 0 0;
+  }
+
+  .task-details-hint a { color: var(--studio); }
+
+  .task-actions { display: flex; gap: 4px; }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+  .icon-btn.danger:hover { color: var(--u-now-text); background: var(--u-now-bg); }
+
+  /* status pills */
+  .status-not_started { background: var(--u-optional-bg); color: var(--u-optional-text); }
+  .status-wip { background: var(--u-easy-bg); color: var(--u-easy-text); }
+  .status-waiting { background: var(--u-later-bg); color: var(--u-later-text); }
+  .status-complete { background: var(--u-done-bg); color: var(--u-done-text); }
+
+  /* urgency border + dot colors */
+  .urg-now { border-left-color: var(--u-now); }
+  .urg-soon { border-left-color: var(--u-soon); }
+  .urg-week { border-left-color: var(--u-week); }
+  .urg-later { border-left-color: var(--u-later); }
+  .urg-easy { border-left-color: var(--u-easy); }
+  .urg-optional { border-left-color: var(--u-optional); }
+  .urg-done { border-left-color: var(--u-done); opacity: 0.6; }
+
+  .urg-pill-now { background: var(--u-now-bg); color: var(--u-now-text); }
+  .urg-pill-soon { background: var(--u-soon-bg); color: var(--u-soon-text); }
+  .urg-pill-week { background: var(--u-week-bg); color: var(--u-week-text); }
+  .urg-pill-later { background: var(--u-later-bg); color: var(--u-later-text); }
+  .urg-pill-easy { background: var(--u-easy-bg); color: var(--u-easy-text); }
+  .urg-pill-optional { background: var(--u-optional-bg); color: var(--u-optional-text); }
+  .urg-pill-done { background: var(--u-done-bg); color: var(--u-done-text); }
+
+  /* ===== Tasks view ===== */
+  .view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .view-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+
+  .view-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .btn-primary {
+    background: var(--studio-deep);
+    color: #fff;
+    border: none;
+    padding: 11px 18px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover { background: var(--studio); }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .btn-secondary:hover { background: var(--surface-2); }
+
+  /* Filters / grouping bar */
+  .control-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .seg-group {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .seg-btn {
+    border: none;
+    background: none;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .seg-btn.active {
+    background: var(--studio-deep);
+    color: #fff;
+  }
+
+  select.filter-select {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 9px 12px;
+    cursor: pointer;
+  }
+
+  /* Grouped sections */
+  .group-block { margin-bottom: 32px; }
+
+  .group-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .group-heading h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .group-count {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .group-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .dot-now { background: var(--u-now); }
+  .dot-soon { background: var(--u-soon); }
+  .dot-week { background: var(--u-week); }
+  .dot-later { background: var(--u-later); }
+  .dot-easy { background: var(--u-easy); }
+  .dot-optional { background: var(--u-optional); }
+  .dot-done { background: var(--u-done); }
+
+  /* ===== Sheet / grid view ===== */
+  .sheet-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: auto;
+  }
+
+  table.sheet {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  table.sheet th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    background: var(--surface-2);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+
+  table.sheet td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: middle;
+  }
+
+  table.sheet tbody tr:last-child td { border-bottom: none; }
+
+  table.sheet tbody tr:hover { background: var(--surface-2); }
+
+  table.sheet .sheet-task-title {
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  table.sheet .sheet-task-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  table.sheet .sheet-client-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  table.sheet .sheet-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  table.sheet .sheet-date.overdue { color: var(--u-now-text); font-weight: 500; }
+
+  table.sheet .sheet-urgency-cell {
+    width: 6px;
+    padding: 0;
+  }
+
+  table.sheet .sheet-actions {
+    display: flex;
+    gap: 2px;
+    white-space: nowrap;
+  }
+
+  /* ===== Clients view ===== */
+  .client-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .client-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+    position: relative;
+  }
+
+  .client-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+    border-color: var(--border);
+  }
+
+  .client-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .client-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+
+  .client-meta {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .client-card-remove {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+
+  .client-card:hover .client-card-remove { opacity: 1; }
+
+  .add-client-card {
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 96px;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .add-client-card:hover { background: var(--surface); color: var(--studio-deep); }
+
+  /* ===== Quick Links ===== */
+  .links-add-bar {
+    margin-bottom: 32px;
+  }
+
+  .links-add-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+  }
+
+  .links-add-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .links-add-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .link-project-wrap { position: relative; }
+  .link-project-wrap input { width: 100%; }
+
+  .links-folder {
+    margin-bottom: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .links-folder-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+
+  .links-folder-header:hover { background: var(--surface-2); }
+
+  .links-folder-chevron {
+    color: var(--ink-faint);
+    font-size: 16px;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+  }
+
+  .links-folder.open .links-folder-chevron { transform: rotate(90deg); }
+
+  .links-folder-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .links-folder-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+
+  .links-folder-count {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .links-folder-body {
+    display: none;
+    border-top: 1px solid var(--border-soft);
+    padding: 10px 0;
+  }
+
+  .links-folder.open .links-folder-body { display: block; }
+
+  .link-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px;
+    transition: background 0.1s;
+  }
+
+  .link-row:hover { background: var(--surface-2); }
+
+  .link-favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  .link-favicon-placeholder {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    background: var(--studio-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: var(--studio);
+  }
+
+  .link-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .link-url {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: 'IBM Plex Mono', monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 240px;
+    text-decoration: none;
+  }
+
+  .link-url:hover { color: var(--studio); text-decoration: underline; }
+
+  .link-open-btn {
+    background: var(--studio-light);
+    color: var(--studio-deep);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.1s;
+  }
+
+  .link-open-btn:hover { background: var(--studio); color: #fff; }
+
+  .link-delete-btn {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    transition: color 0.1s;
+    flex-shrink: 0;
+  }
+
+  .link-delete-btn:hover { color: var(--u-now-text); }
+
+  .links-empty {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 14px;
+  }
+
+  /* ===== Timer ===== */
+  .timer-active-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .timer-client-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .timer-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .timer-client-select {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--studio-deep);
+    background: var(--studio-light);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    cursor: pointer;
+    min-width: 180px;
+  }
+
+  .timer-client-select:focus { outline: 2px solid var(--studio); }
+
+  .timer-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 58px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .timer-display.running { color: var(--studio-deep); }
+
+  .timer-note-row { width: 100%; max-width: 380px; }
+
+  .timer-note-input {
+    width: 100%;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 9px 14px;
+    text-align: center;
+  }
+
+  .timer-note-input:focus { outline: none; border-color: var(--studio); }
+
+  .timer-controls { display: flex; gap: 10px; align-items: center; }
+
+  .timer-btn-start {
+    background: var(--studio-deep);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s, transform 0.08s;
+  }
+
+  .timer-btn-start:hover { background: var(--studio); transform: scale(1.02); }
+  .timer-btn-start:active { transform: scale(0.98); }
+
+  .timer-btn-stop {
+    background: var(--u-now);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s;
+  }
+
+  .timer-btn-stop:hover { background: var(--u-now-text); }
+
+  .timer-btn-cancel {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--ink-soft);
+    border-radius: var(--radius-md);
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .timer-btn-cancel:hover { background: var(--surface-2); color: var(--ink); }
+
+  .timer-running-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--studio);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .timer-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--studio);
+    animation: pulse 1.4s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  .timer-log-section { margin-top: 4px; }
+
+  .timer-log-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .timer-project-block {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .timer-project-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background 0.1s;
+    user-select: none;
+  }
+
+  .timer-project-header:hover { background: var(--surface-2); }
+
+  .timer-project-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .timer-project-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+
+  .timer-project-total {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--studio-deep);
+    background: var(--studio-light);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .timer-project-money {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--u-done-text);
+    background: var(--u-done-bg);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .timer-project-chevron {
+    color: var(--ink-faint);
+    font-size: 15px;
+    transition: transform 0.18s;
+  }
+
+  .timer-project-block.open .timer-project-chevron { transform: rotate(90deg); }
+
+  .timer-project-body {
+    display: none;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .timer-project-block.open .timer-project-body { display: block; }
+
+  .timer-log-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13px;
+  }
+
+  .timer-log-row:last-child { border-bottom: none; }
+
+  .timer-log-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  .timer-log-duration {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    min-width: 72px;
+  }
+
+  .timer-log-note {
+    color: var(--ink-soft);
+    font-size: 13px;
+    flex: 1;
+    font-style: italic;
+  }
+
+  .timer-log-delete {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    transition: color 0.1s;
+  }
+
+  .timer-log-delete:hover { color: var(--u-now-text); }
+
+  .timer-empty {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 14px;
+  }
+
+  .timer-date-heading {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    padding: 10px 18px 6px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(42,38,34,0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 32px rgba(42,38,34,0.18);
+  }
+
+  .modal h2 {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 20px;
+    color: var(--ink);
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    transition: border-color 0.12s;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--studio);
+  }
+
+  .field textarea { resize: vertical; min-height: 70px; font-family: 'Sora', sans-serif; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .urgency-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .urgency-opt {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.12s, transform 0.08s;
+  }
+
+  .urgency-opt:hover { transform: translateY(-1px); }
+  .urgency-opt.selected { border-color: var(--ink); border-width: 2px; }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  /* Color swatch picker for client modal */
+  .swatch-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .swatch-opt {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.08s;
+  }
+
+  .swatch-opt:hover { transform: scale(1.08); }
+  .swatch-opt.selected { border-color: var(--ink); }
+
+  @media (max-width: 800px) {
+    .sidebar { display: none; }
+    .main { padding: 24px; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .greeting-headline { font-size: 28px; }
+    .field-row, .urgency-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD GATE ===== -->
+<div id="pw-gate" style="
+  position: fixed; inset: 0; z-index: 9999;
+  background: #FBF1E9;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Sora', sans-serif;
+">
+  <div style="
+    background: #fff;
+    border: 1px solid #F0DDD3;
+    border-radius: 16px;
+    padding: 40px 44px;
+    width: 100%; max-width: 360px;
+    box-shadow: 0 8px 32px rgba(58,46,42,0.10);
+    text-align: center;
+  ">
+    <div style="width:40px; height:40px; background:#B3582E; border-radius:10px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1 style="font-size:20px; font-weight:600; color:#3A2E2A; margin:0 0 4px;">Shirl's Client Work</h1>
+    <p style="font-size:13px; color:#8A736C; margin:0 0 24px;">Enter your password to continue.</p>
+    <input id="pw-input" type="password" placeholder="Password" style="
+      width:100%; font-family:'Sora',sans-serif; font-size:14px;
+      color:#3A2E2A; background:#FDF6EF;
+      border:1px solid #F0DDD3; border-radius:10px;
+      padding:11px 14px; box-sizing:border-box; margin-bottom:10px;
+    " onkeydown="if(event.key==='Enter') checkPassword()">
+    <p id="pw-error" style="font-size:12px; color:#E5673E; margin:0 0 10px; display:none;">Incorrect password — try again.</p>
+    <button onclick="checkPassword()" style="
+      width:100%; background:#B3582E; color:#fff; border:none;
+      border-radius:10px; padding:12px; font-size:14px; font-weight:600;
+      font-family:'Sora',sans-serif; cursor:pointer;
+    ">Unlock</button>
+  </div>
+</div>
+
+<nav class="sidebar">
+  <div class="brand"><span class="brand-mark"></span>Shirl's Client Work</div>
+
+  <button class="nav-item active" data-view="greeting" onclick="switchView('greeting')">
+    <i class="ti ti-sun"></i> Today
+  </button>
+  <button class="nav-item" data-view="tasks" onclick="switchView('tasks')">
+    <i class="ti ti-list-check"></i> All tasks
+  </button>
+  <button class="nav-item" data-view="addtask" onclick="switchView('addtask')">
+    <i class="ti ti-plus"></i> Add task
+  </button>
+  <button class="nav-item" data-view="clients" onclick="switchView('clients')">
+    <i class="ti ti-users"></i> Clients
+  </button>
+  <button class="nav-item" data-view="links" onclick="switchView('links')">
+    <i class="ti ti-link"></i> Quick links
+  </button>
+  <button class="nav-item" data-view="timer" onclick="switchView('timer')">
+    <i class="ti ti-clock"></i> Timer
+  </button>
+
+  <div class="sidebar-footer">
+    Saved automatically to this browser.
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ===== GREETING / TODAY VIEW ===== -->
+  <section class="view active" id="view-greeting">
+    <p class="greeting-date" id="today-date"></p>
+    <h1 class="greeting-headline" id="greeting-text">
+      Hello <strong>Shirley</strong>, let's get to work.
+    </h1>
+
+    <div class="stat-row" id="stat-row"></div>
+    <div class="stat-row-secondary" id="stat-row-secondary"></div>
+
+    <div class="home-body">
+      <div class="home-tasks">
+        <p class="section-label">Do now</p>
+        <div class="task-stack" id="do-now-stack"></div>
+
+        <p class="section-label">You have some time</p>
+        <div class="task-stack" id="some-time-stack"></div>
+      </div>
+
+      <div class="home-calendar">
+        <div class="cal-card">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>
+            <span class="cal-month-label" id="cal-month-label"></span>
+            <button class="cal-nav" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="cal-legend" id="cal-legend"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ADD TASK VIEW ===== -->
+  <section class="view" id="view-addtask">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Add a task</h1>
+        <p class="view-sub">Drop in a new task &mdash; it'll show up on Today and All tasks right away.</p>
+      </div>
+    </div>
+
+    <form id="addtask-form" style="max-width: 480px;">
+      <div class="field">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <label for="at-client" style="margin:0;">Client</label>
+          <button type="button" onclick="openClientModal()" style="background:none; border:none; font-size:12px; font-weight:600; color:var(--studio); cursor:pointer; padding:0; font-family:'Sora',sans-serif; display:flex; align-items:center; gap:4px;">
+            <i class="ti ti-plus" style="font-size:13px;"></i> New client
+          </button>
+        </div>
+        <select id="at-client" required onchange="syncRateFromClient()"></select>
+      </div>
+      <div class="field">
+        <label for="at-rate">Hourly rate for this client <span style="color:var(--ink-faint); font-weight:400;">($)</span></label>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <input type="number" id="at-rate" placeholder="e.g. 75" min="0" step="0.01" style="max-width:140px;">
+          <button type="button" onclick="saveClientRate()" style="background:var(--studio-light); color:var(--studio-deep); border:none; border-radius:var(--radius-md); padding:9px 14px; font-size:13px; font-weight:600; font-family:'Sora',sans-serif; cursor:pointer; white-space:nowrap;">Save rate</button>
+          <span id="at-rate-saved" style="font-size:12px; color:var(--u-done-text); display:none;"><i class="ti ti-check"></i> Saved</span>
+        </div>
+        <p style="font-size:12px; color:var(--ink-faint); margin:5px 0 0;">This updates the rate for the selected client everywhere.</p>
+      </div>
+      <div class="field">
+        <label for="at-title">Task</label>
+        <input type="text" id="at-title" placeholder="e.g. Redesign homepage hero" required>
+      </div>
+      <div class="field">
+        <label for="at-desc">Description <span style="color: var(--ink-faint); font-weight: 400;">(optional)</span></label>
+        <textarea id="at-desc" placeholder="Any notes, links, or details"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="at-status">Status</label>
+          <select id="at-status">
+            <option value="not_started">Not started</option>
+            <option value="wip">Work in progress</option>
+            <option value="waiting">Waiting</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="at-date">Date</label>
+          <input type="date" id="at-date">
+        </div>
+      </div>
+      <div class="field">
+        <label>Urgency</label>
+        <div class="urgency-grid" id="at-urgency-grid"></div>
+      </div>
+      <div class="modal-actions" style="justify-content: flex-start;">
+        <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Add task</button>
+      </div>
+      <p id="at-success" style="display:none; font-size: 13px; color: var(--u-done-text); margin-top: 8px;">
+        <i class="ti ti-check" aria-hidden="true"></i> Task added.
+      </p>
+    </form>
+  </section>
+
+  <!-- ===== ALL TASKS VIEW ===== -->
+  <section class="view" id="view-tasks">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">All tasks</h1>
+        <p class="view-sub" id="tasks-sub">Everything on your plate, organized your way.</p>
+      </div>
+      <button class="btn-primary" onclick="openTaskModal()"><i class="ti ti-plus"></i> New task</button>
+    </div>
+
+    <div class="control-bar">
+      <div class="seg-group" id="group-by-seg">
+        <button class="seg-btn active" data-group="urgency">By urgency</button>
+        <button class="seg-btn" data-group="client">By client</button>
+        <button class="seg-btn" data-group="status">By status</button>
+        <button class="seg-btn" data-group="date">By due date</button>
+      </div>
+      <select class="filter-select" id="status-filter">
+        <option value="all">All statuses</option>
+        <option value="not_started">Not started</option>
+        <option value="wip">Work in progress</option>
+        <option value="waiting">Waiting</option>
+        <option value="complete">Complete</option>
+      </select>
+      <select class="filter-select" id="client-filter">
+        <option value="all">All clients</option>
+      </select>
+      <div class="seg-group" id="view-mode-seg" style="margin-left: auto;">
+        <button class="seg-btn active" data-mode="cards"><i class="ti ti-layout-cards" style="font-size:14px; vertical-align:-2px; margin-right:4px;"></i>Cards</button>
+        <button class="seg-btn" data-mode="grid"><i class="ti ti-table" style="font-size:14px; vertical-align:-2px; margin-right:4px;"></i>Grid</button>
+      </div>
+    </div>
+
+    <div id="tasks-container"></div>
+  </section>
+
+  <!-- ===== CLIENTS VIEW ===== -->
+  <section class="view" id="view-clients">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Clients</h1>
+        <p class="view-sub">Your current roster &mdash; click a client to see their tasks.</p>
+      </div>
+    </div>
+    <div class="client-grid" id="client-grid"></div>
+  </section>
+
+  <!-- ===== QUICK LINKS VIEW ===== -->
+  <section class="view" id="view-links">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Quick links</h1>
+        <p class="view-sub">All your project resources, one click away.</p>
+      </div>
+    </div>
+
+    <!-- Add link form -->
+    <div class="links-add-bar">
+      <div class="links-add-card">
+        <p class="links-add-title"><i class="ti ti-plus"></i> Add a link</p>
+        <div class="links-add-row">
+          <div class="field" style="flex:1.2; margin:0;">
+            <label for="link-label-input">Link name</label>
+            <input type="text" id="link-label-input" placeholder="e.g. Evergreen Wix Editor">
+          </div>
+          <div class="field" style="flex:2; margin:0;">
+            <label for="link-url-input">URL</label>
+            <input type="url" id="link-url-input" placeholder="https://...">
+          </div>
+          <div class="field" style="flex:1.2; margin:0;">
+            <label for="link-project-input">Project / folder</label>
+            <div class="link-project-wrap">
+              <input type="text" id="link-project-input" placeholder="e.g. Evergreen Studio" list="link-project-list" autocomplete="off">
+              <datalist id="link-project-list"></datalist>
+            </div>
+          </div>
+          <button type="button" class="btn-primary" style="align-self:flex-end; white-space:nowrap;" onclick="addLink()">
+            <i class="ti ti-plus"></i> Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link folders -->
+    <div id="links-folders"></div>
+  </section>
+
+  <!-- ===== TIMER VIEW ===== -->
+  <section class="view" id="view-timer">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Timer</h1>
+        <p class="view-sub">Track hours by project — every session is logged with date and duration.</p>
+      </div>
+    </div>
+
+    <!-- Active timer card -->
+    <div class="timer-active-card" id="timer-active-card">
+      <div class="timer-client-row">
+        <label class="timer-label" for="timer-client-select">Tracking time for</label>
+        <select id="timer-client-select" class="timer-client-select"></select>
+      </div>
+      <div class="timer-display" id="timer-display">00:00:00</div>
+      <div class="timer-note-row">
+        <input type="text" id="timer-note-input" class="timer-note-input" placeholder="What are you working on? (optional)">
+      </div>
+      <div class="timer-controls">
+        <button class="timer-btn-start" id="timer-start-btn" onclick="timerStart()">
+          <i class="ti ti-player-play-filled"></i> Start timer
+        </button>
+        <button class="timer-btn-stop" id="timer-stop-btn" onclick="timerStop()" style="display:none;">
+          <i class="ti ti-player-stop-filled"></i> Stop &amp; save
+        </button>
+        <button class="timer-btn-cancel" id="timer-cancel-btn" onclick="timerCancel()" style="display:none;">
+          <i class="ti ti-x"></i> Cancel
+        </button>
+      </div>
+      <p class="timer-running-label" id="timer-running-label" style="display:none;">
+        <span class="timer-pulse"></span> Timer running&hellip;
+      </p>
+    </div>
+
+    <!-- Log per project -->
+    <div class="timer-log-section">
+      <div class="timer-log-header">
+        <p class="section-label" style="margin:0;">Time logged</p>
+        <div class="seg-group" id="timer-group-seg" style="margin-left:auto;">
+          <button class="seg-btn active" data-tgroup="project">By project</button>
+          <button class="seg-btn" data-tgroup="date">By date</button>
+        </div>
+      </div>
+      <div id="timer-log-container"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== TASK MODAL ===== -->
+<div class="modal-overlay" id="task-modal-overlay">
+  <div class="modal">
+    <h2 id="task-modal-title">New task</h2>
+    <form id="task-form">
+      <div class="field">
+        <label for="task-title-input">Task name</label>
+        <input type="text" id="task-title-input" placeholder="e.g. Redesign homepage hero" required>
+      </div>
+      <div class="field">
+        <label for="task-desc-input">Description <span style="color: var(--ink-faint); font-weight: 400;">(optional)</span></label>
+        <textarea id="task-desc-input" placeholder="Any notes, links, or details"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="task-client-input">Client</label>
+          <select id="task-client-input"></select>
+        </div>
+        <div class="field">
+          <label for="task-status-input">Status</label>
+          <select id="task-status-input">
+            <option value="not_started">Not started</option>
+            <option value="wip">Work in progress</option>
+            <option value="waiting">Waiting</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="task-date-input">Due date <span style="color: var(--ink-faint); font-weight: 400;">(optional)</span></label>
+        <input type="date" id="task-date-input">
+      </div>
+      <div class="field">
+        <label>Urgency</label>
+        <div class="urgency-grid" id="urgency-grid"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeTaskModal()">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Save task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== CLIENT MODAL ===== -->
+<div class="modal-overlay" id="client-modal-overlay">
+  <div class="modal">
+    <h2>Add a client</h2>
+    <form id="client-form">
+      <div class="field">
+        <label for="client-name-input">Client name</label>
+        <input type="text" id="client-name-input" placeholder="e.g. Evergreen Studio" required>
+      </div>
+      <div class="field">
+        <label for="client-rate-input">Rate per task <span style="color: var(--ink-faint); font-weight: 400;">($)</span></label>
+        <input type="number" id="client-rate-input" placeholder="e.g. 75" min="0" step="0.01">
+      </div>
+      <div class="field">
+        <label>Color</label>
+        <div class="swatch-grid" id="client-swatch-grid"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeClientModal()">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Add client</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css">
+<script>
+/* ============== DATA ============== */
+
+const URGENCY_LEVELS = [
+  { id: 'now',      label: 'Do now',               bg: 'var(--u-now-bg)',      text: 'var(--u-now-text)' },
+  { id: 'soon',     label: 'You have some time',   bg: 'var(--u-soon-bg)',     text: 'var(--u-soon-text)' },
+  { id: 'week',     label: 'Over a week away',     bg: 'var(--u-week-bg)',     text: 'var(--u-week-text)' },
+  { id: 'later',    label: 'Do later / dependent', bg: 'var(--u-later-bg)',    text: 'var(--u-later-text)' },
+  { id: 'easy',     label: 'Quick/easy, low strain', bg: 'var(--u-easy-bg)',   text: 'var(--u-easy-text)' },
+  { id: 'optional', label: 'Optional',             bg: 'var(--u-optional-bg)',text: 'var(--u-optional-text)' },
+  { id: 'done',     label: 'Done!',                bg: 'var(--u-done-bg)',     text: 'var(--u-done-text)' },
+];
+
+const STATUS_LABELS = {
+  not_started: 'Not started',
+  wip: 'Work in progress',
+  waiting: 'Waiting',
+  complete: 'Complete'
+};
+
+const CLIENT_COLORS = [
+  { bg: '#E1F5EE', text: '#085041' }, // teal
+  { bg: '#EEEDFE', text: '#3C3489' }, // purple
+  { bg: '#FAECE7', text: '#993C1D' }, // coral
+  { bg: '#FBEAF0', text: '#993556' }, // pink
+  { bg: '#E6F1FB', text: '#185FA5' }, // blue
+  { bg: '#FAEEDA', text: '#854F0B' }, // amber
+  { bg: '#EAF3DE', text: '#3B6D11' }, // green
+  { bg: '#F1EFE8', text: '#5F5E5A' }, // gray
+];
+
+let state = {
+  clients: [],
+  tasks: [],
+  links: [],
+  timeLogs: []   // { id, clientId, date, startMs, endMs, durationMs, note }
+};
+
+let editingTaskId = null;
+let selectedUrgency = 'soon';
+let selectedClientColor = 0;
+let currentGroupBy = 'urgency';
+let currentViewMode = 'cards';
+
+/* ============== STORAGE ============== */
+
+async function loadState() {
+  try {
+    const result = await window.storage.get('studio-desk-state');
+    if (result && result.value) {
+      const parsed = JSON.parse(result.value);
+      state.clients = parsed.clients || [];
+      state.tasks = parsed.tasks || [];
+      state.links = parsed.links || [];
+      state.timeLogs = parsed.timeLogs || [];
+    }
+  } catch (e) {
+    seedExampleData();
+  }
+  if (state.clients.length === 0 && state.tasks.length === 0) {
+    seedExampleData();
+  }
+  renderAll();
+}
+
+async function saveState() {
+  try {
+    await window.storage.set('studio-desk-state', JSON.stringify(state));
+  } catch (e) {
+    console.error('Save failed', e);
+  }
+}
+
+function seedExampleData() {
+  state.clients = [
+    { id: 'c1', name: 'Evergreen Studio', colorIndex: 0, rate: 75 },
+    { id: 'c2', name: 'Emily Bouchard', colorIndex: 4, rate: 60 },
+  ];
+  state.tasks = [
+    {
+      id: 't1', clientId: 'c1', title: 'Redesign homepage mockup',
+      desc: 'Apply the new layout direction to the homepage and prep for client review.',
+      status: 'not_started', urgency: 'now', date: addDays(0)
+    },
+    {
+      id: 't2', clientId: 'c1', title: 'Create process page in Wix',
+      desc: '', status: 'not_started', urgency: 'now', date: addDays(0)
+    },
+    {
+      id: 't3', clientId: 'c2', title: 'Add free resources to Brevo email',
+      desc: '', status: 'waiting', urgency: 'later', date: ''
+    },
+  ];
+}
+
+function addDays(n) {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+/* ============== HELPERS ============== */
+
+function getClient(id) {
+  return state.clients.find(c => c.id === id);
+}
+
+function getUrgencyMeta(id) {
+  return URGENCY_LEVELS.find(u => u.id === id) || URGENCY_LEVELS[1];
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const diffDays = Math.round((d - today) / 86400000);
+
+  const opts = { month: 'short', day: 'numeric' };
+  const formatted = d.toLocaleDateString('en-US', opts);
+
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Tomorrow';
+  if (diffDays === -1) return 'Yesterday';
+  if (diffDays < 0) return formatted + ' (overdue)';
+  return formatted;
+}
+
+function isOverdue(dateStr) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return d < today;
+}
+
+function genId() {
+  return 't' + Date.now() + Math.floor(Math.random() * 1000);
+}
+
+/* ============== VIEW SWITCHING ============== */
+
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelector('.nav-item[data-view="' + view + '"]').classList.add('active');
+}
+
+/* ============== CALENDAR ============== */
+
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-indexed
+
+function calPrev() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function calNext() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const labelEl = document.getElementById('cal-month-label');
+  if (!labelEl) return;
+  labelEl.textContent = `${MONTHS[calMonth]} ${calYear}`;
+
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  // Build a map of date → tasks with due dates
+  const tasksByDate = {};
+  state.tasks.forEach(t => {
+    if (!t.date) return;
+    if (!tasksByDate[t.date]) tasksByDate[t.date] = [];
+    tasksByDate[t.date].push(t);
+  });
+
+  // Build the grid
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+  let cells = [];
+
+  // Prev month padding
+  for (let i = firstDay - 1; i >= 0; i--) {
+    cells.push({ day: daysInPrevMonth - i, current: false, dateStr: null });
+  }
+
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    cells.push({ day: d, current: true, dateStr });
+  }
+
+  // Next month padding to complete grid rows
+  const remaining = 7 - (cells.length % 7);
+  if (remaining < 7) {
+    for (let d = 1; d <= remaining; d++) {
+      cells.push({ day: d, current: false, dateStr: null });
+    }
+  }
+
+  const dowHeaders = DAYS.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  const dayCells = cells.map(cell => {
+    if (!cell.current) return `<div class="cal-day other-month"><span class="cal-day-num">${cell.day}</span></div>`;
+
+    const tasks = tasksByDate[cell.dateStr] || [];
+    const isToday = cell.dateStr === todayStr;
+    const cls = ['cal-day', isToday ? 'today' : '', tasks.length ? 'has-tasks' : ''].filter(Boolean).join(' ');
+
+    // Show up to 3 urgency-colored dots
+    const dots = tasks.slice(0, 4).map(t => {
+      const urgColor = getUrgencyColor(t.urgency);
+      return `<div class="cal-dot" style="background:${urgColor};" title="${escapeHtml(t.title)}"></div>`;
+    }).join('');
+
+    return `<div class="${cls}" title="${tasks.length ? tasks.map(t=>t.title).join(', ') : ''}">
+      <span class="cal-day-num">${cell.day}</span>
+      ${dots ? `<div class="cal-dots">${dots}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const gridEl = document.getElementById('cal-grid');
+  if (gridEl) gridEl.innerHTML = dowHeaders + dayCells;
+
+  // Legend: only urgency levels that have tasks this month
+  const urgenciesThisMonth = new Set();
+  Object.values(tasksByDate).forEach(tasks => {
+    tasks.forEach(t => {
+      const d = new Date(t.date + 'T00:00:00');
+      if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+        urgenciesThisMonth.add(t.urgency);
+      }
+    });
+  });
+
+  const legendEl = document.getElementById('cal-legend');
+  if (legendEl) {
+    if (urgenciesThisMonth.size === 0) {
+      legendEl.innerHTML = `<p class="cal-legend-item" style="color: var(--ink-faint); font-style: italic;">No tasks with due dates this month</p>`;
+    } else {
+      legendEl.innerHTML = URGENCY_LEVELS
+        .filter(u => urgenciesThisMonth.has(u.id))
+        .map(u => `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${getUrgencyColor(u.id)};"></div><span>${u.label}</span></div>`)
+        .join('');
+    }
+  }
+}
+
+function getUrgencyColor(urgencyId) {
+  const map = {
+    now: 'var(--u-now)', soon: 'var(--u-soon)', week: 'var(--u-week)',
+    later: 'var(--u-later)', easy: 'var(--u-easy)', optional: 'var(--u-optional)', done: 'var(--u-done)'
+  };
+  return map[urgencyId] || 'var(--u-optional)';
+}
+
+/* ============== RENDER: GREETING ============== */
+
+function renderGreeting() {
+  const dateEl = document.getElementById('today-date');
+  const today = new Date();
+  dateEl.textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+  const activeTasks = state.tasks.filter(t => t.status !== 'complete');
+  const urgentTasks = activeTasks.filter(t => t.urgency === 'now' || isOverdue(t.date));
+  const importantTasks = activeTasks.filter(t => t.urgency === 'soon' && t.urgency !== 'now' && !isOverdue(t.date));
+
+  const easyTasks = activeTasks.filter(t => t.urgency === 'easy');
+
+  // primary stat row: urgent and important, bigger
+  const statRow = document.getElementById('stat-row');
+  statRow.innerHTML = `
+    <div class="stat-card primary"><p class="stat-num">${urgentTasks.length}</p><p class="stat-label">Urgent tasks</p></div>
+    <div class="stat-card primary"><p class="stat-num">${importantTasks.length}</p><p class="stat-label">Important tasks</p></div>
+  `;
+
+  // secondary stat row: easy tasks + active clients
+  const statRowSecondary = document.getElementById('stat-row-secondary');
+  statRowSecondary.innerHTML = `
+    <div class="stat-card secondary"><p class="stat-num">${easyTasks.length}</p><p class="stat-label">Easy tasks</p></div>
+    <div class="stat-card secondary"><p class="stat-num">${state.clients.length}</p><p class="stat-label">Active clients</p></div>
+  `;
+
+  // personalized greeting message
+  const headlineEl = document.getElementById('greeting-text');
+  headlineEl.innerHTML = buildGreetingMessage(urgentTasks, importantTasks);
+
+
+  // Do now stack: urgent tasks (urgency = now, OR overdue), not complete
+  const doNow = urgentTasks.slice().sort(sortByDate);
+
+  const doNowEl = document.getElementById('do-now-stack');
+  if (doNow.length === 0) {
+    doNowEl.innerHTML = `<div class="empty-state">Nothing marked urgent &mdash; take a breath, or check what's coming up below.</div>`;
+  } else {
+    doNowEl.innerHTML = doNow.map(t => renderTaskCard(t)).join('');
+  }
+
+  // Some time stack: important tasks (urgency soon) plus week-out tasks, not already shown above
+  const someTime = activeTasks
+    .filter(t => (t.urgency === 'soon' || t.urgency === 'week') && t.urgency !== 'now' && !isOverdue(t.date))
+    .sort(sortByDate)
+    .slice(0, 6);
+
+  const someTimeEl = document.getElementById('some-time-stack');
+  if (someTime.length === 0) {
+    someTimeEl.innerHTML = `<div class="empty-state">Nothing queued up here right now.</div>`;
+  } else {
+    someTimeEl.innerHTML = someTime.map(t => renderTaskCard(t)).join('');
+  }
+
+  renderCalendar();
+}
+
+function buildGreetingMessage(urgentTasks, importantTasks) {
+  if (urgentTasks.length === 0 && importantTasks.length === 0) {
+    return 'Hello <strong>Shirley</strong> &mdash; nothing urgent on the desk today. Good time to get ahead.';
+  }
+
+  const parts = [];
+
+  // Group urgent tasks by client
+  if (urgentTasks.length > 0) {
+    const byClient = groupTasksByClient(urgentTasks);
+    const clientPhrases = byClient.map(g => {
+      if (g.items.length === 1) {
+        return `the <strong>${escapeHtml(g.clientName)}</strong> ${describeTask(g.items[0])}`;
+      }
+      return `the <strong>${escapeHtml(g.clientName)}</strong> tasks (${g.items.length})`;
+    });
+    parts.push(`You need to lock in today to finish ${joinWithAnd(clientPhrases)}`);
+  }
+
+  // Group important tasks by client, pick the soonest
+  if (importantTasks.length > 0) {
+    const byClient = groupTasksByClient(importantTasks.slice().sort(sortByDate));
+    const clientPhrases = byClient.slice(0, 2).map(g => {
+      const dateLabel = g.items[0].date ? ` (${formatDate(g.items[0].date)})` : '';
+      if (g.items.length === 1) {
+        return `the <strong>${escapeHtml(g.clientName)}</strong> ${describeTask(g.items[0])}${dateLabel}`;
+      }
+      return `the <strong>${escapeHtml(g.clientName)}</strong> tasks (${g.items.length})${dateLabel}`;
+    });
+    const prefix = parts.length > 0 ? 'Also, don\'t forget' : 'Don\'t forget';
+    parts.push(`${prefix} ${joinWithAnd(clientPhrases)} ${importantTasks.length === 1 ? 'is' : 'are'} coming up`);
+  }
+
+  return `Hello <strong>Shirley</strong>, let's get to work. ${parts.join('. ')}.`;
+}
+
+function buildGreetingSummary(urgentTasks, importantTasks, easyTasks) {
+  // Case: nothing pressing
+  if (urgentTasks.length === 0 && importantTasks.length === 0) {
+    if (easyTasks.length > 0) {
+      return `<i class="ti ti-sparkles" aria-hidden="true"></i>With the pressure off, this could be a good moment to knock out ${easyTasks.length === 1 ? 'that quick task' : `a couple of those ${easyTasks.length} quick, low-strain tasks`} sitting in your "easy" pile &mdash; an easy win to start the day.`;
+    }
+    return `<i class="ti ti-sparkles" aria-hidden="true"></i>Your desk is clear for now. Take the breathing room to plan ahead, tidy up your client list, or just enjoy the quiet.`;
+  }
+
+  const sentenceParts = [];
+
+  // Lead with the concrete plan for "now"
+  if (urgentTasks.length > 0) {
+    const titles = urgentTasks.slice(0, 3).map(t => `"${escapeHtml(t.title)}"`);
+    const titleList = joinWithAnd(titles);
+    if (urgentTasks.length <= 3) {
+      sentenceParts.push(`Today's focus is ${titleList}`);
+    } else {
+      sentenceParts.push(`Today's focus is ${titleList}, plus ${urgentTasks.length - 3} more on the urgent list`);
+    }
+  }
+
+  // Mention what's coming up after, gently
+  if (importantTasks.length > 0) {
+    if (urgentTasks.length > 0) {
+      sentenceParts.push(`once those are off your plate, the next few days are looking lighter with ${importantTasks.length} task${importantTasks.length === 1 ? '' : 's'} queued up`);
+    } else {
+      sentenceParts.push(`you've got ${importantTasks.length} task${importantTasks.length === 1 ? '' : 's'} on deck for the next few days`);
+    }
+  }
+
+  let sentence = sentenceParts.join(', and ') + '.';
+  sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+
+  // Encouraging closer
+  let closer = '';
+  if (urgentTasks.length >= 4) {
+    closer = ` It's a full list, but tackling even one or two of these will make a real dent &mdash; pick the one that's been on your mind most and start there.`;
+  } else if (urgentTasks.length > 0) {
+    closer = ` Nothing here is impossible &mdash; one task at a time and you'll be through it before you know it.`;
+  } else {
+    closer = ` A lighter day &mdash; good chance to make steady progress without the rush.`;
+  }
+
+  return `<i class="ti ti-sparkles" aria-hidden="true"></i>${sentence}${closer}`;
+}
+
+function groupTasksByClient(tasks) {
+  const map = {};
+  tasks.forEach(t => {
+    const client = getClient(t.clientId);
+    const name = client ? client.name : 'Unassigned';
+    if (!map[name]) map[name] = [];
+    map[name].push(t);
+  });
+  return Object.keys(map).map(name => ({ clientName: name, items: map[name] }));
+}
+
+function describeTask(t) {
+  // lowercase a short version of the task title for use mid-sentence
+  let title = t.title.trim();
+  if (title.length > 40) title = title.slice(0, 40).trim() + '...';
+  return escapeHtml(title.charAt(0).toLowerCase() + title.slice(1));
+}
+
+function joinWithAnd(arr) {
+  if (arr.length === 1) return arr[0];
+  if (arr.length === 2) return arr[0] + ', and also ' + arr[1];
+  return arr.slice(0, -1).join(', ') + ', and ' + arr[arr.length - 1];
+}
+
+function sortByDate(a, b) {
+  if (!a.date && !b.date) return 0;
+  if (!a.date) return 1;
+  if (!b.date) return -1;
+  return a.date.localeCompare(b.date);
+}
+
+/* ============== RENDER: TASK CARD ============== */
+
+const URGENCY_BORDER_CLASS = {
+  now: 'urg-now', soon: 'urg-soon', week: 'urg-week', later: 'urg-later',
+  easy: 'urg-easy', optional: 'urg-optional', done: 'urg-done'
+};
+const URGENCY_PILL_CLASS = {
+  now: 'urg-pill-now', soon: 'urg-pill-soon', week: 'urg-pill-week', later: 'urg-pill-later',
+  easy: 'urg-pill-easy', optional: 'urg-pill-optional', done: 'urg-pill-done'
+};
+const URGENCY_DOT_CLASS = {
+  now: 'dot-now', soon: 'dot-soon', week: 'dot-week', later: 'dot-later',
+  easy: 'dot-easy', optional: 'dot-optional', done: 'dot-done'
+};
+
+function renderTaskCard(t) {
+  const client = getClient(t.clientId);
+  const clientName = client ? client.name : 'No client';
+  const clientColor = client ? CLIENT_COLORS[client.colorIndex % CLIENT_COLORS.length] : { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
+  const urgMeta = getUrgencyMeta(t.urgency);
+  const overdue = isOverdue(t.date) && t.status !== 'complete';
+  const dateLabel = formatDate(t.date);
+  const hasDetails = t.details && t.details.trim().length > 0;
+
+  const statusOptions = Object.keys(STATUS_LABELS).map(s =>
+    `<option value="${s}" ${s === t.status ? 'selected' : ''}>${STATUS_LABELS[s]}</option>`
+  ).join('');
+
+  const urgencyOptions = URGENCY_LEVELS.map(u =>
+    `<option value="${u.id}" ${u.id === t.urgency ? 'selected' : ''}>${u.label}</option>`
+  ).join('');
+
+  return `
+    <div class="task-card-wrap ${URGENCY_BORDER_CLASS[t.urgency] || 'urg-soon'}" id="card-${t.id}">
+      <div class="task-card">
+        <div class="task-main">
+          <p class="task-client" style="background:${clientColor.bg}; color:${clientColor.text};">${escapeHtml(clientName)}</p>
+          <p class="task-title">${escapeHtml(t.title)}</p>
+          ${t.desc ? `<p class="task-desc">${escapeHtml(t.desc)}</p>` : ''}
+        </div>
+        <div class="task-meta">
+          ${dateLabel ? `<span class="task-date ${overdue ? 'overdue' : ''}">${dateLabel}</span>` : ''}
+          <select class="pill-select status-${t.status}" aria-label="Status" onchange="updateTaskField('${t.id}', 'status', this.value)">${statusOptions}</select>
+          <select class="pill-select ${URGENCY_PILL_CLASS[t.urgency] || ''}" aria-label="Urgency" onchange="updateTaskField('${t.id}', 'urgency', this.value)">${urgencyOptions}</select>
+        </div>
+        <div class="task-actions">
+          <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')">
+            <i class="ti ti-chevron-down"></i>
+          </button>
+          <button class="icon-btn" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
+          <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="task-details-panel ${hasDetails ? 'open' : ''}" id="details-${t.id}">
+        <label for="details-input-${t.id}">Notes &amp; links</label>
+        <textarea id="details-input-${t.id}" placeholder="Paste client feedback, email links, reference notes..." onblur="updateTaskField('${t.id}', 'details', this.value)">${escapeHtml(t.details || '')}</textarea>
+        <p class="task-details-hint">Links pasted here are clickable once saved.</p>
+      </div>
+    </div>
+  `;
+}
+
+function toggleDetails(taskId) {
+  const panel = document.getElementById('details-' + taskId);
+  const wrap = document.getElementById('card-' + taskId);
+  const toggle = wrap.querySelector('.task-details-toggle');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+function updateTaskField(taskId, field, value) {
+  const t = state.tasks.find(x => x.id === taskId);
+  if (!t) return;
+  t[field] = value;
+  saveState();
+  renderAll();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+/* ============== RENDER: ALL TASKS ============== */
+
+function renderTasksView() {
+  const container = document.getElementById('tasks-container');
+  const statusFilter = document.getElementById('status-filter').value;
+  const clientFilter = document.getElementById('client-filter').value;
+
+  let tasks = state.tasks.slice();
+  if (statusFilter !== 'all') tasks = tasks.filter(t => t.status === statusFilter);
+  if (clientFilter !== 'all') tasks = tasks.filter(t => t.clientId === clientFilter);
+
+  document.getElementById('tasks-sub').textContent =
+    `${tasks.length} task${tasks.length === 1 ? '' : 's'} shown`;
+
+  if (tasks.length === 0) {
+    container.innerHTML = `<div class="empty-state">No tasks match these filters. Try a different view, or add a new task to get started.</div>`;
+    return;
+  }
+
+  let groups = [];
+
+  if (currentGroupBy === 'urgency') {
+    groups = URGENCY_LEVELS.map(u => ({
+      key: u.id,
+      title: u.label,
+      dotClass: 'dot-' + u.id,
+      items: tasks.filter(t => t.urgency === u.id)
+    })).filter(g => g.items.length > 0);
+    groups.forEach(g => g.items.sort(sortByDate));
+  } else if (currentGroupBy === 'client') {
+    const sortedClients = state.clients.slice().sort((a,b) => a.name.localeCompare(b.name));
+    groups = sortedClients.map(c => ({
+      key: c.id,
+      title: c.name,
+      colorBg: CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length].bg,
+      colorText: CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length].text,
+      items: tasks.filter(t => t.clientId === c.id)
+    })).filter(g => g.items.length > 0);
+    const noClient = tasks.filter(t => !getClient(t.clientId));
+    if (noClient.length) groups.push({ key: 'none', title: 'No client', items: noClient });
+    groups.forEach(g => g.items.sort(sortByDate));
+  } else if (currentGroupBy === 'status') {
+    groups = Object.keys(STATUS_LABELS).map(s => ({
+      key: s,
+      title: STATUS_LABELS[s],
+      statusClass: 'status-' + s,
+      items: tasks.filter(t => t.status === s)
+    })).filter(g => g.items.length > 0);
+    groups.forEach(g => g.items.sort(sortByDate));
+  } else if (currentGroupBy === 'date') {
+    const dated = tasks.filter(t => t.date).sort(sortByDate);
+    const undated = tasks.filter(t => !t.date);
+    const buckets = {};
+    dated.forEach(t => {
+      const label = formatDate(t.date);
+      const key = isOverdue(t.date) && t.status !== 'complete' ? 'Overdue' : label;
+      if (!buckets[key]) buckets[key] = [];
+      buckets[key].push(t);
+    });
+    groups = Object.keys(buckets).map(k => ({ key: k, title: k, items: buckets[k] }));
+    if (undated.length) groups.push({ key: 'none', title: 'No due date', items: undated });
+  }
+
+  if (currentViewMode === 'grid') {
+    renderTasksGrid(container, groups);
+    return;
+  }
+
+  container.innerHTML = groups.map(g => `
+    <div class="group-block">
+      <div class="group-heading">
+        ${g.dotClass ? `<span class="group-dot ${g.dotClass}"></span>` : ''}
+        ${g.statusClass ? `<span class="pill ${g.statusClass}">${g.title}</span>` : `<h3>${escapeHtml(g.title)}</h3>`}
+        <span class="group-count">${g.items.length}</span>
+      </div>
+      <div class="task-stack">
+        ${g.items.map(t => renderTaskCard(t)).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTasksGrid(container, groups) {
+  container.innerHTML = groups.map(g => {
+    const rows = g.items.map(t => {
+      const client = getClient(t.clientId);
+      const clientName = client ? client.name : 'No client';
+      const clientColor = client ? CLIENT_COLORS[client.colorIndex % CLIENT_COLORS.length] : { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
+      const overdue = isOverdue(t.date) && t.status !== 'complete';
+      const dateLabel = formatDate(t.date);
+      const dotClass = URGENCY_DOT_CLASS[t.urgency] || 'dot-soon';
+      const hasDetails = t.details && t.details.trim().length > 0;
+
+      const statusOptions = Object.keys(STATUS_LABELS).map(s =>
+        `<option value="${s}" ${s === t.status ? 'selected' : ''}>${STATUS_LABELS[s]}</option>`
+      ).join('');
+
+      const urgencyOptions = URGENCY_LEVELS.map(u =>
+        `<option value="${u.id}" ${u.id === t.urgency ? 'selected' : ''}>${u.label}</option>`
+      ).join('');
+
+      return `
+        <tr>
+          <td class="sheet-urgency-cell"><span class="group-dot ${dotClass}" style="border-radius: 0;"></span></td>
+          <td><span class="sheet-client-pill" style="background:${clientColor.bg}; color:${clientColor.text};">${escapeHtml(clientName)}</span></td>
+          <td>
+            <p class="sheet-task-title">${escapeHtml(t.title)}</p>
+            ${t.desc ? `<p class="sheet-task-desc">${escapeHtml(t.desc)}</p>` : ''}
+          </td>
+          <td><select class="pill-select status-${t.status}" aria-label="Status" onchange="updateTaskField('${t.id}', 'status', this.value)">${statusOptions}</select></td>
+          <td><select class="pill-select ${URGENCY_PILL_CLASS[t.urgency] || ''}" aria-label="Urgency" onchange="updateTaskField('${t.id}', 'urgency', this.value)">${urgencyOptions}</select></td>
+          <td class="sheet-date ${overdue ? 'overdue' : ''}">${dateLabel || '\u2014'}</td>
+          <td>
+            <div class="sheet-actions">
+              <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')"><i class="ti ti-chevron-down"></i></button>
+              <button class="icon-btn" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
+              <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7" style="padding: 0; border-bottom: ${hasDetails ? '1px solid var(--border-soft)' : 'none'};">
+            <div class="task-details-panel ${hasDetails ? 'open' : ''}" id="details-${t.id}" style="margin: 0; border-top: none; padding: ${hasDetails ? '10px 14px 14px' : '0 14px'};">
+              <label for="details-input-${t.id}">Notes &amp; links</label>
+              <textarea id="details-input-${t.id}" placeholder="Paste client feedback, email links, reference notes..." onblur="updateTaskField('${t.id}', 'details', this.value)">${escapeHtml(t.details || '')}</textarea>
+              <p class="task-details-hint">Links pasted here are clickable once saved.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="group-block">
+        <div class="group-heading">
+          ${g.dotClass ? `<span class="group-dot ${g.dotClass}"></span>` : ''}
+          ${g.statusClass ? `<span class="pill ${g.statusClass}">${g.title}</span>` : `<h3>${escapeHtml(g.title)}</h3>`}
+          <span class="group-count">${g.items.length}</span>
+        </div>
+        <div class="sheet-wrap">
+          <table class="sheet">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Client</th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Urgency</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ============== RENDER: CLIENTS ============== */
+
+function renderClientsView() {
+  const grid = document.getElementById('client-grid');
+  const cards = state.clients.map(c => {
+    const color = CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length];
+    const taskCount = state.tasks.filter(t => t.clientId === c.id && t.status !== 'complete').length;
+    const initial = c.name.trim().charAt(0).toUpperCase();
+    return `
+      <div class="client-card" onclick="filterByClient('${c.id}')">
+        <button class="icon-btn danger client-card-remove" aria-label="Remove client" onclick="event.stopPropagation(); deleteClient('${c.id}')"><i class="ti ti-x"></i></button>
+        <div class="client-swatch" style="background:${color.bg}; color:${color.text};">${initial}</div>
+        <p class="client-name">${escapeHtml(c.name)}</p>
+        <p class="client-meta">${taskCount} active task${taskCount === 1 ? '' : 's'}</p>
+      </div>
+    `;
+  }).join('');
+
+  grid.innerHTML = cards + `
+    <div class="add-client-card" onclick="openClientModal()">
+      <i class="ti ti-plus"></i> Add client
+    </div>
+  `;
+}
+
+function filterByClient(clientId) {
+  switchView('tasks');
+  document.getElementById('client-filter').value = clientId;
+  renderTasksView();
+}
+
+/* ============== TASK MODAL ============== */
+
+function populateClientSelect() {
+  const select = document.getElementById('task-client-input');
+  select.innerHTML = state.clients.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+}
+
+function populateUrgencyGrid() {
+  const grid = document.getElementById('urgency-grid');
+  grid.innerHTML = URGENCY_LEVELS.map(u => `
+    <div class="urgency-opt" data-urgency="${u.id}" style="background:${u.bg}; color:${u.text};" onclick="selectUrgency('${u.id}')">
+      ${u.label}
+    </div>
+  `).join('');
+  highlightUrgency();
+}
+
+function selectUrgency(id) {
+  selectedUrgency = id;
+  highlightUrgency();
+}
+
+function highlightUrgency() {
+  document.querySelectorAll('.urgency-opt').forEach(el => {
+    el.classList.toggle('selected', el.dataset.urgency === selectedUrgency);
+  });
+}
+
+function openTaskModal(taskId) {
+  editingTaskId = taskId || null;
+  populateClientSelect();
+  populateUrgencyGrid();
+
+  const title = document.getElementById('task-modal-title');
+  const form = document.getElementById('task-form');
+  form.reset();
+
+  if (taskId) {
+    const t = state.tasks.find(x => x.id === taskId);
+    title.textContent = 'Edit task';
+    document.getElementById('task-title-input').value = t.title;
+    document.getElementById('task-desc-input').value = t.desc || '';
+    document.getElementById('task-client-input').value = t.clientId || '';
+    document.getElementById('task-status-input').value = t.status;
+    document.getElementById('task-date-input').value = t.date || '';
+    selectedUrgency = t.urgency;
+  } else {
+    title.textContent = 'New task';
+    selectedUrgency = 'soon';
+    if (state.clients.length === 0) {
+      // prompt to add a client first
+      closeTaskModal();
+      openClientModal();
+      return;
+    }
+  }
+  highlightUrgency();
+  document.getElementById('task-modal-overlay').classList.add('active');
+  document.getElementById('task-title-input').focus();
+}
+
+function closeTaskModal() {
+  document.getElementById('task-modal-overlay').classList.remove('active');
+  editingTaskId = null;
+}
+
+document.getElementById('task-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const title = document.getElementById('task-title-input').value.trim();
+  const desc = document.getElementById('task-desc-input').value.trim();
+  const clientId = document.getElementById('task-client-input').value;
+  const status = document.getElementById('task-status-input').value;
+  const date = document.getElementById('task-date-input').value;
+
+  if (!title) return;
+
+  if (editingTaskId) {
+    const t = state.tasks.find(x => x.id === editingTaskId);
+    Object.assign(t, { title, desc, clientId, status, date, urgency: selectedUrgency });
+  } else {
+    state.tasks.push({
+      id: genId(), title, desc, clientId, status, date, urgency: selectedUrgency
+    });
+  }
+
+  saveState();
+  renderAll();
+  closeTaskModal();
+});
+
+function deleteTask(id) {
+  state.tasks = state.tasks.filter(t => t.id !== id);
+  saveState();
+  renderAll();
+}
+
+/* ============== CLIENT MODAL ============== */
+
+function populateClientSwatches() {
+  const grid = document.getElementById('client-swatch-grid');
+  grid.innerHTML = CLIENT_COLORS.map((c, i) => `
+    <div class="swatch-opt" data-index="${i}" style="background:${c.bg};" onclick="selectClientColor(${i})"></div>
+  `).join('');
+  highlightClientColor();
+}
+
+function selectClientColor(i) {
+  selectedClientColor = i;
+  highlightClientColor();
+}
+
+function highlightClientColor() {
+  document.querySelectorAll('.swatch-opt').forEach(el => {
+    el.classList.toggle('selected', parseInt(el.dataset.index) === selectedClientColor);
+  });
+}
+
+function openClientModal() {
+  selectedClientColor = state.clients.length % CLIENT_COLORS.length;
+  populateClientSwatches();
+  document.getElementById('client-form').reset();
+  document.getElementById('client-rate-input').value = '';
+  document.getElementById('client-modal-overlay').classList.add('active');
+  document.getElementById('client-name-input').focus();
+}
+
+function closeClientModal() {
+  document.getElementById('client-modal-overlay').classList.remove('active');
+}
+
+document.getElementById('client-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('client-name-input').value.trim();
+  const rate = parseFloat(document.getElementById('client-rate-input').value) || 0;
+  if (!name) return;
+  const newId = 'c' + Date.now();
+  state.clients.push({ id: newId, name, colorIndex: selectedClientColor, rate });
+  saveState();
+  renderAll();
+  closeClientModal();
+  // Auto-select the new client in the Add Task form if it's visible
+  const atSelect = document.getElementById('at-client');
+  if (atSelect) atSelect.value = newId;
+});
+
+function deleteClient(id) {
+  const taskCount = state.tasks.filter(t => t.clientId === id).length;
+  if (taskCount > 0 && !confirm(`This client has ${taskCount} task(s). Remove the client and unassign those tasks?`)) {
+    return;
+  }
+  state.clients = state.clients.filter(c => c.id !== id);
+  state.tasks.forEach(t => { if (t.clientId === id) t.clientId = null; });
+  saveState();
+  renderAll();
+}
+
+/* ============== ADD TASK PAGE ============== */
+
+let selectedAtUrgency = 'soon';
+
+function populateAddTaskForm() {
+  const clientSelect = document.getElementById('at-client');
+  const form = document.getElementById('addtask-form');
+  if (state.clients.length === 0) {
+    clientSelect.innerHTML = '<option value="">No clients yet</option>';
+    form.querySelector('button[type="submit"]').disabled = true;
+  } else {
+    clientSelect.innerHTML = state.clients.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+    form.querySelector('button[type="submit"]').disabled = false;
+  }
+
+  syncRateFromClient();
+
+  const grid = document.getElementById('at-urgency-grid');
+  grid.innerHTML = URGENCY_LEVELS.map(u => `
+    <div class="urgency-opt" data-urgency="${u.id}" style="background:${u.bg}; color:${u.text};" onclick="selectAtUrgency('${u.id}')">
+      ${u.label}
+    </div>
+  `).join('');
+  highlightAtUrgency();
+}
+
+function syncRateFromClient() {
+  const sel = document.getElementById('at-client');
+  const rateInput = document.getElementById('at-rate');
+  if (!sel || !rateInput) return;
+  const client = getClient(sel.value);
+  rateInput.value = client && client.rate ? client.rate : '';
+}
+
+function saveClientRate() {
+  const sel = document.getElementById('at-client');
+  const rateInput = document.getElementById('at-rate');
+  const savedMsg = document.getElementById('at-rate-saved');
+  if (!sel || !rateInput) return;
+  const client = getClient(sel.value);
+  if (!client) return;
+  client.rate = parseFloat(rateInput.value) || 0;
+  saveState();
+  if (savedMsg) {
+    savedMsg.style.display = 'inline';
+    setTimeout(() => { savedMsg.style.display = 'none'; }, 2000);
+  }
+}
+
+function selectAtUrgency(id) {
+  selectedAtUrgency = id;
+  highlightAtUrgency();
+}
+
+function highlightAtUrgency() {
+  document.querySelectorAll('#at-urgency-grid .urgency-opt').forEach(el => {
+    el.classList.toggle('selected', el.dataset.urgency === selectedAtUrgency);
+  });
+}
+
+document.getElementById('addtask-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const clientId = document.getElementById('at-client').value;
+  const title = document.getElementById('at-title').value.trim();
+  const desc = document.getElementById('at-desc').value.trim();
+  const status = document.getElementById('at-status').value;
+  const date = document.getElementById('at-date').value;
+
+  if (!title || !clientId) return;
+
+  state.tasks.push({
+    id: genId(), title, desc, clientId, status, date, urgency: selectedAtUrgency
+  });
+
+  saveState();
+  renderAll();
+
+  // reset form but keep client selected for quick consecutive entry
+  document.getElementById('at-title').value = '';
+  document.getElementById('at-desc').value = '';
+  document.getElementById('at-status').value = 'not_started';
+  document.getElementById('at-date').value = '';
+  selectedAtUrgency = 'soon';
+  highlightAtUrgency();
+
+  const successEl = document.getElementById('at-success');
+  successEl.style.display = 'block';
+  setTimeout(() => { successEl.style.display = 'none'; }, 2000);
+  document.getElementById('at-title').focus();
+});
+
+/* ============== FILTERS / GROUPING ============== */
+
+function populateClientFilter() {
+  const select = document.getElementById('client-filter');
+  const current = select.value;
+  select.innerHTML = '<option value="all">All clients</option>' +
+    state.clients.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  if (state.clients.find(c => c.id === current)) select.value = current;
+}
+
+document.getElementById('group-by-seg').addEventListener('click', function(e) {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  document.querySelectorAll('#group-by-seg .seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentGroupBy = btn.dataset.group;
+  renderTasksView();
+});
+
+document.getElementById('view-mode-seg').addEventListener('click', function(e) {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  document.querySelectorAll('#view-mode-seg .seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentViewMode = btn.dataset.mode;
+  renderTasksView();
+});
+
+document.getElementById('status-filter').addEventListener('change', renderTasksView);
+document.getElementById('client-filter').addEventListener('change', renderTasksView);
+
+/* ============== RENDER ALL ============== */
+
+function renderAll() {
+  renderGreeting();
+  populateClientFilter();
+  renderTasksView();
+  renderClientsView();
+  populateAddTaskForm();
+  renderLinksView();
+  renderTimerView();
+}
+
+/* ============== TIMER ============== */
+
+let timerInterval = null;
+let timerStartMs = null;
+let timerCurrentClientId = null;
+let timerGroupBy = 'project';
+
+function msToHMS(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function msToFriendly(ms) {
+  const totalMin = Math.round(ms / 60000);
+  if (totalMin < 60) return `${totalMin}m`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+}
+
+function populateTimerClientSelect() {
+  const sel = document.getElementById('timer-client-select');
+  if (!sel) return;
+  sel.innerHTML = state.clients.length === 0
+    ? '<option value="">Add a client first</option>'
+    : state.clients.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  if (timerCurrentClientId) sel.value = timerCurrentClientId;
+}
+
+function timerStart() {
+  const sel = document.getElementById('timer-client-select');
+  if (!sel || !sel.value) return;
+
+  timerCurrentClientId = sel.value;
+  timerStartMs = Date.now();
+
+  // Lock the client select while running
+  sel.disabled = true;
+
+  document.getElementById('timer-start-btn').style.display = 'none';
+  document.getElementById('timer-stop-btn').style.display = 'inline-flex';
+  document.getElementById('timer-cancel-btn').style.display = 'inline-flex';
+  document.getElementById('timer-running-label').style.display = 'flex';
+  document.getElementById('timer-display').classList.add('running');
+  document.getElementById('timer-note-input').disabled = false;
+
+  timerInterval = setInterval(() => {
+    const elapsed = Date.now() - timerStartMs;
+    const el = document.getElementById('timer-display');
+    if (el) el.textContent = msToHMS(elapsed);
+  }, 1000);
+}
+
+function timerStop() {
+  if (!timerStartMs) return;
+  clearInterval(timerInterval);
+
+  const endMs = Date.now();
+  const durationMs = endMs - timerStartMs;
+  const note = document.getElementById('timer-note-input').value.trim();
+
+  // Format date as YYYY-MM-DD in local time
+  const d = new Date();
+  const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+  state.timeLogs.push({
+    id: 'tl' + Date.now(),
+    clientId: timerCurrentClientId,
+    date,
+    startMs: timerStartMs,
+    endMs,
+    durationMs,
+    note
+  });
+
+  saveState();
+  timerReset();
+  renderTimerView();
+}
+
+function timerCancel() {
+  clearInterval(timerInterval);
+  timerReset();
+}
+
+function timerReset() {
+  timerStartMs = null;
+  timerInterval = null;
+
+  const dispEl = document.getElementById('timer-display');
+  if (dispEl) { dispEl.textContent = '00:00:00'; dispEl.classList.remove('running'); }
+
+  const sel = document.getElementById('timer-client-select');
+  if (sel) sel.disabled = false;
+
+  const noteEl = document.getElementById('timer-note-input');
+  if (noteEl) { noteEl.value = ''; noteEl.disabled = false; }
+
+  const startBtn = document.getElementById('timer-start-btn');
+  const stopBtn = document.getElementById('timer-stop-btn');
+  const cancelBtn = document.getElementById('timer-cancel-btn');
+  const runningLabel = document.getElementById('timer-running-label');
+  if (startBtn) startBtn.style.display = 'inline-flex';
+  if (stopBtn) stopBtn.style.display = 'none';
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  if (runningLabel) runningLabel.style.display = 'none';
+}
+
+function deleteTimeLog(id) {
+  state.timeLogs = state.timeLogs.filter(l => l.id !== id);
+  saveState();
+  renderTimerView();
+}
+
+function toggleTimerProject(id) {
+  const el = document.getElementById('tpb-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+function renderTimerView() {
+  populateTimerClientSelect();
+
+  const container = document.getElementById('timer-log-container');
+  if (!container) return;
+
+  if (state.timeLogs.length === 0) {
+    container.innerHTML = `<div class="timer-empty">No sessions logged yet — start a timer above to begin tracking.</div>`;
+    return;
+  }
+
+  if (timerGroupBy === 'project') {
+    renderTimerByProject(container);
+  } else {
+    renderTimerByDate(container);
+  }
+}
+
+function renderTimerByProject(container) {
+  // Group logs by clientId
+  const grouped = {};
+  state.timeLogs.forEach(log => {
+    if (!grouped[log.clientId]) grouped[log.clientId] = [];
+    grouped[log.clientId].push(log);
+  });
+
+  const clientColors = {};
+  state.clients.forEach(c => {
+    clientColors[c.id] = CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length];
+  });
+
+  container.innerHTML = Object.keys(grouped).map(clientId => {
+    const client = getClient(clientId);
+    const clientName = client ? client.name : 'Unknown client';
+    const color = clientColors[clientId] || { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
+    const logs = grouped[clientId].slice().sort((a,b) => b.startMs - a.startMs);
+    const totalMs = logs.reduce((sum, l) => sum + l.durationMs, 0);
+    const totalHours = totalMs / 3600000;
+    const rate = client && client.rate ? client.rate : 0;
+    const earned = rate ? (totalHours * rate) : null;
+    const blockId = 'client-' + clientId;
+
+    const rows = logs.map(log => {
+      const d = new Date(log.date + 'T00:00:00');
+      const dateLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const sessionHours = log.durationMs / 3600000;
+      const sessionEarned = rate ? sessionHours * rate : null;
+      return `
+        <div class="timer-log-row">
+          <span class="timer-log-date">${dateLabel}</span>
+          <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
+          <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
+          ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span></span>'}
+          ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
+          <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="timer-project-block open" id="tpb-${clientId}">
+        <div class="timer-project-header" onclick="toggleTimerProject('${clientId}')">
+          <i class="ti ti-chevron-right timer-project-chevron"></i>
+          <span class="timer-project-swatch" style="background:${color.bg}; border: 1.5px solid ${color.text}40;"></span>
+          <span class="timer-project-name">${escapeHtml(clientName)}</span>
+          <span class="timer-project-total">${msToFriendly(totalMs)}</span>
+          ${earned !== null ? `<span class="timer-project-money">~$${(earned).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>` : ''}
+        </div>
+        <div class="timer-project-body">${rows}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTimerByDate(container) {
+  // Group logs by date
+  const grouped = {};
+  state.timeLogs.forEach(log => {
+    if (!grouped[log.date]) grouped[log.date] = [];
+    grouped[log.date].push(log);
+  });
+
+  const sortedDates = Object.keys(grouped).sort((a,b) => b.localeCompare(a));
+
+  container.innerHTML = sortedDates.map(date => {
+    const d = new Date(date + 'T00:00:00');
+    const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const logs = grouped[date].slice().sort((a,b) => b.startMs - a.startMs);
+    const totalMs = logs.reduce((sum, l) => sum + l.durationMs, 0);
+
+    const rows = logs.map(log => {
+      const client = getClient(log.clientId);
+      const clientName = client ? client.name : 'Unknown';
+      const clientColor = client ? CLIENT_COLORS[client.colorIndex % CLIENT_COLORS.length] : { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
+      const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+      return `
+        <div class="timer-log-row">
+          <span class="sheet-client-pill" style="background:${clientColor.bg}; color:${clientColor.text}; font-size:11px; padding:2px 8px; border-radius:999px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">${escapeHtml(clientName)}</span>
+          <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
+          <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
+          ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span class="timer-log-note"></span>'}
+          <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="timer-project-block open" id="tpb-date-${date}">
+        <div class="timer-project-header" onclick="this.parentElement.classList.toggle('open')">
+          <i class="ti ti-chevron-right timer-project-chevron"></i>
+          <span class="timer-project-name">${dateLabel}</span>
+          <span class="timer-project-total">${msToFriendly(totalMs)} total</span>
+        </div>
+        <div class="timer-project-body">${rows}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Timer group-by toggle
+document.getElementById('timer-group-seg').addEventListener('click', function(e) {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  document.querySelectorAll('#timer-group-seg .seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  timerGroupBy = btn.dataset.tgroup;
+  renderTimerView();
+});
+
+/* ============== QUICK LINKS ============== */
+
+const FOLDER_COLORS = [
+  '#E5673E', '#F0A630', '#E893A8', '#6FAEC4', '#8FB89C',
+  '#AFA9EC', '#F6C667', '#C2B6AE'
+];
+
+function getFolderColor(projectName) {
+  // Deterministic color based on project name
+  let hash = 0;
+  for (let i = 0; i < projectName.length; i++) hash = projectName.charCodeAt(i) + ((hash << 5) - hash);
+  return FOLDER_COLORS[Math.abs(hash) % FOLDER_COLORS.length];
+}
+
+function addLink() {
+  const label = document.getElementById('link-label-input').value.trim();
+  const url = document.getElementById('link-url-input').value.trim();
+  const project = document.getElementById('link-project-input').value.trim();
+
+  if (!label || !url) {
+    if (!label) document.getElementById('link-label-input').focus();
+    else document.getElementById('link-url-input').focus();
+    return;
+  }
+
+  // Ensure url has protocol
+  const fullUrl = url.startsWith('http') ? url : 'https://' + url;
+
+  state.links.push({
+    id: 'l' + Date.now(),
+    label,
+    url: fullUrl,
+    project: project || 'General'
+  });
+
+  saveState();
+  renderLinksView();
+
+  // Clear inputs except project (so you can add multiple to same folder)
+  document.getElementById('link-label-input').value = '';
+  document.getElementById('link-url-input').value = '';
+  document.getElementById('link-label-input').focus();
+}
+
+function deleteLink(id) {
+  state.links = state.links.filter(l => l.id !== id);
+  saveState();
+  renderLinksView();
+}
+
+function toggleFolder(projectName) {
+  const el = document.getElementById('folder-' + CSS.escape(projectName));
+  if (el) el.classList.toggle('open');
+}
+
+function renderLinksView() {
+  // Populate datalist with existing project names
+  const projects = [...new Set(state.links.map(l => l.project))];
+  const datalist = document.getElementById('link-project-list');
+  if (datalist) {
+    datalist.innerHTML = projects.map(p => `<option value="${escapeHtml(p)}">`).join('');
+  }
+
+  const container = document.getElementById('links-folders');
+  if (!container) return;
+
+  if (state.links.length === 0) {
+    container.innerHTML = `<div class="links-empty">No links yet — add one above to get started.</div>`;
+    return;
+  }
+
+  // Group by project
+  const grouped = {};
+  state.links.forEach(l => {
+    if (!grouped[l.project]) grouped[l.project] = [];
+    grouped[l.project].push(l);
+  });
+
+  container.innerHTML = Object.keys(grouped).map(project => {
+    const links = grouped[project];
+    const color = getFolderColor(project);
+    const folderId = 'folder-' + project.replace(/[^a-zA-Z0-9]/g, '_');
+
+    const linkRows = links.map(l => {
+      let hostname = '';
+      try { hostname = new URL(l.url).hostname; } catch(e) {}
+      const faviconUrl = hostname ? `https://www.google.com/s2/favicons?domain=${hostname}&sz=32` : '';
+
+      return `
+        <div class="link-row">
+          ${faviconUrl
+            ? `<img class="link-favicon" src="${faviconUrl}" alt="" onerror="this.style.display='none'">`
+            : `<div class="link-favicon-placeholder"><i class="ti ti-link" style="font-size:10px;"></i></div>`}
+          <span class="link-label">${escapeHtml(l.label)}</span>
+          <a class="link-url" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(hostname || l.url)}</a>
+          <a class="link-open-btn" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">
+            <i class="ti ti-external-link" style="font-size:12px;"></i> Open
+          </a>
+          <button class="link-delete-btn" aria-label="Remove link" onclick="deleteLink('${l.id}')">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="links-folder open" id="${folderId}">
+        <div class="links-folder-header" onclick="toggleFolder('${escapeHtml(project).replace(/'/g,"\\'")}')">
+          <i class="ti ti-chevron-right links-folder-chevron"></i>
+          <span class="links-folder-swatch" style="background:${color};"></span>
+          <span class="links-folder-name">${escapeHtml(project)}</span>
+          <span class="links-folder-count">${links.length} link${links.length === 1 ? '' : 's'}</span>
+        </div>
+        <div class="links-folder-body">${linkRows}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+// Enter key on link inputs
+['link-label-input', 'link-url-input', 'link-project-input'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addLink(); }
+  });
+});
+
+/* ============== PASSWORD GATE ============== */
+function checkPassword() {
+  const input = document.getElementById('pw-input');
+  const error = document.getElementById('pw-error');
+  if (input.value === 'Thriller') {
+    sessionStorage.setItem('scw-auth', '1');
+    document.getElementById('pw-gate').style.display = 'none';
+    input.value = '';
+    error.style.display = 'none';
+  } else {
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+  }
+}
+
+// If already authenticated this session, skip the gate
+if (sessionStorage.getItem('scw-auth') === '1') {
+  document.getElementById('pw-gate').style.display = 'none';
+} else {
+  // Delay focus so fonts are loaded
+  setTimeout(() => document.getElementById('pw-input').focus(), 100);
+}
+
+loadState();
+</script>
+</body>
+</html>
