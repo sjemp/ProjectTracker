@@ -139,6 +139,34 @@
     line-height: 1.5;
   }
 
+  .sidebar-data-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-data-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .sidebar-data-btn:hover { background: var(--border-soft); color: var(--ink); }
+  .sidebar-data-btn i { font-size: 14px; }
+
   /* ===== Main ===== */
   .main {
     flex: 1;
@@ -1587,6 +1615,15 @@
   </button>
 
   <div class="sidebar-footer">
+    <div class="sidebar-data-btns">
+      <button class="sidebar-data-btn" onclick="exportData()">
+        <i class="ti ti-download"></i> Export data
+      </button>
+      <button class="sidebar-data-btn" onclick="document.getElementById('import-file-input').click()">
+        <i class="ti ti-upload"></i> Import data
+      </button>
+      <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importData(event)">
+    </div>
     Saved automatically to this browser.
   </div>
 </nav>
@@ -1968,6 +2005,57 @@ async function saveState() {
   } catch (e) {
     console.error('Save failed', e);
   }
+}
+
+/* ============== EXPORT / IMPORT ============== */
+
+function exportData() {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 1,
+    clients: state.clients,
+    tasks: state.tasks,
+    links: state.links,
+    timeLogs: state.timeLogs
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `shirls-client-work-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.clients || !parsed.tasks) {
+        alert('This doesn\'t look like a valid Shirl\'s Client Work backup file.');
+        return;
+      }
+      if (!confirm(`This will replace all your current data with the backup from ${parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleDateString() : 'this file'}. Are you sure?`)) {
+        return;
+      }
+      state.clients = parsed.clients || [];
+      state.tasks = parsed.tasks || [];
+      state.links = parsed.links || [];
+      state.timeLogs = parsed.timeLogs || [];
+      saveState();
+      renderAll();
+      alert('✓ Data imported successfully!');
+    } catch (err) {
+      alert('Could not read that file — make sure it\'s a valid backup JSON.');
+    }
+    // Reset the input so the same file can be re-imported if needed
+    event.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function seedExampleData() {
