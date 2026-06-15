@@ -607,25 +607,22 @@
   .icon-btn {
     background: none;
     border: none;
-    color: var(--ink-faint);
     cursor: pointer;
-    padding: 6px;
+    padding: 4px 8px;
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
-    font-size: 16px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
     transition: background 0.12s, color 0.12s;
   }
 
-  .icon-btn:hover { background: var(--surface-2); color: var(--ink); }
-  .icon-btn.danger:hover { color: var(--u-now-text); background: var(--u-now-bg); }
-
-  .icon-btn.edit {
-    font-size: 15px;
-    color: var(--ink-soft);
-  }
-
+  .icon-btn:hover { background: var(--surface-2); }
+  .icon-btn.edit { color: var(--ink-soft); }
   .icon-btn.edit:hover { color: var(--ink); background: var(--surface-2); }
+  .icon-btn.danger { color: var(--ink-faint); }
+  .icon-btn.danger:hover { color: var(--u-now-text); background: var(--u-now-bg); }
 
   /* status pills */
   .status-not_started { background: var(--u-optional-bg); color: var(--u-optional-text); }
@@ -2494,8 +2491,8 @@ function renderTaskCard(t) {
           <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')">
             <i class="ti ti-chevron-down"></i>
           </button>
-          <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
-          <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
+          <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')">Edit</button>
+          <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')">Delete</button>
         </div>
       </div>
       <div class="task-details-panel ${hasDetails ? 'open' : ''}" id="details-${t.id}">
@@ -2650,8 +2647,8 @@ function renderTasksGrid(container, groups) {
           <td>
             <div class="sheet-actions">
               <button class="task-details-toggle ${hasDetails ? 'open' : ''}" aria-label="Toggle details" onclick="toggleDetails('${t.id}')"><i class="ti ti-chevron-down"></i></button>
-              <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')"><i class="ti ti-edit"></i></button>
-              <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')"><i class="ti ti-trash"></i></button>
+              <button class="icon-btn edit" aria-label="Edit task" onclick="openTaskModal('${t.id}')">Edit</button>
+              <button class="icon-btn danger" aria-label="Delete task" onclick="deleteTask('${t.id}')">Delete</button>
             </div>
           </td>
         </tr>
