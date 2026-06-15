@@ -1265,6 +1265,24 @@
 
   .timer-btn-stop:hover { background: var(--u-now-text); }
 
+  .timer-btn-pause {
+    background: var(--u-soon-bg);
+    color: var(--u-soon-text);
+    border: 1.5px solid var(--u-soon);
+    border-radius: var(--radius-md);
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s;
+  }
+
+  .timer-btn-pause:hover { background: var(--u-soon); color: #fff; }
+
   .timer-btn-cancel {
     background: none;
     border: 1px solid var(--border);
@@ -1432,6 +1450,25 @@
   }
 
   .timer-log-delete:hover { color: var(--u-now-text); }
+
+  .timer-continue-btn {
+    background: var(--studio-light);
+    color: var(--studio-deep);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: background 0.1s;
+  }
+
+  .timer-continue-btn:hover { background: var(--studio); color: #fff; }
 
   .timer-empty {
     padding: 40px 24px;
@@ -1858,6 +1895,12 @@
         </button>
         <button class="timer-btn-stop" id="timer-stop-btn" onclick="timerStop()" style="display:none;">
           <i class="ti ti-player-stop-filled"></i> Stop &amp; save
+        </button>
+        <button class="timer-btn-pause" id="timer-pause-btn" onclick="timerPause()" style="display:none;">
+          <i class="ti ti-player-pause-filled"></i> Pause
+        </button>
+        <button class="timer-btn-pause" id="timer-resume-btn" onclick="timerResume()" style="display:none;">
+          <i class="ti ti-player-play-filled"></i> Resume
         </button>
         <button class="timer-btn-cancel" id="timer-cancel-btn" onclick="timerCancel()" style="display:none;">
           <i class="ti ti-x"></i> Cancel
@@ -3021,8 +3064,11 @@ function renderAll() {
 /* ============== TIMER ============== */
 
 let timerInterval = null;
-let timerStartMs = null;
+let timerStartMs = null;        // when current segment started
+let timerAccumulatedMs = 0;     // ms from previous segments (for pause)
 let timerCurrentClientId = null;
+let timerCurrentNote = '';
+let timerIsPaused = false;
 let timerGroupBy = 'project';
 
 function msToHMS(ms) {
@@ -3055,34 +3101,57 @@ function timerStart() {
   if (!sel || !sel.value) return;
 
   timerCurrentClientId = sel.value;
+  timerAccumulatedMs = 0;
+  timerIsPaused = false;
   timerStartMs = Date.now();
-
-  // Lock the client select while running
   sel.disabled = true;
 
-  document.getElementById('timer-start-btn').style.display = 'none';
-  document.getElementById('timer-stop-btn').style.display = 'inline-flex';
-  document.getElementById('timer-cancel-btn').style.display = 'inline-flex';
-  document.getElementById('timer-running-label').style.display = 'flex';
-  document.getElementById('timer-display').classList.add('running');
   document.getElementById('timer-note-input').disabled = false;
+  _timerSetRunningUI();
+  _timerTick();
+}
 
-  timerInterval = setInterval(() => {
-    const elapsed = Date.now() - timerStartMs;
-    const el = document.getElementById('timer-display');
-    if (el) el.textContent = msToHMS(elapsed);
-  }, 1000);
+function timerPause() {
+  if (!timerStartMs || timerIsPaused) return;
+  clearInterval(timerInterval);
+  timerAccumulatedMs += Date.now() - timerStartMs;
+  timerStartMs = null;
+  timerIsPaused = true;
+
+  const pauseBtn = document.getElementById('timer-pause-btn');
+  const resumeBtn = document.getElementById('timer-resume-btn');
+  const runningLabel = document.getElementById('timer-running-label');
+  if (pauseBtn) pauseBtn.style.display = 'none';
+  if (resumeBtn) resumeBtn.style.display = 'inline-flex';
+  if (runningLabel) runningLabel.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:var(--u-soon);flex-shrink:0;"></span> Paused';
+}
+
+function timerResume() {
+  if (!timerIsPaused) return;
+  timerStartMs = Date.now();
+  timerIsPaused = false;
+
+  const pauseBtn = document.getElementById('timer-pause-btn');
+  const resumeBtn = document.getElementById('timer-resume-btn');
+  const runningLabel = document.getElementById('timer-running-label');
+  if (pauseBtn) pauseBtn.style.display = 'inline-flex';
+  if (resumeBtn) resumeBtn.style.display = 'none';
+  if (runningLabel) runningLabel.innerHTML = '<span class="timer-pulse"></span> Timer running&hellip;';
+
+  _timerTick();
 }
 
 function timerStop() {
-  if (!timerStartMs) return;
+  if (timerStartMs === null && !timerIsPaused) return;
   clearInterval(timerInterval);
 
-  const endMs = Date.now();
-  const durationMs = endMs - timerStartMs;
-  const note = document.getElementById('timer-note-input').value.trim();
+  const finalMs = timerIsPaused
+    ? timerAccumulatedMs
+    : timerAccumulatedMs + (Date.now() - timerStartMs);
 
-  // Format date as YYYY-MM-DD in local time
+  if (finalMs < 1000) { timerCancel(); return; } // don't save sub-second sessions
+
+  const note = document.getElementById('timer-note-input').value.trim();
   const d = new Date();
   const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
@@ -3090,9 +3159,9 @@ function timerStop() {
     id: 'tl' + Date.now(),
     clientId: timerCurrentClientId,
     date,
-    startMs: timerStartMs,
-    endMs,
-    durationMs,
+    startMs: Date.now() - finalMs,
+    endMs: Date.now(),
+    durationMs: finalMs,
     note
   });
 
@@ -3106,9 +3175,61 @@ function timerCancel() {
   timerReset();
 }
 
+function timerContinueSession(logId) {
+  // Load a saved session back into the active timer to continue it
+  const log = state.timeLogs.find(l => l.id === logId);
+  if (!log) return;
+
+  // Remove from saved logs (it becomes active again)
+  state.timeLogs = state.timeLogs.filter(l => l.id !== logId);
+  saveState();
+
+  timerCurrentClientId = log.clientId;
+  timerAccumulatedMs = log.durationMs; // carry forward previous time
+  timerIsPaused = false;
+  timerStartMs = Date.now();
+
+  // Set UI
+  const sel = document.getElementById('timer-client-select');
+  if (sel) { sel.value = log.clientId; sel.disabled = true; }
+  const noteEl = document.getElementById('timer-note-input');
+  if (noteEl) { noteEl.value = log.note || ''; noteEl.disabled = false; }
+
+  _timerSetRunningUI();
+  _timerTick();
+  renderTimerView();
+}
+
+function _timerTick() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const elapsed = timerAccumulatedMs + (timerStartMs ? Date.now() - timerStartMs : 0);
+    const el = document.getElementById('timer-display');
+    if (el) el.textContent = msToHMS(elapsed);
+  }, 1000);
+  // immediate first tick
+  const elapsed = timerAccumulatedMs + (timerStartMs ? Date.now() - timerStartMs : 0);
+  const el = document.getElementById('timer-display');
+  if (el) el.textContent = msToHMS(elapsed);
+}
+
+function _timerSetRunningUI() {
+  document.getElementById('timer-start-btn').style.display = 'none';
+  document.getElementById('timer-stop-btn').style.display = 'inline-flex';
+  document.getElementById('timer-pause-btn').style.display = 'inline-flex';
+  document.getElementById('timer-resume-btn').style.display = 'none';
+  document.getElementById('timer-cancel-btn').style.display = 'inline-flex';
+  document.getElementById('timer-running-label').style.display = 'flex';
+  document.getElementById('timer-running-label').innerHTML = '<span class="timer-pulse"></span> Timer running&hellip;';
+  document.getElementById('timer-display').classList.add('running');
+}
+
 function timerReset() {
   timerStartMs = null;
-  timerInterval = null;
+  timerAccumulatedMs = 0;
+  timerIsPaused = false;
+  timerCurrentClientId = null;
+  clearInterval(timerInterval);
 
   const dispEl = document.getElementById('timer-display');
   if (dispEl) { dispEl.textContent = '00:00:00'; dispEl.classList.remove('running'); }
@@ -3119,14 +3240,12 @@ function timerReset() {
   const noteEl = document.getElementById('timer-note-input');
   if (noteEl) { noteEl.value = ''; noteEl.disabled = false; }
 
-  const startBtn = document.getElementById('timer-start-btn');
-  const stopBtn = document.getElementById('timer-stop-btn');
-  const cancelBtn = document.getElementById('timer-cancel-btn');
-  const runningLabel = document.getElementById('timer-running-label');
-  if (startBtn) startBtn.style.display = 'inline-flex';
-  if (stopBtn) stopBtn.style.display = 'none';
-  if (cancelBtn) cancelBtn.style.display = 'none';
-  if (runningLabel) runningLabel.style.display = 'none';
+  document.getElementById('timer-start-btn').style.display = 'inline-flex';
+  document.getElementById('timer-stop-btn').style.display = 'none';
+  document.getElementById('timer-pause-btn').style.display = 'none';
+  document.getElementById('timer-resume-btn').style.display = 'none';
+  document.getElementById('timer-cancel-btn').style.display = 'none';
+  document.getElementById('timer-running-label').style.display = 'none';
 }
 
 function deleteTimeLog(id) {
@@ -3189,6 +3308,7 @@ function renderTimerByProject(container) {
       const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       const sessionHours = log.durationMs / 3600000;
       const sessionEarned = rate ? sessionHours * rate : null;
+      const isToday = log.date === new Date().toISOString().slice(0,10);
       return `
         <div class="timer-log-row">
           <span class="timer-log-date">${dateLabel}</span>
@@ -3196,6 +3316,7 @@ function renderTimerByProject(container) {
           <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
           ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span></span>'}
           ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
+          ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
           <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
         </div>
       `;
@@ -3238,6 +3359,9 @@ function renderTimerByDate(container) {
       const clientColor = client ? CLIENT_COLORS[client.colorIndex % CLIENT_COLORS.length] : { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
       const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const isToday = log.date === new Date().toISOString().slice(0,10);
+      const rate = client && client.rate ? client.rate : 0;
+      const sessionEarned = rate ? (log.durationMs / 3600000) * rate : null;
 
       return `
         <div class="timer-log-row">
@@ -3245,6 +3369,8 @@ function renderTimerByDate(container) {
           <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
           <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
           ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span class="timer-log-note"></span>'}
+          ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
+          ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
           <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
         </div>
       `;
