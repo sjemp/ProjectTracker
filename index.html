@@ -1926,6 +1926,35 @@
 
 </main>
 
+<!-- ===== TIMER EDIT MODAL ===== -->
+<div class="modal-overlay" id="timer-edit-modal-overlay">
+  <div class="modal">
+    <h2>Edit session</h2>
+    <div class="field">
+      <label for="te-client">Client</label>
+      <select id="te-client" class="field"></select>
+    </div>
+    <div class="field">
+      <label for="te-note">What you worked on</label>
+      <input type="text" id="te-note" placeholder="Notes about this session">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="te-duration">Duration (minutes)</label>
+        <input type="number" id="te-duration" min="1" step="1" placeholder="e.g. 90">
+      </div>
+      <div class="field">
+        <label for="te-date">Date</label>
+        <input type="date" id="te-date">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeTimerEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveTimerEdit()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== TASK MODAL ===== -->
 <div class="modal-overlay" id="task-modal-overlay">
   <div class="modal">
@@ -2122,23 +2151,35 @@ function importData(event) {
 
 function seedExampleData() {
   state.clients = [
-    { id: 'c1', name: 'Evergreen Studio', colorIndex: 0, rate: 75 },
-    { id: 'c2', name: 'Emily Bouchard', colorIndex: 4, rate: 60 },
+    { id: "c1", name: "Evergreen Studio", colorIndex: 0, rate: 45 },
+    { id: "c2", name: "Emily Bouchard", colorIndex: 4, rate: 60 },
+    { id: "c1781552960737", name: "Rise and Renew", colorIndex: 3, rate: 0 },
+    { id: "c1781552983202", name: "Raised to Empower", colorIndex: 5, rate: 45 },
+    { id: "c1781552987876", name: "Beast", colorIndex: 7, rate: 80 }
   ];
   state.tasks = [
-    {
-      id: 't1', clientId: 'c1', title: 'Redesign homepage mockup',
-      desc: 'Apply the new layout direction to the homepage and prep for client review.',
-      status: 'not_started', urgency: 'now', date: addDays(0)
-    },
-    {
-      id: 't2', clientId: 'c1', title: 'Create process page in Wix',
-      desc: '', status: 'not_started', urgency: 'now', date: addDays(0)
-    },
-    {
-      id: 't3', clientId: 'c2', title: 'Add free resources to Brevo email',
-      desc: '', status: 'waiting', urgency: 'later', date: ''
-    },
+    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "wip", urgency: "now", date: "2026-06-15" },
+    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
+    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "waiting", urgency: "later", date: "" },
+    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "not_started", urgency: "now", date: "2026-06-16" },
+    { id: "t1781553034418397", clientId: "c1781552983202", title: "Swap Home Page Photo", desc: "", status: "not_started", urgency: "easy", date: "2026-06-20" },
+    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "not_started", urgency: "soon", date: "2026-06-20" },
+    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "not_started", urgency: "soon", date: "2026-06-20" },
+    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
+    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
+    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "not_started", urgency: "now", date: "2026-06-16" },
+    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "not_started", urgency: "week", date: "2026-06-20" },
+    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
+    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "not_started", urgency: "later", date: "2026-06-16" }
+  ];
+  state.links = [
+    { id: "l1781553209673", label: "Evergreen Wix", url: "https://manage.wix.com/dashboard/88a4cfac-15cf-4d40-929a-1b70c2bd8a48/setup", project: "Evergreen" },
+    { id: "l1781553229283", label: "Brevo", url: "https://www.brevo.com", project: "Emily Bouchard" },
+    { id: "l1781553249611", label: "SiteGround", url: "https://www.siteground.com", project: "Emily Bouchard" }
+  ];
+  state.timeLogs = [
+    { id: "tl1781561016858", clientId: "c1", date: "2026-06-15", startMs: 1781558563095, endMs: 1781561016858, durationMs: 2453763, note: "Home Page Edits" },
+    { id: "tl1781571832718", clientId: "c1", date: "2026-06-15", startMs: 1781571826185, endMs: 1781571832718, durationMs: 6533, note: "contact page updates" }
   ];
 }
 
@@ -3308,7 +3349,7 @@ function renderTimerByProject(container) {
       const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       const sessionHours = log.durationMs / 3600000;
       const sessionEarned = rate ? sessionHours * rate : null;
-      const isToday = log.date === new Date().toISOString().slice(0,10);
+      const isToday = log.date === (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
       return `
         <div class="timer-log-row">
           <span class="timer-log-date">${dateLabel}</span>
@@ -3317,7 +3358,8 @@ function renderTimerByProject(container) {
           ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span></span>'}
           ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
           ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
-          <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
+          <button class="icon-btn edit" onclick="openTimerEditModal('${log.id}')">Edit</button>
+          <button class="icon-btn danger" onclick="deleteTimeLog('${log.id}')">Delete</button>
         </div>
       `;
     }).join('');
@@ -3359,7 +3401,8 @@ function renderTimerByDate(container) {
       const clientColor = client ? CLIENT_COLORS[client.colorIndex % CLIENT_COLORS.length] : { bg: 'var(--border-soft)', text: 'var(--ink-soft)' };
       const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      const isToday = log.date === new Date().toISOString().slice(0,10);
+      const todayLocal = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+      const isToday = log.date === todayLocal;
       const rate = client && client.rate ? client.rate : 0;
       const sessionEarned = rate ? (log.durationMs / 3600000) * rate : null;
 
@@ -3371,7 +3414,8 @@ function renderTimerByDate(container) {
           ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span class="timer-log-note"></span>'}
           ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
           ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
-          <button class="timer-log-delete" onclick="deleteTimeLog('${log.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
+          <button class="icon-btn edit" onclick="openTimerEditModal('${log.id}')">Edit</button>
+          <button class="icon-btn danger" onclick="deleteTimeLog('${log.id}')">Delete</button>
         </div>
       `;
     }).join('');
@@ -3387,6 +3431,51 @@ function renderTimerByDate(container) {
       </div>
     `;
   }).join('');
+}
+
+/* ============== TIMER EDIT MODAL ============== */
+
+let timerEditingLogId = null;
+
+function openTimerEditModal(logId) {
+  const log = state.timeLogs.find(l => l.id === logId);
+  if (!log) return;
+  timerEditingLogId = logId;
+
+  // Populate client select
+  const sel = document.getElementById('te-client');
+  sel.innerHTML = state.clients.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  sel.value = log.clientId;
+
+  document.getElementById('te-note').value = log.note || '';
+  document.getElementById('te-duration').value = Math.round(log.durationMs / 60000);
+  document.getElementById('te-date').value = log.date;
+
+  document.getElementById('timer-edit-modal-overlay').classList.add('active');
+}
+
+function closeTimerEditModal() {
+  document.getElementById('timer-edit-modal-overlay').classList.remove('active');
+  timerEditingLogId = null;
+}
+
+function saveTimerEdit() {
+  const log = state.timeLogs.find(l => l.id === timerEditingLogId);
+  if (!log) return;
+
+  const clientId = document.getElementById('te-client').value;
+  const note = document.getElementById('te-note').value.trim();
+  const durationMin = parseFloat(document.getElementById('te-duration').value) || 0;
+  const date = document.getElementById('te-date').value;
+
+  log.clientId = clientId;
+  log.note = note;
+  log.durationMs = durationMin * 60000;
+  log.date = date;
+
+  saveState();
+  renderTimerView();
+  closeTimerEditModal();
 }
 
 // Timer group-by toggle
@@ -3521,7 +3610,10 @@ function renderLinksView() {
 // close modals on overlay click
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) overlay.classList.remove('active');
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      if (overlay.id === 'timer-edit-modal-overlay') timerEditingLogId = null;
+    }
   });
 });
 
