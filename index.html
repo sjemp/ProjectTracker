@@ -207,6 +207,24 @@
     color: var(--studio-deep);
   }
 
+  .greeting-block {
+    margin-bottom: 32px;
+  }
+
+  .greeting-line {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin: 4px 0 0;
+    line-height: 1.6;
+    max-width: 620px;
+  }
+
+  .greeting-line strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
   .greeting-summary {
     font-size: 15px;
     line-height: 1.7;
@@ -1470,6 +1488,67 @@
 
   .timer-continue-btn:hover { background: var(--studio); color: #fff; }
 
+  /* Timesheet checkbox */
+  .timesheet-check {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .timesheet-check input[type="checkbox"] { display: none; }
+
+  .timesheet-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, border-color 0.12s;
+    flex-shrink: 0;
+  }
+
+  .timesheet-check input:checked + .timesheet-box {
+    background: var(--u-done);
+    border-color: var(--u-done);
+  }
+
+  .timesheet-check input:checked + .timesheet-box::after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 7px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  .timer-log-row.invoiced {
+    background: var(--u-done-bg);
+    opacity: 0.75;
+  }
+
+  .timer-log-row.invoiced .timer-log-duration,
+  .timer-log-row.invoiced .timer-log-note {
+    text-decoration: line-through;
+    color: var(--ink-faint);
+  }
+
+  .timesheet-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    padding: 6px 18px 4px 28px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
   .timer-empty {
     padding: 40px 24px;
     text-align: center;
@@ -1487,6 +1566,42 @@
     background: var(--surface-2);
     border-bottom: 1px solid var(--border-soft);
   }
+
+  /* Day sub-blocks inside project view */
+  .timer-day-block { border-bottom: 1px solid var(--border-soft); }
+  .timer-day-block:last-child { border-bottom: none; }
+
+  .timer-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px 10px 28px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+    background: var(--surface-2);
+  }
+
+  .timer-day-header:hover { background: var(--border-soft); }
+
+  .timer-day-chevron {
+    color: var(--ink-faint);
+    font-size: 13px;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+  }
+
+  .timer-day-block.open .timer-day-chevron { transform: rotate(90deg); }
+
+  .timer-day-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+
+  .timer-day-body { display: none; }
+  .timer-day-block.open .timer-day-body { display: block; }
 
   /* ===== Modal ===== */
   .modal-overlay {
@@ -1689,9 +1804,11 @@
   <!-- ===== GREETING / TODAY VIEW ===== -->
   <section class="view active" id="view-greeting">
     <p class="greeting-date" id="today-date"></p>
-    <h1 class="greeting-headline" id="greeting-text">
-      Hello <strong>Shirley</strong>, let's get to work.
-    </h1>
+    <div class="greeting-block">
+      <h1 class="greeting-headline">Hello <strong>Shirley</strong> 🤠</h1>
+      <p class="greeting-line" id="greeting-line-1"></p>
+      <p class="greeting-line" id="greeting-line-2"></p>
+    </div>
 
     <div class="stat-row" id="stat-row"></div>
     <div class="stat-row-secondary" id="stat-row-secondary"></div>
@@ -2158,28 +2275,42 @@ function seedExampleData() {
     { id: "c1781552987876", name: "Beast", colorIndex: 7, rate: 80 }
   ];
   state.tasks = [
-    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "wip", urgency: "now", date: "2026-06-15" },
-    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
-    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "waiting", urgency: "later", date: "" },
-    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "not_started", urgency: "now", date: "2026-06-16" },
+    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "complete", urgency: "now", date: "2026-06-15" },
+    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
+    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "complete", urgency: "later", date: "" },
+    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "complete", urgency: "now", date: "2026-06-16" },
     { id: "t1781553034418397", clientId: "c1781552983202", title: "Swap Home Page Photo", desc: "", status: "not_started", urgency: "easy", date: "2026-06-20" },
-    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "not_started", urgency: "soon", date: "2026-06-20" },
-    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "not_started", urgency: "soon", date: "2026-06-20" },
-    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
-    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
-    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "not_started", urgency: "now", date: "2026-06-16" },
-    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "not_started", urgency: "week", date: "2026-06-20" },
-    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "not_started", urgency: "now", date: "2026-06-15" },
-    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "not_started", urgency: "later", date: "2026-06-16" }
+    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "complete", urgency: "soon", date: "2026-06-20" },
+    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "complete", urgency: "soon", date: "2026-06-20" },
+    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "wip", urgency: "now", date: "2026-06-15" },
+    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
+    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "not_started", urgency: "done", date: "2026-06-16" },
+    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "wip", urgency: "week", date: "2026-06-20" },
+    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
+    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "complete", urgency: "later", date: "2026-06-16" },
+    { id: "t1781921243673494", clientId: "c1781552987876", title: "Seperate/Fix CAD file", desc: "", status: "complete", urgency: "now", date: "2026-06-22" },
+    { id: "t178231631146446", clientId: "c1", title: "Process Page Edits", desc: "", status: "not_started", urgency: "week", date: "2026-06-30" },
+    { id: "t1782316340743185", clientId: "c1", title: "Service Page Draft", desc: "Create in Wix (Waiting for Copy from Jess)", status: "not_started", urgency: "later", date: "2026-06-30" }
   ];
   state.links = [
     { id: "l1781553209673", label: "Evergreen Wix", url: "https://manage.wix.com/dashboard/88a4cfac-15cf-4d40-929a-1b70c2bd8a48/setup", project: "Evergreen" },
     { id: "l1781553229283", label: "Brevo", url: "https://www.brevo.com", project: "Emily Bouchard" },
-    { id: "l1781553249611", label: "SiteGround", url: "https://www.siteground.com", project: "Emily Bouchard" }
+    { id: "l1781553249611", label: "SiteGround", url: "https://www.siteground.com", project: "Emily Bouchard" },
+    { id: "l1781729397535", label: "Employee Time Tracker", url: "https://docs.google.com/spreadsheets/d/1RL2DmKPdMU8cjrMr9oegyrFNuKi-KdsnbP9mbKlCD7M/edit?gid=1319109655#gid=1319109655", project: "Evergreen ALL" }
   ];
   state.timeLogs = [
-    { id: "tl1781561016858", clientId: "c1", date: "2026-06-15", startMs: 1781558563095, endMs: 1781561016858, durationMs: 2453763, note: "Home Page Edits" },
-    { id: "tl1781571832718", clientId: "c1", date: "2026-06-15", startMs: 1781571826185, endMs: 1781571832718, durationMs: 6533, note: "contact page updates" }
+    { id: "tl1781583817733", clientId: "c1", date: "2026-06-15", startMs: 1781580376234, endMs: 1781583817733, durationMs: 3441499, note: "Home Page Edits" },
+    { id: "tl1781594061906", clientId: "c1", date: "2026-06-16", startMs: 1781587234838, endMs: 1781594061906, durationMs: 6827068, note: "Process Page" },
+    { id: "tl1781740347393", clientId: "c1781552987876", date: "2026-06-17", startMs: 1781739345982, endMs: 1781740347393, durationMs: 1001411, note: "Converting CAD Files" },
+    { id: "tl1781751568983", clientId: "c1", date: "2026-06-17", startMs: 1781747655686, endMs: 1781751568983, durationMs: 3913297, note: "Process Page" },
+    { id: "tl1781767865626", clientId: "c1781552987876", date: "2026-06-18", startMs: 1781765673997, endMs: 1781767865626, durationMs: 2191629, note: "Cad File splitting/developing for 3d mograph software" },
+    { id: "tl1782244851243", clientId: "c1781552987876", date: "2026-06-23", startMs: 1782237786528, endMs: 1782244851243, durationMs: 7064715, note: "Cleaning Up and Separating Mesh (Blade and Steel Interior)" },
+    { id: "tl1782329061682", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782326308876, endMs: 1782329061683, durationMs: 2752807, note: "C4d Lighting Tests" },
+    { id: "tl1782330089614", clientId: "c1", date: "2026-06-24", startMs: 1782329079815, endMs: 1782330089614, durationMs: 1009799, note: "Eevee Animatic (Zoom in and spin)" },
+    { id: "tl1782360979672", clientId: "c1", date: "2026-06-24", startMs: 1782354020636, endMs: 1782360979672, durationMs: 6959036, note: "Animatic 2.0" },
+    { id: "tl1782417889214", clientId: "c1781552987876", date: "2026-06-25", startMs: 1782413322444, endMs: 1782417889214, durationMs: 4566770, note: "Animatic" },
+    { id: "tl1782431810072", clientId: "c1", date: "2026-06-25", startMs: 1782431524245, endMs: 1782431810072, durationMs: 285827, note: "Fixing CAD files (adding screw top)" },
+    { id: "tl1782512996865", clientId: "c1781552987876", date: "2026-06-26", startMs: 1782507687810, endMs: 1782512996865, durationMs: 5309055, note: "Animatics & Fixing 3D Model" }
   ];
 }
 
@@ -2383,8 +2514,7 @@ function renderGreeting() {
   `;
 
   // personalized greeting message
-  const headlineEl = document.getElementById('greeting-text');
-  headlineEl.innerHTML = buildGreetingMessage(urgentTasks, importantTasks);
+  buildGreetingMessage(urgentTasks, importantTasks);
 
 
   // Do now stack: urgent tasks (urgency = now, OR overdue), not complete
@@ -2414,39 +2544,27 @@ function renderGreeting() {
 }
 
 function buildGreetingMessage(urgentTasks, importantTasks) {
-  if (urgentTasks.length === 0 && importantTasks.length === 0) {
-    return 'Hello <strong>Shirley</strong> &mdash; nothing urgent on the desk today. Good time to get ahead.';
+  const line1El = document.getElementById('greeting-line-1');
+  const line2El = document.getElementById('greeting-line-2');
+  if (!line1El || !line2El) return;
+
+  // Line 1: Today's main tasks
+  if (urgentTasks.length === 0) {
+    line1El.innerHTML = `Today's main tasks are: <strong>nothing urgent right now!</strong> Enjoy the breathing room.`;
+  } else {
+    const taskTitles = urgentTasks.slice(0, 4).map(t => `<strong>${escapeHtml(t.title)}</strong>`);
+    const rest = urgentTasks.length > 4 ? ` <span style="color:var(--ink-faint);">+${urgentTasks.length - 4} more</span>` : '';
+    line1El.innerHTML = `Today's main tasks are: ${taskTitles.join(', ')}${rest}.`;
   }
 
-  const parts = [];
-
-  // Group urgent tasks by client
-  if (urgentTasks.length > 0) {
-    const byClient = groupTasksByClient(urgentTasks);
-    const clientPhrases = byClient.map(g => {
-      if (g.items.length === 1) {
-        return `the <strong>${escapeHtml(g.clientName)}</strong> ${describeTask(g.items[0])}`;
-      }
-      return `the <strong>${escapeHtml(g.clientName)}</strong> tasks (${g.items.length})`;
-    });
-    parts.push(`You need to lock in today to finish ${joinWithAnd(clientPhrases)}`);
+  // Line 2: Keep on radar
+  if (importantTasks.length === 0) {
+    line2El.innerHTML = '';
+  } else {
+    const taskTitles = importantTasks.slice(0, 3).map(t => `<strong>${escapeHtml(t.title)}</strong>`);
+    const rest = importantTasks.length > 3 ? ` <span style="color:var(--ink-faint);">+${importantTasks.length - 3} more</span>` : '';
+    line2El.innerHTML = `Keep these on your radar: ${taskTitles.join(', ')}${rest}.`;
   }
-
-  // Group important tasks by client, pick the soonest
-  if (importantTasks.length > 0) {
-    const byClient = groupTasksByClient(importantTasks.slice().sort(sortByDate));
-    const clientPhrases = byClient.slice(0, 2).map(g => {
-      const dateLabel = g.items[0].date ? ` (${formatDate(g.items[0].date)})` : '';
-      if (g.items.length === 1) {
-        return `the <strong>${escapeHtml(g.clientName)}</strong> ${describeTask(g.items[0])}${dateLabel}`;
-      }
-      return `the <strong>${escapeHtml(g.clientName)}</strong> tasks (${g.items.length})${dateLabel}`;
-    });
-    const prefix = parts.length > 0 ? 'Also, don\'t forget' : 'Don\'t forget';
-    parts.push(`${prefix} ${joinWithAnd(clientPhrases)} ${importantTasks.length === 1 ? 'is' : 'are'} coming up`);
-  }
-
-  return `Hello <strong>Shirley</strong>, let's get to work. ${parts.join('. ')}.`;
 }
 
 function buildGreetingSummary(urgentTasks, importantTasks, easyTasks) {
@@ -3319,7 +3437,6 @@ function renderTimerView() {
 }
 
 function renderTimerByProject(container) {
-  // Group logs by clientId
   const grouped = {};
   state.timeLogs.forEach(log => {
     if (!grouped[log.clientId]) grouped[log.clientId] = [];
@@ -3331,6 +3448,11 @@ function renderTimerByProject(container) {
     clientColors[c.id] = CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length];
   });
 
+  if (Object.keys(grouped).length === 0) {
+    container.innerHTML = `<div class="timer-empty">No sessions logged yet — start a timer above to begin tracking.</div>`;
+    return;
+  }
+
   container.innerHTML = Object.keys(grouped).map(clientId => {
     const client = getClient(clientId);
     const clientName = client ? client.name : 'Unknown client';
@@ -3340,42 +3462,69 @@ function renderTimerByProject(container) {
     const totalHours = totalMs / 3600000;
     const rate = client && client.rate ? client.rate : 0;
     const earned = rate ? (totalHours * rate) : null;
-    const blockId = 'client-' + clientId;
 
-    const rows = logs.map(log => {
-      const d = new Date(log.date + 'T00:00:00');
-      const dateLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      const sessionHours = log.durationMs / 3600000;
-      const sessionEarned = rate ? sessionHours * rate : null;
-      const isToday = log.date === (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+    // Group sessions by date within this client
+    const byDate = {};
+    logs.forEach(log => {
+      if (!byDate[log.date]) byDate[log.date] = [];
+      byDate[log.date].push(log);
+    });
+    const sortedDates = Object.keys(byDate).sort((a,b) => b.localeCompare(a));
+
+    const dayBlocks = sortedDates.map(date => {
+      const d = new Date(date + 'T00:00:00');
+      const dateLabel = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const dayLogs = byDate[date];
+      const dayTotalMs = dayLogs.reduce((sum, l) => sum + l.durationMs, 0);
+      const dayEarned = rate ? (dayTotalMs / 3600000) * rate : null;
+      const todayLocal = (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; })();
+
+      const rows = dayLogs.map(log => {
+        const startTime = new Date(log.startMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        const endTime = new Date(log.endMs).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        const sessionEarned = rate ? (log.durationMs / 3600000) * rate : null;
+        const isToday = log.date === todayLocal;
+        const invoiced = log.invoiced ? 'checked' : '';
+        const invoicedClass = log.invoiced ? 'invoiced' : '';
+        return `
+          <div class="timer-log-row ${invoicedClass}">
+            <label class="timesheet-check" title="${log.invoiced ? 'Added to invoice' : 'Not yet invoiced'}">
+              <input type="checkbox" ${invoiced} onchange="toggleInvoiced('${log.id}', this.checked)">
+              <span class="timesheet-box"></span>
+            </label>
+            <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
+            <span class="timer-log-note" style="color:var(--ink-faint);font-size:11px;font-family:'IBM Plex Mono',monospace;font-style:normal;">${startTime} – ${endTime}</span>
+            ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span></span>'}
+            ${sessionEarned !== null ? `<span style="font-size:11px;color:var(--u-done-text);font-family:'IBM Plex Mono',monospace;font-weight:500;">+$${sessionEarned.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>` : ''}
+            ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
+            <button class="icon-btn edit" onclick="openTimerEditModal('${log.id}')">Edit</button>
+            <button class="icon-btn danger" onclick="deleteTimeLog('${log.id}')">Delete</button>
+          </div>`;
+      }).join('');
+
       return `
-        <div class="timer-log-row">
-          <span class="timer-log-date">${dateLabel}</span>
-          <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
-          <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
-          ${log.note ? `<span class="timer-log-note">${escapeHtml(log.note)}</span>` : '<span></span>'}
-          ${sessionEarned !== null ? `<span style="font-size:11px; color:var(--u-done-text); font-family:'IBM Plex Mono',monospace; font-weight:500;">+$${sessionEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
-          ${isToday ? `<button class="timer-continue-btn" onclick="timerContinueSession('${log.id}')"><i class="ti ti-player-play-filled" style="font-size:11px;"></i> Continue</button>` : ''}
-          <button class="icon-btn edit" onclick="openTimerEditModal('${log.id}')">Edit</button>
-          <button class="icon-btn danger" onclick="deleteTimeLog('${log.id}')">Delete</button>
-        </div>
-      `;
+        <div class="timer-day-block" id="tdb-${clientId}-${date}">
+          <div class="timer-day-header" onclick="this.parentElement.classList.toggle('open')">
+            <i class="ti ti-chevron-right timer-day-chevron"></i>
+            <span class="timer-day-label">${dateLabel}</span>
+            <span class="timer-project-total" style="font-size:12px;">${msToFriendly(dayTotalMs)}</span>
+            ${dayEarned !== null ? `<span class="timer-project-money" style="font-size:11px;">~$${dayEarned.toLocaleString('en-US',{maximumFractionDigits:0})}</span>` : ''}
+          </div>
+          <div class="timer-day-body"><div class="timesheet-col-label">Timesheet</div>${rows}</div>
+        </div>`;
     }).join('');
 
     return `
-      <div class="timer-project-block open" id="tpb-${clientId}">
+      <div class="timer-project-block" id="tpb-${clientId}">
         <div class="timer-project-header" onclick="toggleTimerProject('${clientId}')">
           <i class="ti ti-chevron-right timer-project-chevron"></i>
-          <span class="timer-project-swatch" style="background:${color.bg}; border: 1.5px solid ${color.text}40;"></span>
+          <span class="timer-project-swatch" style="background:${color.bg}; border:1.5px solid ${color.text}40;"></span>
           <span class="timer-project-name">${escapeHtml(clientName)}</span>
           <span class="timer-project-total">${msToFriendly(totalMs)}</span>
-          ${earned !== null ? `<span class="timer-project-money">~$${(earned).toLocaleString('en-US', {maximumFractionDigits: 0})}</span>` : ''}
+          ${earned !== null ? `<span class="timer-project-money">~$${earned.toLocaleString('en-US',{maximumFractionDigits:0})}</span>` : ''}
         </div>
-        <div class="timer-project-body">${rows}</div>
-      </div>
-    `;
+        <div class="timer-project-body">${dayBlocks}</div>
+      </div>`;
   }).join('');
 }
 
@@ -3407,7 +3556,11 @@ function renderTimerByDate(container) {
       const sessionEarned = rate ? (log.durationMs / 3600000) * rate : null;
 
       return `
-        <div class="timer-log-row">
+        <div class="timer-log-row ${log.invoiced ? 'invoiced' : ''}">
+          <label class="timesheet-check" title="${log.invoiced ? 'Added to invoice' : 'Not yet invoiced'}">
+            <input type="checkbox" ${log.invoiced ? 'checked' : ''} onchange="toggleInvoiced('${log.id}', this.checked)">
+            <span class="timesheet-box"></span>
+          </label>
           <span class="sheet-client-pill" style="background:${clientColor.bg}; color:${clientColor.text}; font-size:11px; padding:2px 8px; border-radius:999px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">${escapeHtml(clientName)}</span>
           <span class="timer-log-duration">${msToFriendly(log.durationMs)}</span>
           <span class="timer-log-note" style="color: var(--ink-faint); font-size: 11px; font-family: 'IBM Plex Mono', monospace; font-style: normal;">${startTime} – ${endTime}</span>
@@ -3421,16 +3574,25 @@ function renderTimerByDate(container) {
     }).join('');
 
     return `
-      <div class="timer-project-block open" id="tpb-date-${date}">
+      <div class="timer-project-block" id="tpb-date-${date}">
         <div class="timer-project-header" onclick="this.parentElement.classList.toggle('open')">
           <i class="ti ti-chevron-right timer-project-chevron"></i>
           <span class="timer-project-name">${dateLabel}</span>
           <span class="timer-project-total">${msToFriendly(totalMs)} total</span>
         </div>
-        <div class="timer-project-body">${rows}</div>
+        <div class="timer-project-body"><div class="timesheet-col-label">Timesheet</div>${rows}</div>
       </div>
     `;
   }).join('');
+}
+
+function toggleInvoiced(logId, checked) {
+  const log = state.timeLogs.find(l => l.id === logId);
+  if (!log) return;
+  log.invoiced = checked;
+  saveState();
+  const row = document.querySelector(`input[onchange="toggleInvoiced('${logId}', this.checked)"]`)?.closest('.timer-log-row');
+  if (row) row.classList.toggle('invoiced', checked);
 }
 
 /* ============== TIMER EDIT MODAL ============== */
