@@ -9,51 +9,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #FBF1E9;
+    --paper: #EDF4FA;
     --surface: #FFFFFF;
-    --surface-2: #FDF6EF;
-    --ink: #3A2E2A;
-    --ink-soft: #8A736C;
-    --ink-faint: #C7B5AD;
-    --border: #F0DDD3;
-    --border-soft: #F7E9DE;
-    --studio: #E08A4F;
-    --studio-light: #FDEBDC;
-    --studio-deep: #B3582E;
+    --surface-2: #F4F9FD;
+    --ink: #1A2A3A;
+    --ink-soft: #5B7A95;
+    --ink-faint: #A8BFD0;
+    --border: #CFE3F1;
+    --border-soft: #E0EEF7;
+    --studio: #5F86A6;
+    --studio-light: #DDE9F3;
+    --studio-deep: #243A5E;
 
-    /* Urgency palette - warm sunset: coral red, orange, gold, teal, sky blue, soft pink, sage green */
-    --u-now: #E5673E;
-    --u-now-bg: #FCE5DB;
-    --u-now-text: #A8401E;
+    /* Urgency palette — blue-toned but still distinct */
+    --u-now: #D94F4F;
+    --u-now-bg: #FAEAEA;
+    --u-now-text: #8B2020;
 
-    --u-soon: #F0A630;
-    --u-soon-bg: #FCEED2;
-    --u-soon-text: #95620E;
+    --u-soon: #E08A4F;
+    --u-soon-bg: #FAEEDE;
+    --u-soon-text: #7A4010;
 
-    --u-week: #F6C667;
-    --u-week-bg: #FDF3DE;
-    --u-week-text: #95620E;
+    --u-week: #C9A84C;
+    --u-week-bg: #FAF4DE;
+    --u-week-text: #7A5C10;
 
-    --u-later: #E893A8;
-    --u-later-bg: #FCEAEF;
-    --u-later-text: #A1405A;
+    --u-later: #8B95D4;
+    --u-later-bg: #ECEEF8;
+    --u-later-text: #353F80;
 
-    --u-easy: #6FAEC4;
-    --u-easy-bg: #E4F1F5;
-    --u-easy-text: #1F6A82;
+    --u-easy: #8FB6D4;
+    --u-easy-bg: #DDE9F3;
+    --u-easy-text: #1F4F7A;
 
-    --u-optional: #C2B6AE;
-    --u-optional-bg: #F4ECE6;
-    --u-optional-text: #7A6760;
+    --u-optional: #A0B5C5;
+    --u-optional-bg: #E8EFF4;
+    --u-optional-text: #3A5570;
 
-    --u-done: #8FB89C;
-    --u-done-bg: #E7F1E9;
-    --u-done-text: #4A7B5A;
+    --u-done: #6AAF8A;
+    --u-done-bg: #E2F2EA;
+    --u-done-text: #2A6645;
 
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 16px;
-    --shadow-soft: 0 1px 2px rgba(58,46,42,0.04), 0 2px 8px rgba(58,46,42,0.04);
+    --shadow-soft: 0 1px 2px rgba(26,42,58,0.04), 0 2px 8px rgba(26,42,58,0.05);
   }
 
   * { box-sizing: border-box; }
@@ -130,6 +130,50 @@
   }
 
   .nav-item i { font-size: 18px; }
+
+  .nav-item.artistsway {
+    margin-top: 12px;
+    background: var(--studio-deep);
+    color: #fff;
+    border: 1px solid var(--studio-deep);
+    font-style: italic;
+  }
+
+  .nav-item.artistsway:hover {
+    background: var(--studio);
+    color: #fff;
+    border-color: var(--studio);
+  }
+
+  .nav-item.artistsway.active {
+    background: var(--studio);
+    color: #fff;
+    border-color: var(--studio);
+  }
+
+  .nav-item.artistsway i {
+    color: #fff;
+  }
+
+  .nav-item.artistsway-sub {
+    background: var(--studio-light);
+    color: var(--studio-deep);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    padding: 8px 12px 8px 22px;
+    margin-top: 2px;
+  }
+
+  .nav-item.artistsway-sub:hover {
+    background: var(--border-soft);
+    color: var(--studio-deep);
+  }
+
+  .nav-item.artistsway-sub.active {
+    background: var(--studio-light);
+    color: var(--studio-deep);
+    border-color: var(--studio);
+  }
 
   .sidebar-footer {
     margin-top: auto;
@@ -1603,6 +1647,259 @@
   .timer-day-body { display: none; }
   .timer-day-block.open .timer-day-body { display: block; }
 
+  /* ===== Artist's Way ===== */
+  .aw-header {
+    background: var(--studio-deep);
+    border: 1px solid var(--studio-deep);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .aw-week-selector { flex-shrink: 0; }
+
+  .aw-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+    margin: 0 0 6px;
+  }
+
+  .aw-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 6px;
+    font-style: italic;
+  }
+
+  .aw-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+  }
+
+  .aw-type-toggle {
+    display: flex;
+    gap: 10px;
+  }
+
+  .aw-type-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+
+  .aw-type-btn:hover {
+    border-color: var(--studio);
+    color: var(--studio-deep);
+  }
+
+  .aw-type-btn.active {
+    background: var(--studio-deep);
+    border-color: var(--studio-deep);
+    color: #fff;
+  }
+
+  /* AW Checklist */
+  .aw-week-block {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .aw-week-block.this-week {
+    border-color: var(--studio);
+    border-width: 2px;
+  }
+
+  .aw-week-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+
+  .aw-week-heading:hover { background: var(--surface-2); }
+
+  .aw-week-chevron {
+    color: var(--ink-faint);
+    font-size: 14px;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+  }
+
+  .aw-week-block.collapsed .aw-week-chevron { transform: rotate(-90deg); }
+  .aw-week-block.collapsed .aw-week-body { display: none; }
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+
+  .aw-week-block.this-week .aw-week-title { color: var(--studio-deep); }
+
+  .aw-this-week-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--studio-deep);
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .aw-week-progress {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .aw-week-body { border-top: 1px solid var(--border-soft); }
+
+  .aw-task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.1s;
+  }
+
+  .aw-task-row:last-child { border-bottom: none; }
+  .aw-task-row:hover { background: var(--surface-2); }
+
+  .aw-task-row.done-task { opacity: 0.55; }
+  .aw-task-row.done-task .aw-task-title { text-decoration: line-through; color: var(--ink-faint); }
+
+  .aw-check {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .aw-check input[type="checkbox"] { display: none; }
+
+  .aw-check-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, border-color 0.12s;
+    flex-shrink: 0;
+  }
+
+  .aw-check input:checked + .aw-check-box {
+    background: var(--studio-deep);
+    border-color: var(--studio-deep);
+  }
+
+  .aw-check input:checked + .aw-check-box::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  .aw-task-info { flex: 1; min-width: 0; }
+
+  .aw-task-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 3px;
+    line-height: 1.4;
+  }
+
+  .aw-task-details {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .aw-task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .aw-type-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .aw-type-writing {
+    background: var(--u-easy-bg);
+    color: var(--u-easy-text);
+  }
+
+  .aw-type-activity {
+    background: var(--u-soon-bg);
+    color: var(--u-soon-text);
+  }
+
+  .aw-delete-btn {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    transition: color 0.1s;
+  }
+
+  .aw-delete-btn:hover { color: var(--u-now-text); }
+
+  .aw-empty-week {
+    padding: 20px 18px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
   /* ===== Modal ===== */
   .modal-overlay {
     position: fixed;
@@ -1730,33 +2027,33 @@
 <!-- ===== PASSWORD GATE ===== -->
 <div id="pw-gate" style="
   position: fixed; inset: 0; z-index: 9999;
-  background: #FBF1E9;
+  background: #EDF4FA;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Sora', sans-serif;
 ">
   <div style="
     background: #fff;
-    border: 1px solid #F0DDD3;
+    border: 1px solid #CFE3F1;
     border-radius: 16px;
     padding: 40px 44px;
     width: 100%; max-width: 360px;
-    box-shadow: 0 8px 32px rgba(58,46,42,0.10);
+    box-shadow: 0 8px 32px rgba(26,42,58,0.10);
     text-align: center;
   ">
-    <div style="width:40px; height:40px; background:#B3582E; border-radius:10px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center;">
+    <div style="width:40px; height:40px; background:#243A5E; border-radius:10px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
-    <h1 style="font-size:20px; font-weight:600; color:#3A2E2A; margin:0 0 4px;">Shirl's Client Work</h1>
-    <p style="font-size:13px; color:#8A736C; margin:0 0 24px;">Enter your password to continue.</p>
+    <h1 style="font-size:20px; font-weight:600; color:#1A2A3A; margin:0 0 4px;">Shirl's Client Work</h1>
+    <p style="font-size:13px; color:#5B7A95; margin:0 0 24px;">Enter your password to continue.</p>
     <input id="pw-input" type="password" placeholder="Password" style="
       width:100%; font-family:'Sora',sans-serif; font-size:14px;
-      color:#3A2E2A; background:#FDF6EF;
-      border:1px solid #F0DDD3; border-radius:10px;
+      color:#1A2A3A; background:#F4F9FD;
+      border:1px solid #CFE3F1; border-radius:10px;
       padding:11px 14px; box-sizing:border-box; margin-bottom:10px;
     " onkeydown="if(event.key==='Enter') checkPassword()">
-    <p id="pw-error" style="font-size:12px; color:#E5673E; margin:0 0 10px; display:none;">Incorrect password — try again.</p>
+    <p id="pw-error" style="font-size:12px; color:#D94F4F; margin:0 0 10px; display:none;">Incorrect password — try again.</p>
     <button onclick="checkPassword()" style="
-      width:100%; background:#B3582E; color:#fff; border:none;
+      width:100%; background:#243A5E; color:#fff; border:none;
       border-radius:10px; padding:12px; font-size:14px; font-weight:600;
       font-family:'Sora',sans-serif; cursor:pointer;
     ">Unlock</button>
@@ -1783,6 +2080,12 @@
   </button>
   <button class="nav-item" data-view="timer" onclick="switchView('timer')">
     <i class="ti ti-clock"></i> Timer
+  </button>
+  <button class="nav-item artistsway" data-view="artistsway" onclick="switchView('artistsway')">
+    <i class="ti ti-feather"></i> The Artist's Way
+  </button>
+  <button class="nav-item artistsway-sub" data-view="aw-addtask" onclick="switchView('aw-addtask')">
+    <i class="ti ti-plus"></i> Add Task
   </button>
 
   <div class="sidebar-footer">
@@ -2041,7 +2344,143 @@
     </div>
   </section>
 
+<!-- ===== ARTIST'S WAY VIEW ===== -->
+  <section class="view" id="view-artistsway">
+    <div class="aw-header">
+      <div class="aw-title-block">
+        <p class="aw-eyebrow">Julia Cameron</p>
+        <h1 class="aw-title">The Artist's Way</h1>
+        <p class="aw-subtitle">Your creative recovery journal — tasks, reflections, and check-ins.</p>
+      </div>
+      <div class="aw-week-selector">
+        <label style="font-size:12px; color:rgba(255,255,255,0.7); font-weight:500; margin-bottom:6px; display:block;">Current week</label>
+        <select id="aw-current-week" onchange="setAwCurrentWeek(this.value)" style="font-family:'Sora',sans-serif; font-size:13px; font-weight:600; color:var(--studio-deep); background:#fff; border:none; border-radius:var(--radius-md); padding:8px 12px; cursor:pointer; min-width:220px;">
+          <option value="1">Week 1</option>
+          <option value="2">Week 2</option>
+          <option value="3">Week 3</option>
+          <option value="4">Week 4</option>
+          <option value="5">Week 5</option>
+          <option value="6">Week 6</option>
+          <option value="7">Week 7</option>
+          <option value="8">Week 8</option>
+          <option value="9">Week 9</option>
+          <option value="10">Week 10</option>
+          <option value="11">Week 11</option>
+          <option value="12">Week 12</option>
+        </select>
+      </div>
+    </div>
+    <div id="aw-content" style="margin-top: 32px;"></div>
+  </section>
+
+<!-- ===== ARTIST'S WAY ADD TASK VIEW ===== -->
+  <section class="view" id="view-aw-addtask">
+    <div class="aw-header">
+      <div class="aw-title-block">
+        <p class="aw-eyebrow">Julia Cameron</p>
+        <h1 class="aw-title">Add a Task</h1>
+        <p class="aw-subtitle">Type it out — the act of writing it helps it stick.</p>
+      </div>
+    </div>
+
+    <form id="aw-addtask-form" style="max-width: 520px; margin-top: 32px;">
+
+      <div class="field">
+        <label for="aw-week">Week</label>
+        <select id="aw-week">
+          <option value="1">Week 1 — Recovering a Sense of Safety</option>
+          <option value="2">Week 2 — Recovering a Sense of Identity</option>
+          <option value="3">Week 3 — Recovering a Sense of Power</option>
+          <option value="4">Week 4 — Recovering a Sense of Integrity</option>
+          <option value="5">Week 5 — Recovering a Sense of Possibility</option>
+          <option value="6">Week 6 — Recovering a Sense of Abundance</option>
+          <option value="7">Week 7 — Recovering a Sense of Connection</option>
+          <option value="8">Week 8 — Recovering a Sense of Strength</option>
+          <option value="9">Week 9 — Recovering a Sense of Compassion</option>
+          <option value="10">Week 10 — Recovering a Sense of Self-Protection</option>
+          <option value="11">Week 11 — Recovering a Sense of Autonomy</option>
+          <option value="12">Week 12 — Recovering a Sense of Faith</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Type</label>
+        <div class="aw-type-toggle">
+          <button type="button" class="aw-type-btn active" data-awtype="writing" onclick="selectAwType('writing')">
+            <i class="ti ti-pencil"></i> Writing
+          </button>
+          <button type="button" class="aw-type-btn" data-awtype="activity" onclick="selectAwType('activity')">
+            <i class="ti ti-palette"></i> Activity
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="aw-title-input">Title</label>
+        <input type="text" id="aw-title-input" placeholder="e.g. Morning Pages, Artist Date...">
+      </div>
+
+      <div class="field">
+        <label for="aw-details-input">Details <span style="color:var(--ink-faint); font-weight:400;">(optional)</span></label>
+        <textarea id="aw-details-input" placeholder="Any notes, prompts, or reflections..." style="min-height: 100px;"></textarea>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px; margin-top: 4px;">
+        <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Add task</button>
+        <p id="aw-success" style="display:none; font-size:13px; color:var(--u-done-text); margin:0;"><i class="ti ti-check"></i> Task added!</p>
+      </div>
+
+    </form>
+  </section>
+
 </main>
+
+<!-- ===== ARTIST'S WAY EDIT MODAL ===== -->
+<div class="modal-overlay" id="aw-edit-modal-overlay">
+  <div class="modal">
+    <h2>Edit task</h2>
+    <div class="field">
+      <label for="aw-edit-week">Week</label>
+      <select id="aw-edit-week">
+        <option value="1">Week 1 — Recovering a Sense of Safety</option>
+        <option value="2">Week 2 — Recovering a Sense of Identity</option>
+        <option value="3">Week 3 — Recovering a Sense of Power</option>
+        <option value="4">Week 4 — Recovering a Sense of Integrity</option>
+        <option value="5">Week 5 — Recovering a Sense of Possibility</option>
+        <option value="6">Week 6 — Recovering a Sense of Abundance</option>
+        <option value="7">Week 7 — Recovering a Sense of Connection</option>
+        <option value="8">Week 8 — Recovering a Sense of Strength</option>
+        <option value="9">Week 9 — Recovering a Sense of Compassion</option>
+        <option value="10">Week 10 — Recovering a Sense of Self-Protection</option>
+        <option value="11">Week 11 — Recovering a Sense of Autonomy</option>
+        <option value="12">Week 12 — Recovering a Sense of Faith</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <div class="aw-type-toggle">
+        <button type="button" class="aw-type-btn active" data-awtype-edit="writing" onclick="selectAwTypeEdit('writing')">
+          <i class="ti ti-pencil"></i> Writing
+        </button>
+        <button type="button" class="aw-type-btn" data-awtype-edit="activity" onclick="selectAwTypeEdit('activity')">
+          <i class="ti ti-palette"></i> Activity
+        </button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="aw-edit-title">Title</label>
+      <input type="text" id="aw-edit-title" placeholder="Task title">
+    </div>
+    <div class="field">
+      <label for="aw-edit-details">Details <span style="color:var(--ink-faint); font-weight:400;">(optional)</span></label>
+      <textarea id="aw-edit-details" style="min-height:80px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeAwEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveAwEdit()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== TIMER EDIT MODAL ===== -->
 <div class="modal-overlay" id="timer-edit-modal-overlay">
@@ -2177,7 +2616,9 @@ let state = {
   clients: [],
   tasks: [],
   links: [],
-  timeLogs: []   // { id, clientId, date, startMs, endMs, durationMs, note }
+  timeLogs: [],   // { id, clientId, date, startMs, endMs, durationMs, note }
+  awTasks: [],    // { id, week, type, title, details, done, createdAt }
+  awCurrentWeek: 1
 };
 
 let editingTaskId = null;
@@ -2197,6 +2638,8 @@ function loadState() {
       state.tasks = parsed.tasks || [];
       state.links = parsed.links || [];
       state.timeLogs = parsed.timeLogs || [];
+      state.awTasks = parsed.awTasks || [];
+      state.awCurrentWeek = parsed.awCurrentWeek || 1;
     }
   } catch (e) {
     seedExampleData();
@@ -2272,45 +2715,61 @@ function seedExampleData() {
     { id: "c2", name: "Emily Bouchard", colorIndex: 4, rate: 60 },
     { id: "c1781552960737", name: "Rise and Renew", colorIndex: 3, rate: 0 },
     { id: "c1781552983202", name: "Raised to Empower", colorIndex: 5, rate: 45 },
-    { id: "c1781552987876", name: "Beast", colorIndex: 7, rate: 80 }
+    { id: "c1781552987876", name: "Beast", colorIndex: 7, rate: 80 },
+    { id: "c1782620985438", name: "Sandwich Vision", colorIndex: 6, rate: 0 }
   ];
   state.tasks = [
-    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "complete", urgency: "now", date: "2026-06-15" },
-    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
-    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "complete", urgency: "later", date: "" },
-    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "complete", urgency: "now", date: "2026-06-16" },
-    { id: "t1781553034418397", clientId: "c1781552983202", title: "Swap Home Page Photo", desc: "", status: "not_started", urgency: "easy", date: "2026-06-20" },
-    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "complete", urgency: "soon", date: "2026-06-20" },
-    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "complete", urgency: "soon", date: "2026-06-20" },
-    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "wip", urgency: "now", date: "2026-06-15" },
-    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
-    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "not_started", urgency: "done", date: "2026-06-16" },
-    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "wip", urgency: "week", date: "2026-06-20" },
-    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "complete", urgency: "now", date: "2026-06-15" },
-    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "complete", urgency: "later", date: "2026-06-16" },
-    { id: "t1781921243673494", clientId: "c1781552987876", title: "Seperate/Fix CAD file", desc: "", status: "complete", urgency: "now", date: "2026-06-22" },
-    { id: "t178231631146446", clientId: "c1", title: "Process Page Edits", desc: "", status: "not_started", urgency: "week", date: "2026-06-30" },
-    { id: "t1782316340743185", clientId: "c1", title: "Service Page Draft", desc: "Create in Wix (Waiting for Copy from Jess)", status: "not_started", urgency: "later", date: "2026-06-30" }
+    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "complete", urgency: "done", date: "2026-06-15" },
+    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
+    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "complete", urgency: "done", date: "" },
+    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "complete", urgency: "done", date: "2026-06-16" },
+    { id: "t1781553034418397", clientId: "c1781552983202", title: "Swap Home Page Photo", desc: "", status: "complete", urgency: "done", date: "2026-06-20" },
+    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "complete", urgency: "done", date: "2026-06-20" },
+    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "complete", urgency: "done", date: "2026-06-20" },
+    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
+    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
+    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "complete", urgency: "done", date: "2026-06-16" },
+    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "complete", urgency: "done", date: "2026-06-20" },
+    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
+    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "complete", urgency: "done", date: "2026-06-16" },
+    { id: "t1781921243673494", clientId: "c1781552987876", title: "Seperate/Fix CAD file", desc: "", status: "complete", urgency: "done", date: "2026-06-22" },
+    { id: "t178231631146446", clientId: "c1", title: "Process Page Edits", desc: "", status: "not_started", urgency: "soon", date: "2026-06-30" },
+    { id: "t1782316340743185", clientId: "c1", title: "Service Page Draft", desc: "Create in Wix (Waiting for Copy from Jess)", status: "not_started", urgency: "soon", date: "2026-07-03" },
+    { id: "t1782621004068406", clientId: "c1782620985438", title: "Email Jose Stereoscopic Video", desc: "", status: "complete", urgency: "done", date: "2026-06-22" },
+    { id: "t1782680248113252", clientId: "c1781552987876", title: "More Stylized Test Renders", desc: "", status: "complete", urgency: "done", date: "2026-06-29" },
+    { id: "t1782768078481884", clientId: "c1781552987876", title: "Storyboard/Inspo Gathering for New Round of Mockups", desc: "See notes from the meeting: https://docs.google.com/document/d/1bNw47mjck55AZ-kqA11G_Zx2CtzXevwhCA99jdsIfK4/edit?usp=sharing", status: "not_started", urgency: "soon", date: "2026-07-02" },
+    { id: "t1782778450543862", clientId: "c1", title: "Quick Home Page Edits", desc: "", status: "not_started", urgency: "week", date: "2026-07-03" },
+    { id: "t1782863496846617", clientId: "c1782620985438", title: "Re-Render Project Test in c4d", desc: "Look up how to correctly render it in stereoscopic view", status: "not_started", urgency: "soon", date: "2026-07-02" }
   ];
   state.links = [
     { id: "l1781553209673", label: "Evergreen Wix", url: "https://manage.wix.com/dashboard/88a4cfac-15cf-4d40-929a-1b70c2bd8a48/setup", project: "Evergreen" },
     { id: "l1781553229283", label: "Brevo", url: "https://www.brevo.com", project: "Emily Bouchard" },
     { id: "l1781553249611", label: "SiteGround", url: "https://www.siteground.com", project: "Emily Bouchard" },
-    { id: "l1781729397535", label: "Employee Time Tracker", url: "https://docs.google.com/spreadsheets/d/1RL2DmKPdMU8cjrMr9oegyrFNuKi-KdsnbP9mbKlCD7M/edit?gid=1319109655#gid=1319109655", project: "Evergreen ALL" }
+    { id: "l1781729397535", label: "Employee Time Tracker", url: "https://docs.google.com/spreadsheets/d/1RL2DmKPdMU8cjrMr9oegyrFNuKi-KdsnbP9mbKlCD7M/edit?gid=1319109655#gid=1319109655", project: "Evergreen ALL" },
+    { id: "l1782621328764", label: "Invoice Generator", url: "https://invoice-generator.com", project: "BEAST" }
   ];
   state.timeLogs = [
-    { id: "tl1781583817733", clientId: "c1", date: "2026-06-15", startMs: 1781580376234, endMs: 1781583817733, durationMs: 3441499, note: "Home Page Edits" },
-    { id: "tl1781594061906", clientId: "c1", date: "2026-06-16", startMs: 1781587234838, endMs: 1781594061906, durationMs: 6827068, note: "Process Page" },
+    { id: "tl1781583817733", clientId: "c1", date: "2026-06-15", startMs: 1781580376234, endMs: 1781583817733, durationMs: 3441499, note: "Home Page Edits", invoiced: true },
+    { id: "tl1781594061906", clientId: "c1", date: "2026-06-16", startMs: 1781587234838, endMs: 1781594061906, durationMs: 6827068, note: "Process Page", invoiced: true },
     { id: "tl1781740347393", clientId: "c1781552987876", date: "2026-06-17", startMs: 1781739345982, endMs: 1781740347393, durationMs: 1001411, note: "Converting CAD Files" },
-    { id: "tl1781751568983", clientId: "c1", date: "2026-06-17", startMs: 1781747655686, endMs: 1781751568983, durationMs: 3913297, note: "Process Page" },
+    { id: "tl1781751568983", clientId: "c1", date: "2026-06-17", startMs: 1781747655686, endMs: 1781751568983, durationMs: 3913297, note: "Process Page", invoiced: true },
     { id: "tl1781767865626", clientId: "c1781552987876", date: "2026-06-18", startMs: 1781765673997, endMs: 1781767865626, durationMs: 2191629, note: "Cad File splitting/developing for 3d mograph software" },
     { id: "tl1782244851243", clientId: "c1781552987876", date: "2026-06-23", startMs: 1782237786528, endMs: 1782244851243, durationMs: 7064715, note: "Cleaning Up and Separating Mesh (Blade and Steel Interior)" },
     { id: "tl1782329061682", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782326308876, endMs: 1782329061683, durationMs: 2752807, note: "C4d Lighting Tests" },
-    { id: "tl1782330089614", clientId: "c1", date: "2026-06-24", startMs: 1782329079815, endMs: 1782330089614, durationMs: 1009799, note: "Eevee Animatic (Zoom in and spin)" },
-    { id: "tl1782360979672", clientId: "c1", date: "2026-06-24", startMs: 1782354020636, endMs: 1782360979672, durationMs: 6959036, note: "Animatic 2.0" },
+    { id: "tl1782330089614", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782329079815, endMs: 1782330089614, durationMs: 1020000, note: "Eevee Animatic (Zoom in and spin)" },
+    { id: "tl1782360979672", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782354020636, endMs: 1782360979672, durationMs: 6960000, note: "Animatic 2.0" },
     { id: "tl1782417889214", clientId: "c1781552987876", date: "2026-06-25", startMs: 1782413322444, endMs: 1782417889214, durationMs: 4566770, note: "Animatic" },
-    { id: "tl1782431810072", clientId: "c1", date: "2026-06-25", startMs: 1782431524245, endMs: 1782431810072, durationMs: 285827, note: "Fixing CAD files (adding screw top)" },
-    { id: "tl1782512996865", clientId: "c1781552987876", date: "2026-06-26", startMs: 1782507687810, endMs: 1782512996865, durationMs: 5309055, note: "Animatics & Fixing 3D Model" }
+    { id: "tl1782431810072", clientId: "c1781552987876", date: "2026-06-25", startMs: 1782431524245, endMs: 1782431810072, durationMs: 300000, note: "Fixing CAD files (adding screw top)" },
+    { id: "tl1782512996865", clientId: "c1781552987876", date: "2026-06-26", startMs: 1782507687810, endMs: 1782512996865, durationMs: 5309055, note: "Animatics & Fixing 3D Model" },
+    { id: "tl1782763229715", clientId: "c1781552987876", date: "2026-06-29", startMs: 1782760157460, endMs: 1782763229715, durationMs: 3072255, note: "More test stills and meeting prep" },
+    { id: "tl1782779944374", clientId: "c1", date: "2026-06-29", startMs: 1782779048065, endMs: 1782779944374, durationMs: 896309, note: "Quick Home Page Edits & Start of Process Page Edits" },
+    { id: "tl1782857501862", clientId: "c1", date: "2026-06-30", startMs: 1782853370574, endMs: 1782857501862, durationMs: 4131288, note: "Process Page Edits" },
+    { id: "tl1782864350637", clientId: "c1781552987876", date: "2026-06-30", startMs: 1782862909902, endMs: 1782864350637, durationMs: 1440735, note: "New Animation References/Storyboarding" }
+  ];
+  state.awCurrentWeek = 1;
+  state.awTasks = [
+    { id: "aw-test-1", week: 1, type: "writing", title: "Morning Pages", details: "Write 3 pages longhand, stream of consciousness, first thing in the morning.", done: false, createdAt: new Date().toISOString() },
+    { id: "aw-test-2", week: 1, type: "activity", title: "Artist Date", details: "Take your inner artist on a solo outing — a museum, a walk, a new coffee shop.", done: false, createdAt: new Date().toISOString() }
   ];
 }
 
@@ -3218,7 +3677,197 @@ function renderAll() {
   populateAddTaskForm();
   renderLinksView();
   renderTimerView();
+  renderAwView();
 }
+
+/* ============== ARTIST'S WAY ============== */
+
+let selectedAwType = 'writing';
+
+const AW_WEEK_TITLES = [
+  '', // index 0 unused
+  'Week 1 — Recovering a Sense of Safety',
+  'Week 2 — Recovering a Sense of Identity',
+  'Week 3 — Recovering a Sense of Power',
+  'Week 4 — Recovering a Sense of Integrity',
+  'Week 5 — Recovering a Sense of Possibility',
+  'Week 6 — Recovering a Sense of Abundance',
+  'Week 7 — Recovering a Sense of Connection',
+  'Week 8 — Recovering a Sense of Strength',
+  'Week 9 — Recovering a Sense of Compassion',
+  'Week 10 — Recovering a Sense of Self-Protection',
+  'Week 11 — Recovering a Sense of Autonomy',
+  'Week 12 — Recovering a Sense of Faith',
+];
+
+function setAwCurrentWeek(week) {
+  state.awCurrentWeek = parseInt(week);
+  saveState();
+  renderAwView();
+}
+
+function toggleAwTask(id, checked) {
+  const task = (state.awTasks || []).find(t => t.id === id);
+  if (!task) return;
+  task.done = checked;
+  saveState();
+  // Lightweight update — just toggle class without full re-render
+  const row = document.getElementById('aw-row-' + id);
+  if (row) row.classList.toggle('done-task', checked);
+}
+
+function deleteAwTask(id) {
+  state.awTasks = (state.awTasks || []).filter(t => t.id !== id);
+  saveState();
+  renderAwView();
+}
+
+let awEditingId = null;
+let selectedAwTypeEdit = 'writing';
+
+function openAwEditModal(id) {
+  const task = (state.awTasks || []).find(t => t.id === id);
+  if (!task) return;
+  awEditingId = id;
+  selectedAwTypeEdit = task.type;
+
+  document.getElementById('aw-edit-week').value = task.week;
+  document.getElementById('aw-edit-title').value = task.title;
+  document.getElementById('aw-edit-details').value = task.details || '';
+  document.querySelectorAll('[data-awtype-edit]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.awtypeEdit === task.type);
+  });
+  document.getElementById('aw-edit-modal-overlay').classList.add('active');
+  document.getElementById('aw-edit-title').focus();
+}
+
+function closeAwEditModal() {
+  document.getElementById('aw-edit-modal-overlay').classList.remove('active');
+  awEditingId = null;
+}
+
+function selectAwTypeEdit(type) {
+  selectedAwTypeEdit = type;
+  document.querySelectorAll('[data-awtype-edit]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.awtypeEdit === type);
+  });
+}
+
+function saveAwEdit() {
+  const task = (state.awTasks || []).find(t => t.id === awEditingId);
+  if (!task) return;
+  task.week = parseInt(document.getElementById('aw-edit-week').value);
+  task.title = document.getElementById('aw-edit-title').value.trim();
+  task.details = document.getElementById('aw-edit-details').value.trim();
+  task.type = selectedAwTypeEdit;
+  saveState();
+  renderAwView();
+  closeAwEditModal();
+}
+
+function renderAwView() {
+  const container = document.getElementById('aw-content');
+  if (!container) return;
+
+  // Sync week selector
+  const weekSel = document.getElementById('aw-current-week');
+  if (weekSel) weekSel.value = state.awCurrentWeek;
+
+  const tasks = state.awTasks || [];
+  const currentWeek = state.awCurrentWeek || 1;
+
+  if (tasks.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="border-style:solid; background:var(--studio-light); border-color:var(--border); color:var(--studio-deep);">
+      <i class="ti ti-feather" style="font-size:28px; display:block; margin-bottom:10px; color:var(--studio);"></i>
+      No tasks yet — head to <strong>Add Task</strong> to get started.
+    </div>`;
+    return;
+  }
+
+  // Build blocks for all 12 weeks
+  let html = '';
+  for (let w = 1; w <= 12; w++) {
+    const weekTasks = tasks.filter(t => t.week === w);
+    const isThisWeek = w === currentWeek;
+    const collapsed = isThisWeek ? '' : 'collapsed';
+    const done = weekTasks.filter(t => t.done).length;
+    const total = weekTasks.length;
+
+    const taskRows = weekTasks.length === 0
+      ? `<div class="aw-empty-week">No tasks added for this week yet.</div>`
+      : weekTasks.map(t => `
+          <div class="aw-task-row ${t.done ? 'done-task' : ''}" id="aw-row-${t.id}">
+            <label class="aw-check">
+              <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleAwTask('${t.id}', this.checked)">
+              <span class="aw-check-box"></span>
+            </label>
+            <div class="aw-task-info">
+              <p class="aw-task-title">${escapeHtml(t.title)}</p>
+              ${t.details ? `<p class="aw-task-details">${escapeHtml(t.details)}</p>` : ''}
+            </div>
+            <div class="aw-task-meta">
+              <span class="aw-type-pill ${t.type === 'writing' ? 'aw-type-writing' : 'aw-type-activity'}">
+                ${t.type === 'writing' ? 'Writing' : 'Activity'}
+              </span>
+              <button class="aw-delete-btn" onclick="openAwEditModal('${t.id}')">Edit</button>
+              <button class="aw-delete-btn" style="color:var(--u-now-text);" onclick="deleteAwTask('${t.id}')">Delete</button>
+            </div>
+          </div>`).join('');
+
+    html += `
+      <div class="aw-week-block ${isThisWeek ? 'this-week' : ''} ${collapsed}" id="aw-week-${w}">
+        <div class="aw-week-heading" onclick="this.parentElement.classList.toggle('collapsed')">
+          <i class="ti ti-chevron-down aw-week-chevron"></i>
+          <span class="aw-week-title">${AW_WEEK_TITLES[w]}</span>
+          ${isThisWeek ? `<span class="aw-this-week-badge">This week</span>` : ''}
+          ${total > 0 ? `<span class="aw-week-progress">${done}/${total}</span>` : ''}
+        </div>
+        <div class="aw-week-body">${taskRows}</div>
+      </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// Add Artist's Way tasks to state
+if (!state.awTasks) state.awTasks = [];
+
+function selectAwType(type) {
+  selectedAwType = type;
+  document.querySelectorAll('.aw-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.awtype === type);
+  });
+}
+
+document.getElementById('aw-addtask-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const week = parseInt(document.getElementById('aw-week').value);
+  const title = document.getElementById('aw-title-input').value.trim();
+  const details = document.getElementById('aw-details-input').value.trim();
+  if (!title) return;
+
+  if (!state.awTasks) state.awTasks = [];
+  state.awTasks.push({
+    id: 'aw' + Date.now(),
+    week,
+    type: selectedAwType,
+    title,
+    details,
+    done: false,
+    createdAt: new Date().toISOString()
+  });
+
+  saveState();
+
+  // Reset form but keep week + type selected
+  document.getElementById('aw-title-input').value = '';
+  document.getElementById('aw-details-input').value = '';
+
+  const success = document.getElementById('aw-success');
+  success.style.display = 'inline';
+  setTimeout(() => { success.style.display = 'none'; }, 2000);
+  document.getElementById('aw-title-input').focus();
+});
 
 /* ============== TIMER ============== */
 
@@ -3775,6 +4424,7 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
     if (e.target === overlay) {
       overlay.classList.remove('active');
       if (overlay.id === 'timer-edit-modal-overlay') timerEditingLogId = null;
+      if (overlay.id === 'aw-edit-modal-overlay') awEditingId = null;
     }
   });
 });
