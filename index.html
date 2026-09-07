@@ -1389,6 +1389,170 @@
 
   .timer-log-section { margin-top: 4px; }
 
+  /* Billing cycle card */
+  .billing-cycle-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .billing-cycle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+
+  .billing-cycle-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    margin: 0 0 3px;
+  }
+
+  .billing-cycle-dates {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--studio-deep);
+    margin: 0;
+  }
+
+  .billing-settings-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--ink-soft);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background 0.12s, color 0.12s;
+    flex-shrink: 0;
+  }
+
+  .billing-settings-btn:hover { background: var(--border-soft); color: var(--ink); }
+
+  .billing-settings-panel {
+    border-top: 1px solid var(--border-soft);
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+
+  .billing-settings-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .billing-per-client-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .billing-per-client-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .billing-per-client-row input {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 7px 10px;
+    width: 160px;
+  }
+
+  .billing-per-client-row input:focus {
+    outline: none;
+    border-color: var(--studio);
+  }
+
+  .billing-cycle-totals {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .billing-cycle-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .billing-cycle-stat-val {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--studio-deep);
+  }
+
+  .billing-cycle-stat-label {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .billing-cycle-divider {
+    width: 1px;
+    background: var(--border-soft);
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .billing-client-cycle-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .billing-client-cycle-name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .billing-client-cycle-hrs {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .billing-client-cycle-earn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--u-done-text);
+  }
+
   .timer-log-header {
     display: flex;
     align-items: center;
@@ -2299,6 +2463,27 @@
       </div>
     </div>
 
+    <!-- Billing cycle summary card -->
+    <div class="billing-cycle-card" id="billing-cycle-card">
+      <div class="billing-cycle-header">
+        <div>
+          <p class="billing-cycle-eyebrow">Current billing cycle</p>
+          <p class="billing-cycle-dates" id="billing-cycle-dates">Set last invoice dates per client below</p>
+        </div>
+        <button class="billing-settings-btn" onclick="togglePerClientDates()">
+          <i class="ti ti-calendar" id="per-client-chevron"></i> Last invoice dates
+        </button>
+      </div>
+
+      <!-- Per-client date fields -->
+      <div id="per-client-dates-panel" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border-soft);">
+        <p style="font-size:12px; color:var(--ink-faint); margin:0 0 12px;">Enter the last date you invoiced each client. Earnings since that date will appear below.</p>
+        <div id="per-client-dates-fields"></div>
+      </div>
+
+      <div class="billing-cycle-totals" id="billing-cycle-totals"></div>
+    </div>
+
     <!-- Active timer card -->
     <div class="timer-active-card" id="timer-active-card">
       <div class="timer-client-row">
@@ -2616,9 +2801,11 @@ let state = {
   clients: [],
   tasks: [],
   links: [],
-  timeLogs: [],   // { id, clientId, date, startMs, endMs, durationMs, note }
-  awTasks: [],    // { id, week, type, title, details, done, createdAt }
-  awCurrentWeek: 1
+  timeLogs: [],
+  awTasks: [],
+  awCurrentWeek: 1,
+  billingGlobalDate: '',      // YYYY-MM-DD global billing start
+  billingClientDates: {}      // { clientId: 'YYYY-MM-DD' }
 };
 
 let editingTaskId = null;
@@ -2640,6 +2827,8 @@ function loadState() {
       state.timeLogs = parsed.timeLogs || [];
       state.awTasks = parsed.awTasks || [];
       state.awCurrentWeek = parsed.awCurrentWeek || 1;
+      state.billingGlobalDate = parsed.billingGlobalDate || '';
+      state.billingClientDates = parsed.billingClientDates || {};
     }
   } catch (e) {
     seedExampleData();
@@ -2711,66 +2900,1136 @@ function importData(event) {
 
 function seedExampleData() {
   state.clients = [
-    { id: "c1", name: "Evergreen Studio", colorIndex: 0, rate: 45 },
-    { id: "c2", name: "Emily Bouchard", colorIndex: 4, rate: 60 },
-    { id: "c1781552960737", name: "Rise and Renew", colorIndex: 3, rate: 0 },
-    { id: "c1781552983202", name: "Raised to Empower", colorIndex: 5, rate: 45 },
-    { id: "c1781552987876", name: "Beast", colorIndex: 7, rate: 80 },
-    { id: "c1782620985438", name: "Sandwich Vision", colorIndex: 6, rate: 0 }
-  ];
+    {
+        "id": "c1",
+        "name": "Evergreen Studio",
+        "colorIndex": 0,
+        "rate": 45
+    },
+    {
+        "id": "c1781552960737",
+        "name": "Rise and Renew",
+        "colorIndex": 3,
+        "rate": 0
+    },
+    {
+        "id": "c1781552983202",
+        "name": "Raised to Empower",
+        "colorIndex": 5,
+        "rate": 45
+    },
+    {
+        "id": "c1781552987876",
+        "name": "Beast",
+        "colorIndex": 7,
+        "rate": 80
+    },
+    {
+        "id": "c1782620985438",
+        "name": "Sandwich Vision",
+        "colorIndex": 6,
+        "rate": 0
+    },
+    {
+        "id": "c1787460893093",
+        "name": "STR TV",
+        "colorIndex": 1,
+        "rate": 0
+    },
+    {
+        "id": "c2",
+        "name": "Emily Bouchard",
+        "colorIndex": 4,
+        "rate": 60
+    }
+];
   state.tasks = [
-    { id: "t1", clientId: "c1", title: "Redesign homepage mockup", desc: "Apply the new layout direction to the homepage and prep for client review.", status: "complete", urgency: "done", date: "2026-06-15" },
-    { id: "t2", clientId: "c1", title: "Create process page in Wix", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
-    { id: "t3", clientId: "c2", title: "Add free resources to Brevo email", desc: "", status: "complete", urgency: "done", date: "" },
-    { id: "t1781553018935522", clientId: "c1", title: "Process Page Design", desc: "Create in Wix", status: "complete", urgency: "done", date: "2026-06-16" },
-    { id: "t1781553034418397", clientId: "c1781552983202", title: "Swap Home Page Photo", desc: "", status: "complete", urgency: "done", date: "2026-06-20" },
-    { id: "t1781553063548963", clientId: "c1781552983202", title: "Beginner Coaching Page Mockup", desc: "Make in Illustrator", status: "complete", urgency: "done", date: "2026-06-20" },
-    { id: "t1781553078300678", clientId: "c1781552983202", title: "Redesign Homepage", desc: "Mockup in Illustrator", status: "complete", urgency: "done", date: "2026-06-20" },
-    { id: "t1781553108527746", clientId: "c1781552987876", title: "Make Calender/Check in Plan", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
-    { id: "t1781553124734721", clientId: "c1781552987876", title: "Test CAD files in Blender and C4D", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
-    { id: "t1781553135254465", clientId: "c1781552987876", title: "Pick Scenes to Test Animate", desc: "", status: "complete", urgency: "done", date: "2026-06-16" },
-    { id: "t1781553148071414", clientId: "c1781552987876", title: "3-5 Test Stills", desc: "", status: "complete", urgency: "done", date: "2026-06-20" },
-    { id: "t1781553169810574", clientId: "c1781552987876", title: "Create Time/Task Tracker", desc: "", status: "complete", urgency: "done", date: "2026-06-15" },
-    { id: "t1781559960663336", clientId: "c1", title: "Send Homepage and Process Page to Jess", desc: "", status: "complete", urgency: "done", date: "2026-06-16" },
-    { id: "t1781921243673494", clientId: "c1781552987876", title: "Seperate/Fix CAD file", desc: "", status: "complete", urgency: "done", date: "2026-06-22" },
-    { id: "t178231631146446", clientId: "c1", title: "Process Page Edits", desc: "", status: "not_started", urgency: "soon", date: "2026-06-30" },
-    { id: "t1782316340743185", clientId: "c1", title: "Service Page Draft", desc: "Create in Wix (Waiting for Copy from Jess)", status: "not_started", urgency: "soon", date: "2026-07-03" },
-    { id: "t1782621004068406", clientId: "c1782620985438", title: "Email Jose Stereoscopic Video", desc: "", status: "complete", urgency: "done", date: "2026-06-22" },
-    { id: "t1782680248113252", clientId: "c1781552987876", title: "More Stylized Test Renders", desc: "", status: "complete", urgency: "done", date: "2026-06-29" },
-    { id: "t1782768078481884", clientId: "c1781552987876", title: "Storyboard/Inspo Gathering for New Round of Mockups", desc: "See notes from the meeting: https://docs.google.com/document/d/1bNw47mjck55AZ-kqA11G_Zx2CtzXevwhCA99jdsIfK4/edit?usp=sharing", status: "not_started", urgency: "soon", date: "2026-07-02" },
-    { id: "t1782778450543862", clientId: "c1", title: "Quick Home Page Edits", desc: "", status: "not_started", urgency: "week", date: "2026-07-03" },
-    { id: "t1782863496846617", clientId: "c1782620985438", title: "Re-Render Project Test in c4d", desc: "Look up how to correctly render it in stereoscopic view", status: "not_started", urgency: "soon", date: "2026-07-02" }
-  ];
+    {
+        "id": "t1",
+        "clientId": "c1",
+        "title": "Redesign homepage mockup",
+        "desc": "Apply the new layout direction to the homepage and prep for client review.",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "t1781553018935522",
+        "clientId": "c1",
+        "title": "Process Page Design",
+        "desc": "Create in Wix",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-16"
+    },
+    {
+        "id": "t1781553034418397",
+        "clientId": "c1781552983202",
+        "title": "Swap Home Page Photo",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-20"
+    },
+    {
+        "id": "t1781553063548963",
+        "clientId": "c1781552983202",
+        "title": "Beginner Coaching Page Mockup",
+        "desc": "Make in Illustrator",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-20"
+    },
+    {
+        "id": "t1781553078300678",
+        "clientId": "c1781552983202",
+        "title": "Redesign Homepage",
+        "desc": "Mockup in Illustrator",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-20"
+    },
+    {
+        "id": "t1781553108527746",
+        "clientId": "c1781552987876",
+        "title": "Make Calender/Check in Plan",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "t1781553124734721",
+        "clientId": "c1781552987876",
+        "title": "Test CAD files in Blender and C4D",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "t1781553135254465",
+        "clientId": "c1781552987876",
+        "title": "Pick Scenes to Test Animate",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-16"
+    },
+    {
+        "id": "t1781553148071414",
+        "clientId": "c1781552987876",
+        "title": "3-5 Test Stills",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-20"
+    },
+    {
+        "id": "t1781553169810574",
+        "clientId": "c1781552987876",
+        "title": "Create Time/Task Tracker",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "t1781559960663336",
+        "clientId": "c1",
+        "title": "Send Homepage and Process Page to Jess",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-16"
+    },
+    {
+        "id": "t1781921243673494",
+        "clientId": "c1781552987876",
+        "title": "Seperate/Fix CAD file",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-22"
+    },
+    {
+        "id": "t178231631146446",
+        "clientId": "c1",
+        "title": "Process Page Edits",
+        "desc": "",
+        "status": "not_started",
+        "urgency": "soon",
+        "date": "2026-06-30"
+    },
+    {
+        "id": "t1782316340743185",
+        "clientId": "c1",
+        "title": "Service Page Draft",
+        "desc": "Create in Wix (Waiting for Copy from Jess)",
+        "status": "not_started",
+        "urgency": "soon",
+        "date": "2026-07-03"
+    },
+    {
+        "id": "t1782621004068406",
+        "clientId": "c1782620985438",
+        "title": "Email Jose Stereoscopic Video",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-22"
+    },
+    {
+        "id": "t1782680248113252",
+        "clientId": "c1781552987876",
+        "title": "More Stylized Test Renders",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-29"
+    },
+    {
+        "id": "t1782768078481884",
+        "clientId": "c1781552987876",
+        "title": "Storyboard/Inspo Gathering for New Round of Mockups",
+        "desc": "See notes from the meeting: https://docs.google.com/document/d/1bNw47mjck55AZ-kqA11G_Zx2CtzXevwhCA99jdsIfK4/edit?usp=sharing",
+        "status": "not_started",
+        "urgency": "soon",
+        "date": "2026-07-02"
+    },
+    {
+        "id": "t1782778450543862",
+        "clientId": "c1",
+        "title": "Quick Home Page Edits",
+        "desc": "",
+        "status": "not_started",
+        "urgency": "week",
+        "date": "2026-07-03"
+    },
+    {
+        "id": "t1782863496846617",
+        "clientId": "c1782620985438",
+        "title": "Re-Render Project Test in c4d",
+        "desc": "Look up how to correctly render it in stereoscopic view",
+        "status": "not_started",
+        "urgency": "soon",
+        "date": "2026-07-02"
+    },
+    {
+        "id": "t1783132472215988",
+        "title": "Send Out Progress Page and Service Page to Jess",
+        "desc": "",
+        "clientId": "c1",
+        "status": "complete",
+        "date": "2026-07-06",
+        "urgency": "done"
+    },
+    {
+        "id": "t1783965094032438",
+        "title": "Fix Mobile Page Bug",
+        "desc": "",
+        "clientId": "c2",
+        "status": "complete",
+        "date": "2026-07-13",
+        "urgency": "done"
+    },
+    {
+        "id": "t1783965112942423",
+        "title": "Privacy Policy Page Design",
+        "desc": "",
+        "clientId": "c2",
+        "status": "complete",
+        "date": "2026-07-13",
+        "urgency": "done"
+    },
+    {
+        "id": "t1783980490370619",
+        "title": "Finish Animating and Render X-Ray",
+        "desc": "",
+        "clientId": "c1781552987876",
+        "status": "complete",
+        "date": "2026-07-12",
+        "urgency": "done"
+    },
+    {
+        "id": "t1783980518889923",
+        "title": "Render Out CutAways",
+        "desc": "Showcase Steel Interior",
+        "clientId": "c1781552987876",
+        "status": "complete",
+        "date": "2026-07-13",
+        "urgency": "done"
+    },
+    {
+        "id": "t178398054076254",
+        "title": "Beast Temperature Animation",
+        "desc": "Particle Systems... See Notes",
+        "clientId": "c1781552987876",
+        "status": "not_started",
+        "date": "2026-07-13",
+        "urgency": "now"
+    },
+    {
+        "id": "t1784852324416346",
+        "title": "New About Page Draft",
+        "desc": "",
+        "clientId": "c1",
+        "status": "wip",
+        "date": "2026-07-27",
+        "urgency": "soon"
+    },
+    {
+        "id": "t1784852347575737",
+        "title": "New FAQ Page Draft",
+        "desc": "",
+        "clientId": "c1",
+        "status": "not_started",
+        "date": "2026-07-27",
+        "urgency": "soon"
+    },
+    {
+        "id": "t1784852443551546",
+        "title": "3 Versions based on Fav Clips",
+        "desc": "",
+        "clientId": "c1781552987876",
+        "status": "not_started",
+        "date": "2026-07-24",
+        "urgency": "now"
+    },
+    {
+        "id": "t1784852532473387",
+        "title": "Sample Liquid Simulations",
+        "desc": "",
+        "clientId": "c1781552987876",
+        "status": "complete",
+        "date": "2026-07-24",
+        "urgency": "now"
+    },
+    {
+        "id": "t1784852556151643",
+        "title": "Audio/Text Version",
+        "desc": "",
+        "clientId": "c1781552987876",
+        "status": "not_started",
+        "date": "2026-07-27",
+        "urgency": "now"
+    },
+    {
+        "id": "t1784852609212300",
+        "title": "Temperature Technology Simulation",
+        "desc": "",
+        "clientId": "c1781552987876",
+        "status": "not_started",
+        "date": "2026-07-27",
+        "urgency": "now"
+    },
+    {
+        "id": "t2",
+        "clientId": "c1",
+        "title": "Create process page in Wix",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "t3",
+        "clientId": "c2",
+        "title": "Add free resources to Brevo email",
+        "desc": "",
+        "status": "complete",
+        "urgency": "done",
+        "date": ""
+    }
+];
   state.links = [
-    { id: "l1781553209673", label: "Evergreen Wix", url: "https://manage.wix.com/dashboard/88a4cfac-15cf-4d40-929a-1b70c2bd8a48/setup", project: "Evergreen" },
-    { id: "l1781553229283", label: "Brevo", url: "https://www.brevo.com", project: "Emily Bouchard" },
-    { id: "l1781553249611", label: "SiteGround", url: "https://www.siteground.com", project: "Emily Bouchard" },
-    { id: "l1781729397535", label: "Employee Time Tracker", url: "https://docs.google.com/spreadsheets/d/1RL2DmKPdMU8cjrMr9oegyrFNuKi-KdsnbP9mbKlCD7M/edit?gid=1319109655#gid=1319109655", project: "Evergreen ALL" },
-    { id: "l1782621328764", label: "Invoice Generator", url: "https://invoice-generator.com", project: "BEAST" }
-  ];
+    {
+        "id": "l1781553209673",
+        "label": "Evergreen Wix",
+        "url": "https://manage.wix.com/dashboard/88a4cfac-15cf-4d40-929a-1b70c2bd8a48/setup",
+        "project": "Evergreen"
+    },
+    {
+        "id": "l1781553229283",
+        "label": "Brevo",
+        "url": "https://www.brevo.com",
+        "project": "Emily Bouchard"
+    },
+    {
+        "id": "l1781553249611",
+        "label": "SiteGround",
+        "url": "https://www.siteground.com",
+        "project": "Emily Bouchard"
+    },
+    {
+        "id": "l1781729397535",
+        "label": "Employee Time Tracker",
+        "url": "https://docs.google.com/spreadsheets/d/1RL2DmKPdMU8cjrMr9oegyrFNuKi-KdsnbP9mbKlCD7M/edit?gid=1319109655#gid=1319109655",
+        "project": "Evergreen ALL"
+    },
+    {
+        "id": "l1782621328764",
+        "label": "Invoice Generator",
+        "url": "https://invoice-generator.com",
+        "project": "BEAST"
+    }
+];
   state.timeLogs = [
-    { id: "tl1781583817733", clientId: "c1", date: "2026-06-15", startMs: 1781580376234, endMs: 1781583817733, durationMs: 3441499, note: "Home Page Edits", invoiced: true },
-    { id: "tl1781594061906", clientId: "c1", date: "2026-06-16", startMs: 1781587234838, endMs: 1781594061906, durationMs: 6827068, note: "Process Page", invoiced: true },
-    { id: "tl1781740347393", clientId: "c1781552987876", date: "2026-06-17", startMs: 1781739345982, endMs: 1781740347393, durationMs: 1001411, note: "Converting CAD Files" },
-    { id: "tl1781751568983", clientId: "c1", date: "2026-06-17", startMs: 1781747655686, endMs: 1781751568983, durationMs: 3913297, note: "Process Page", invoiced: true },
-    { id: "tl1781767865626", clientId: "c1781552987876", date: "2026-06-18", startMs: 1781765673997, endMs: 1781767865626, durationMs: 2191629, note: "Cad File splitting/developing for 3d mograph software" },
-    { id: "tl1782244851243", clientId: "c1781552987876", date: "2026-06-23", startMs: 1782237786528, endMs: 1782244851243, durationMs: 7064715, note: "Cleaning Up and Separating Mesh (Blade and Steel Interior)" },
-    { id: "tl1782329061682", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782326308876, endMs: 1782329061683, durationMs: 2752807, note: "C4d Lighting Tests" },
-    { id: "tl1782330089614", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782329079815, endMs: 1782330089614, durationMs: 1020000, note: "Eevee Animatic (Zoom in and spin)" },
-    { id: "tl1782360979672", clientId: "c1781552987876", date: "2026-06-24", startMs: 1782354020636, endMs: 1782360979672, durationMs: 6960000, note: "Animatic 2.0" },
-    { id: "tl1782417889214", clientId: "c1781552987876", date: "2026-06-25", startMs: 1782413322444, endMs: 1782417889214, durationMs: 4566770, note: "Animatic" },
-    { id: "tl1782431810072", clientId: "c1781552987876", date: "2026-06-25", startMs: 1782431524245, endMs: 1782431810072, durationMs: 300000, note: "Fixing CAD files (adding screw top)" },
-    { id: "tl1782512996865", clientId: "c1781552987876", date: "2026-06-26", startMs: 1782507687810, endMs: 1782512996865, durationMs: 5309055, note: "Animatics & Fixing 3D Model" },
-    { id: "tl1782763229715", clientId: "c1781552987876", date: "2026-06-29", startMs: 1782760157460, endMs: 1782763229715, durationMs: 3072255, note: "More test stills and meeting prep" },
-    { id: "tl1782779944374", clientId: "c1", date: "2026-06-29", startMs: 1782779048065, endMs: 1782779944374, durationMs: 896309, note: "Quick Home Page Edits & Start of Process Page Edits" },
-    { id: "tl1782857501862", clientId: "c1", date: "2026-06-30", startMs: 1782853370574, endMs: 1782857501862, durationMs: 4131288, note: "Process Page Edits" },
-    { id: "tl1782864350637", clientId: "c1781552987876", date: "2026-06-30", startMs: 1782862909902, endMs: 1782864350637, durationMs: 1440735, note: "New Animation References/Storyboarding" }
-  ];
+    {
+        "id": "tl1781583817733",
+        "clientId": "c1",
+        "date": "2026-06-15",
+        "startMs": 1781580376234,
+        "endMs": 1781583817733,
+        "durationMs": 3441499,
+        "note": "Home Page Edits",
+        "invoiced": true
+    },
+    {
+        "id": "tl1781594061906",
+        "clientId": "c1",
+        "date": "2026-06-16",
+        "startMs": 1781587234838,
+        "endMs": 1781594061906,
+        "durationMs": 6827068,
+        "note": "Process Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1781740347393",
+        "clientId": "c1781552987876",
+        "date": "2026-06-17",
+        "startMs": 1781739345982,
+        "endMs": 1781740347393,
+        "durationMs": 1001411,
+        "note": "Converting CAD Files"
+    },
+    {
+        "id": "tl1781751568983",
+        "clientId": "c1",
+        "date": "2026-06-17",
+        "startMs": 1781747655686,
+        "endMs": 1781751568983,
+        "durationMs": 3913297,
+        "note": "Process Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1781767865626",
+        "clientId": "c1781552987876",
+        "date": "2026-06-18",
+        "startMs": 1781765673997,
+        "endMs": 1781767865626,
+        "durationMs": 2191629,
+        "note": "Cad File splitting/developing for 3d mograph software"
+    },
+    {
+        "id": "tl1782244851243",
+        "clientId": "c1781552987876",
+        "date": "2026-06-23",
+        "startMs": 1782237786528,
+        "endMs": 1782244851243,
+        "durationMs": 7064715,
+        "note": "Cleaning Up and Separating Mesh (Blade and Steel Interior)"
+    },
+    {
+        "id": "tl1782329061682",
+        "clientId": "c1781552987876",
+        "date": "2026-06-24",
+        "startMs": 1782326308876,
+        "endMs": 1782329061683,
+        "durationMs": 2752807,
+        "note": "C4d Lighting Tests"
+    },
+    {
+        "id": "tl1782330089614",
+        "clientId": "c1781552987876",
+        "date": "2026-06-24",
+        "startMs": 1782329079815,
+        "endMs": 1782330089614,
+        "durationMs": 1020000,
+        "note": "Eevee Animatic (Zoom in and spin)"
+    },
+    {
+        "id": "tl1782360979672",
+        "clientId": "c1781552987876",
+        "date": "2026-06-24",
+        "startMs": 1782354020636,
+        "endMs": 1782360979672,
+        "durationMs": 6960000,
+        "note": "Animatic 2.0"
+    },
+    {
+        "id": "tl1782417889214",
+        "clientId": "c1781552987876",
+        "date": "2026-06-25",
+        "startMs": 1782413322444,
+        "endMs": 1782417889214,
+        "durationMs": 4566770,
+        "note": "Animatic"
+    },
+    {
+        "id": "tl1782431810072",
+        "clientId": "c1781552987876",
+        "date": "2026-06-25",
+        "startMs": 1782431524245,
+        "endMs": 1782431810072,
+        "durationMs": 300000,
+        "note": "Fixing CAD files (adding screw top)"
+    },
+    {
+        "id": "tl1782512996865",
+        "clientId": "c1781552987876",
+        "date": "2026-06-26",
+        "startMs": 1782507687810,
+        "endMs": 1782512996865,
+        "durationMs": 5309055,
+        "note": "Animatics & Fixing 3D Model"
+    },
+    {
+        "id": "tl1782763229715",
+        "clientId": "c1781552987876",
+        "date": "2026-06-29",
+        "startMs": 1782760157460,
+        "endMs": 1782763229715,
+        "durationMs": 3072255,
+        "note": "More test stills and meeting prep"
+    },
+    {
+        "id": "tl1782779944374",
+        "clientId": "c1",
+        "date": "2026-06-29",
+        "startMs": 1782779048065,
+        "endMs": 1782779944374,
+        "durationMs": 896309,
+        "note": "Quick Home Page Edits & Start of Process Page Edits"
+    },
+    {
+        "id": "tl1782857501862",
+        "clientId": "c1",
+        "date": "2026-06-30",
+        "startMs": 1782853370574,
+        "endMs": 1782857501862,
+        "durationMs": 4131288,
+        "note": "Process Page Edits"
+    },
+    {
+        "id": "tl1782864350637",
+        "clientId": "c1781552987876",
+        "date": "2026-06-30",
+        "startMs": 1782862909902,
+        "endMs": 1782864350637,
+        "durationMs": 1440735,
+        "note": "New Animation References/Storyboarding"
+    },
+    {
+        "id": "tl1783106780175",
+        "clientId": "c1",
+        "date": "2026-07-03",
+        "startMs": 1783103021721,
+        "endMs": 1783106780175,
+        "durationMs": 3758454,
+        "note": "Process Page Edits and Service Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1783461269033",
+        "clientId": "c1781552987876",
+        "date": "2026-07-07",
+        "startMs": 1783452994748,
+        "endMs": 1783461269033,
+        "durationMs": 8274285,
+        "note": "Mockups",
+        "invoiced": true
+    },
+    {
+        "id": "tl1783633837418",
+        "clientId": "c1",
+        "date": "2026-07-09",
+        "startMs": 1783633002672,
+        "endMs": 1783633837418,
+        "durationMs": 834746,
+        "note": "Updating FAQ",
+        "invoiced": true
+    },
+    {
+        "id": "tl1783651969619",
+        "clientId": "c1781552987876",
+        "date": "2026-07-09",
+        "startMs": 1783647668903,
+        "endMs": 1783651969619,
+        "durationMs": 4300716,
+        "note": "mockups",
+        "invoiced": true
+    },
+    {
+        "id": "tl1783972096077",
+        "clientId": "c2",
+        "date": "2026-07-13",
+        "startMs": 1783969912861,
+        "endMs": 1783972096077,
+        "durationMs": 2183216,
+        "note": "Mobile Page DeBug & Privacy Policy Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1784169341516",
+        "clientId": "c1781552987876",
+        "date": "2026-07-15",
+        "startMs": 1784156609955,
+        "endMs": 1784169341516,
+        "durationMs": 12731561,
+        "note": "mockups",
+        "invoiced": true
+    },
+    {
+        "id": "tl1784185200262",
+        "clientId": "c1781552987876",
+        "date": "2026-07-16",
+        "startMs": 1784179694581,
+        "endMs": 1784185200262,
+        "durationMs": 5505681,
+        "note": "More animation",
+        "invoiced": true
+    },
+    {
+        "id": "tl1784857435783",
+        "clientId": "c1781552987876",
+        "date": "2026-07-20",
+        "startMs": 1784857434200,
+        "endMs": 1784857435783,
+        "durationMs": 7200000,
+        "note": "animations",
+        "invoiced": true
+    },
+    {
+        "id": "tl1784886315548",
+        "clientId": "c1781552987876",
+        "date": "2026-07-22",
+        "startMs": 1784868719260,
+        "endMs": 1784886315548,
+        "durationMs": 17580000,
+        "note": "3 mockups (based on tuesday meeting)",
+        "invoiced": true
+    },
+    {
+        "id": "tl1784857080615",
+        "clientId": "c1",
+        "date": "2026-07-23",
+        "startMs": 1784853995728,
+        "endMs": 1784857080615,
+        "durationMs": 3084887,
+        "note": "About Page Draft",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785010810738",
+        "clientId": "c1781552987876",
+        "date": "2026-07-24",
+        "startMs": 1785010809454,
+        "endMs": 1785010810738,
+        "durationMs": 3600000,
+        "note": "Liquid Sims",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785035982998",
+        "clientId": "c1781552987876",
+        "date": "2026-07-25",
+        "startMs": 1785026981233,
+        "endMs": 1785035982998,
+        "durationMs": 9001765,
+        "note": "3 Mockups",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785217701323",
+        "clientId": "c1",
+        "date": "2026-07-27",
+        "startMs": 1785206816816,
+        "endMs": 1785217701323,
+        "durationMs": 10884507,
+        "note": "About Page - Employee Profile Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785340612122",
+        "clientId": "c1781552987876",
+        "date": "2026-07-27",
+        "startMs": 1785340609552,
+        "endMs": 1785340612122,
+        "durationMs": 5400000,
+        "note": "Longer Cut",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785356937538",
+        "clientId": "c1781552987876",
+        "date": "2026-07-29",
+        "startMs": 1785355810003,
+        "endMs": 1785356937538,
+        "durationMs": 1127535,
+        "note": "Color Tests"
+    },
+    {
+        "id": "tl1785374429903",
+        "clientId": "c1",
+        "date": "2026-07-29",
+        "startMs": 1785369509596,
+        "endMs": 1785374429903,
+        "durationMs": 4920307,
+        "note": "About Page",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785524554073",
+        "clientId": "c1781552987876",
+        "date": "2026-07-31",
+        "startMs": 1785523008592,
+        "endMs": 1785524554073,
+        "durationMs": 1545481,
+        "note": "Color\Material Tweaks"
+    },
+    {
+        "id": "tl1785565607526",
+        "clientId": "c1781552987876",
+        "date": "2026-07-31",
+        "startMs": 1785560339714,
+        "endMs": 1785565607526,
+        "durationMs": 5267812,
+        "note": "July 29th Meeting Edits"
+    },
+    {
+        "id": "tl1785567839331",
+        "clientId": "c1",
+        "date": "2026-08-01",
+        "startMs": 1785566254318,
+        "endMs": 1785567839331,
+        "durationMs": 1585013,
+        "note": "Website Updates",
+        "invoiced": true
+    },
+    {
+        "id": "tl_aug01_evg",
+        "clientId": "c1",
+        "date": "2026-08-01",
+        "startMs": 1785585600000,
+        "endMs": 1785587400000,
+        "durationMs": 1800000,
+        "note": "General website updates based on my recent feedback",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785722967587",
+        "clientId": "c1781552987876",
+        "date": "2026-08-02",
+        "startMs": 1785717571187,
+        "endMs": 1785722967587,
+        "durationMs": 5396400,
+        "note": "Edits from July 28th Meeting"
+    },
+    {
+        "id": "tl1785816195286",
+        "clientId": "c1781552987876",
+        "date": "2026-08-03",
+        "startMs": 1785816193203,
+        "endMs": 1785816195286,
+        "durationMs": 8040000,
+        "note": "Edits based on last weeks meeting (Mocha version)"
+    },
+    {
+        "id": "tl1785910259258",
+        "clientId": "c1",
+        "date": "2026-08-04",
+        "startMs": 1785906731780,
+        "endMs": 1785910259258,
+        "durationMs": 3527478,
+        "note": "Website Updates/Edits based on last weeks meeting",
+        "invoiced": true
+    },
+    {
+        "id": "tl_aug04_evg",
+        "clientId": "c1",
+        "date": "2026-08-04",
+        "startMs": 1785844800000,
+        "endMs": 1785848400000,
+        "durationMs": 3600000,
+        "note": "Website Updates/Edits based on last weeks meeting",
+        "invoiced": true
+    },
+    {
+        "id": "tl1785913973676",
+        "clientId": "c1781552987876",
+        "date": "2026-08-05",
+        "startMs": 1785910864792,
+        "endMs": 1785913973676,
+        "durationMs": 3108884,
+        "note": "Edits/Updates based on Tuesdays meeting"
+    },
+    {
+        "id": "tl1786036787603",
+        "clientId": "c2",
+        "date": "2026-08-06",
+        "startMs": 1786034854127,
+        "endMs": 1786036787603,
+        "durationMs": 1933476,
+        "note": "Updating TrustMoneyFamilies Site",
+        "invoiced": true
+    },
+    {
+        "id": "tl1786067590779",
+        "clientId": "c1",
+        "date": "2026-08-06",
+        "startMs": 1786064894415,
+        "endMs": 1786067590779,
+        "durationMs": 2696364,
+        "note": "Website Updates",
+        "invoiced": true
+    },
+    {
+        "id": "tl1786081675440",
+        "clientId": "c1781552987876",
+        "date": "2026-08-06",
+        "startMs": 1786070180899,
+        "endMs": 1786081675440,
+        "durationMs": 11494541,
+        "note": "Edits/Updates based on last week's meeting"
+    },
+    {
+        "id": "tl1786352074231",
+        "clientId": "c1781552987876",
+        "date": "2026-08-10",
+        "startMs": 1786344080165,
+        "endMs": 1786352074231,
+        "durationMs": 7994066,
+        "note": "Water Mockups/Edits"
+    },
+    {
+        "id": "tl1786430243343",
+        "clientId": "c1781552987876",
+        "date": "2026-08-10",
+        "startMs": 1786424132850,
+        "endMs": 1786430243343,
+        "durationMs": 6110493,
+        "note": "Draft 1 Edits"
+    },
+    {
+        "id": "tl1786495209795",
+        "clientId": "c2",
+        "date": "2026-08-11",
+        "startMs": 1786494177774,
+        "endMs": 1786495209795,
+        "durationMs": 1032021,
+        "note": "TrustMoneyFamily site updates",
+        "invoiced": true
+    },
+    {
+        "id": "tl1786552915495",
+        "clientId": "c1781552983202",
+        "date": "2026-08-12",
+        "startMs": 1786551970909,
+        "endMs": 1786552915495,
+        "durationMs": 944586,
+        "note": "Mockup feedback/organization"
+    },
+    {
+        "id": "tl_aug12_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-12",
+        "startMs": 1786536000000,
+        "endMs": 1786541400000,
+        "durationMs": 5400000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug12_evg",
+        "clientId": "c1",
+        "date": "2026-08-12",
+        "startMs": 1786536000000,
+        "endMs": 1786540680000,
+        "durationMs": 4680000,
+        "note": "Website Updates",
+        "invoiced": true
+    },
+    {
+        "id": "tl_aug13_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-13",
+        "startMs": 1786622400000,
+        "endMs": 1786625100000,
+        "durationMs": 2700000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug14_emily",
+        "clientId": "c2",
+        "date": "2026-08-14",
+        "startMs": 1786708800000,
+        "endMs": 1786709700000,
+        "durationMs": 900000,
+        "note": "Website Mobile Fix"
+    },
+    {
+        "id": "tl_aug14_rise",
+        "clientId": "c1781552960737",
+        "date": "2026-08-14",
+        "startMs": 1786708800000,
+        "endMs": 1786709700000,
+        "durationMs": 900000,
+        "note": "File Organization/Updates"
+    },
+    {
+        "id": "tl_aug14_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-14",
+        "startMs": 1786708800000,
+        "endMs": 1786716000000,
+        "durationMs": 7200000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug17_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-17",
+        "startMs": 1786968000000,
+        "endMs": 1786972500000,
+        "durationMs": 4500000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug19_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-19",
+        "startMs": 1787140800000,
+        "endMs": 1787142600000,
+        "durationMs": 1800000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug20_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-20",
+        "startMs": 1787227200000,
+        "endMs": 1787233500000,
+        "durationMs": 6300000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl_aug21_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-21",
+        "startMs": 1787313600000,
+        "endMs": 1787316300000,
+        "durationMs": 2700000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl1787465205351",
+        "clientId": "c1787460893093",
+        "date": "2026-08-22",
+        "startMs": 1787462401894,
+        "endMs": 1787465205351,
+        "durationMs": 2803457,
+        "note": "Asset Organization/Audit"
+    },
+    {
+        "id": "tl_aug22_beast",
+        "clientId": "c1781552987876",
+        "date": "2026-08-22",
+        "startMs": 1787400000000,
+        "endMs": 1787405400000,
+        "durationMs": 5400000,
+        "note": "Edits/Updates"
+    },
+    {
+        "id": "tl1787475863770",
+        "clientId": "c1787460893093",
+        "date": "2026-08-23",
+        "startMs": 1787465926686,
+        "endMs": 1787475863770,
+        "durationMs": 9937084,
+        "note": "Video Editing"
+    },
+    {
+        "id": "tl1787479083368",
+        "clientId": "c1781552987876",
+        "date": "2026-08-23",
+        "startMs": 1787477522085,
+        "endMs": 1787479083368,
+        "durationMs": 1561283,
+        "note": "ColorTests/Edits"
+    },
+    {
+        "id": "tl1787538475912",
+        "clientId": "c1787460893093",
+        "date": "2026-08-23",
+        "startMs": 1787527201743,
+        "endMs": 1787538475912,
+        "durationMs": 3600000,
+        "note": "Video Edits"
+    },
+    {
+        "id": "tl1787593193052",
+        "clientId": "c2",
+        "date": "2026-08-24",
+        "startMs": 1787592562002,
+        "endMs": 1787593193052,
+        "durationMs": 631050,
+        "note": "Podcast Page Fix",
+        "invoiced": true
+    },
+    {
+        "id": "tl1787637802627",
+        "clientId": "c1787460893093",
+        "date": "2026-08-24",
+        "startMs": 1787623627707,
+        "endMs": 1787637802627,
+        "durationMs": 14174920,
+        "note": "Video Eding/Logo/Brand Stuff"
+    },
+    {
+        "id": "tl1787646634423",
+        "clientId": "c1781552987876",
+        "date": "2026-08-25",
+        "startMs": 1787640078051,
+        "endMs": 1787646634423,
+        "durationMs": 6556372,
+        "note": "Edits"
+    },
+    {
+        "id": "tl1787995098172",
+        "clientId": "c1781552987876",
+        "date": "2026-08-29",
+        "startMs": 1787988066509,
+        "endMs": 1787995098172,
+        "durationMs": 7031663,
+        "note": "Final Draft Edits"
+    },
+    {
+        "id": "tl1788075190180",
+        "clientId": "c1781552987876",
+        "date": "2026-08-30",
+        "startMs": 1788068828027,
+        "endMs": 1788075190180,
+        "durationMs": 6362153,
+        "note": "Final Vertical Edits"
+    },
+    {
+        "id": "tl1788136948403",
+        "clientId": "c1",
+        "date": "2026-08-19",
+        "startMs": 1788136947203,
+        "endMs": 1788136948403,
+        "durationMs": 5400000,
+        "note": "Website Updates"
+    },
+    {
+        "id": "tl1788136999335",
+        "clientId": "c1",
+        "date": "2026-08-18",
+        "startMs": 1788136997734,
+        "endMs": 1788136999335,
+        "durationMs": 60000,
+        "note": ""
+    },
+    {
+        "id": "tl1788243533045",
+        "clientId": "c1781552987876",
+        "date": "2026-08-31",
+        "startMs": 1788237060578,
+        "endMs": 1788243533045,
+        "durationMs": 6472467,
+        "note": "Sand on Black BG"
+    },
+    {
+        "id": "tl1788244670050",
+        "clientId": "c2",
+        "date": "2026-08-31",
+        "startMs": 1788244197033,
+        "endMs": 1788244670050,
+        "durationMs": 473017,
+        "note": "PDF Redesign"
+    },
+    {
+        "id": "tl1788299739271",
+        "clientId": "c2",
+        "date": "2026-09-01",
+        "startMs": 1788294369335,
+        "endMs": 1788299739272,
+        "durationMs": 5369937,
+        "note": "PDF Update"
+    },
+    {
+        "id": "tl1788323243833",
+        "clientId": "c1781552987876",
+        "date": "2026-09-01",
+        "startMs": 1788314104254,
+        "endMs": 1788323243833,
+        "durationMs": 9139579,
+        "note": "Accessory Project start"
+    },
+    {
+        "id": "tl1788409546838",
+        "clientId": "c1781552987876",
+        "date": "2026-09-02",
+        "startMs": 1788403353693,
+        "endMs": 1788409546838,
+        "durationMs": 6193145,
+        "note": "Panel Graphic Renders"
+    },
+    {
+        "id": "tl1788477279151",
+        "clientId": "c1781552960737",
+        "date": "2026-09-03",
+        "startMs": 1788474417703,
+        "endMs": 1788477279151,
+        "durationMs": 2861448,
+        "note": "Website Updates"
+    },
+    {
+        "id": "tl1788478576231",
+        "clientId": "c2",
+        "date": "2026-09-03",
+        "startMs": 1788478430130,
+        "endMs": 1788478576231,
+        "durationMs": 146101,
+        "note": "Website Updates"
+    },
+    {
+        "id": "tl1788481799767",
+        "clientId": "c1",
+        "date": "2026-09-03",
+        "startMs": 1788480067340,
+        "endMs": 1788481799767,
+        "durationMs": 1732427,
+        "note": "Website Updates"
+    },
+    {
+        "id": "tl1788491235536",
+        "clientId": "c1781552987876",
+        "date": "2026-09-03",
+        "startMs": 1788483497483,
+        "endMs": 1788491235536,
+        "durationMs": 7738053,
+        "note": "Print Graphic"
+    },
+    {
+        "id": "tl1788574360837",
+        "clientId": "c1781552987876",
+        "date": "2026-09-04",
+        "startMs": 1788570159773,
+        "endMs": 1788574360837,
+        "durationMs": 4201064,
+        "note": "Print Graphics & color variations"
+    }
+];
   state.awCurrentWeek = 1;
   state.awTasks = [
     { id: "aw-test-1", week: 1, type: "writing", title: "Morning Pages", details: "Write 3 pages longhand, stream of consciousness, first thing in the morning.", done: false, createdAt: new Date().toISOString() },
     { id: "aw-test-2", week: 1, type: "activity", title: "Artist Date", details: "Take your inner artist on a solo outing — a museum, a walk, a new coffee shop.", done: false, createdAt: new Date().toISOString() }
   ];
+  state.billingGlobalDate = '';
+  state.billingClientDates = {};
 }
 
 function addDays(n) {
@@ -4069,6 +5328,7 @@ function toggleTimerProject(id) {
 
 function renderTimerView() {
   populateTimerClientSelect();
+  renderBillingCycle();
 
   const container = document.getElementById('timer-log-container');
   if (!container) return;
@@ -4287,6 +5547,123 @@ function saveTimerEdit() {
   saveState();
   renderTimerView();
   closeTimerEditModal();
+}
+
+/* ============== BILLING CYCLE ============== */
+
+function togglePerClientDates() {
+  const panel = document.getElementById('per-client-dates-panel');
+  if (!panel) return;
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) renderPerClientDateFields();
+}
+
+function renderPerClientDateFields() {
+  const container = document.getElementById('per-client-dates-fields');
+  if (!container) return;
+  const activeClientIds = [...new Set(state.timeLogs.map(l => l.clientId))];
+  const activeClients = state.clients.filter(c => activeClientIds.includes(c.id));
+  container.innerHTML = activeClients.map(c => {
+    const color = CLIENT_COLORS[c.colorIndex % CLIENT_COLORS.length];
+    return `
+      <div class="billing-per-client-row">
+        <span class="billing-per-client-label">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${color.bg};border:1.5px solid ${color.text};margin-right:6px;vertical-align:middle;"></span>
+          ${escapeHtml(c.name)}
+        </span>
+        <input type="date" id="billing-client-${c.id}"
+          value="${(state.billingClientDates || {})[c.id] || ''}"
+          onchange="saveBillingSettings()"
+          style="font-family:'Sora',sans-serif; font-size:13px; color:var(--ink); background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:7px 10px;">
+      </div>`;
+  }).join('');
+}
+
+function saveBillingSettings() {
+  state.billingClientDates = state.billingClientDates || {};
+  const activeClientIds = [...new Set(state.timeLogs.map(l => l.clientId))];
+  activeClientIds.forEach(id => {
+    const input = document.getElementById('billing-client-' + id);
+    if (input) {
+      if (input.value) state.billingClientDates[id] = input.value;
+      else delete state.billingClientDates[id];
+    }
+  });
+  saveState();
+  renderBillingCycle();
+}
+
+function renderBillingCycle() {
+  const datesEl = document.getElementById('billing-cycle-dates');
+  const totalsEl = document.getElementById('billing-cycle-totals');
+  if (!datesEl || !totalsEl) return;
+
+  const clientDates = state.billingClientDates || {};
+  const hasAnyDate = Object.keys(clientDates).length > 0;
+
+  if (!hasAnyDate) {
+    datesEl.textContent = 'Set last invoice dates per client below';
+    totalsEl.innerHTML = '';
+    return;
+  }
+
+  const formatDate = (d) => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  datesEl.textContent = 'Showing earnings since last invoice date per client';
+
+  const activeClientIds = [...new Set(state.timeLogs.map(l => l.clientId))];
+  let totalCycleHrs = 0;
+  let totalCycleEarned = 0;
+  const clientStats = [];
+
+  activeClientIds.forEach(clientId => {
+    const billingDate = clientDates[clientId];
+    if (!billingDate) return;
+    const client = getClient(clientId);
+    if (!client) return;
+    const cycleLogs = state.timeLogs.filter(l => l.clientId === clientId && l.date >= billingDate);
+    if (cycleLogs.length === 0) return;
+    const cycleHrs = cycleLogs.reduce((sum, l) => sum + l.durationMs, 0) / 3600000;
+    const cycleEarned = client.rate ? cycleHrs * client.rate : null;
+    totalCycleHrs += cycleHrs;
+    if (cycleEarned) totalCycleEarned += cycleEarned;
+    clientStats.push({ client, cycleHrs, cycleEarned, billingDate });
+  });
+
+  if (clientStats.length === 0) {
+    totalsEl.innerHTML = `<p style="font-size:13px; color:var(--ink-faint); margin:0;">No sessions found since the invoice dates set.</p>`;
+    return;
+  }
+
+  const totalHtml = `
+    <div class="billing-cycle-stat">
+      <span class="billing-cycle-stat-val">${totalCycleHrs.toFixed(1)}h</span>
+      <span class="billing-cycle-stat-label">Cycle hours</span>
+    </div>
+    ${totalCycleEarned > 0 ? `
+    <div class="billing-cycle-divider"></div>
+    <div class="billing-cycle-stat">
+      <span class="billing-cycle-stat-val">$${totalCycleEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+      <span class="billing-cycle-stat-label">Cycle earnings</span>
+    </div>` : ''}
+    <div class="billing-cycle-divider"></div>
+  `;
+
+  const clientPills = clientStats.map(s => {
+    const color = CLIENT_COLORS[s.client.colorIndex % CLIENT_COLORS.length];
+    const shortDate = new Date(s.billingDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `
+      <div class="billing-client-cycle-pill" title="Since ${shortDate}">
+        <span style="width:8px;height:8px;border-radius:2px;background:${color.bg};border:1.5px solid ${color.text};flex-shrink:0;"></span>
+        <span class="billing-client-cycle-name">${escapeHtml(s.client.name)}</span>
+        <span style="font-size:10px;color:var(--ink-faint);">since ${shortDate}</span>
+        <span class="billing-client-cycle-hrs">${s.cycleHrs.toFixed(1)}h</span>
+        ${s.cycleEarned ? `<span class="billing-client-cycle-earn">$${s.cycleEarned.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>` : ''}
+      </div>`;
+  }).join('');
+
+  totalsEl.innerHTML = totalHtml + clientPills;
 }
 
 // Timer group-by toggle
