@@ -5985,6 +5985,11 @@ async function startSyncedSession(user) {
   const meta = getMeta();
   const localRaw = localStorage.getItem(LS_KEY);
 
+  // Load this browser's data into memory BEFORE any push, so the first
+  // migration (and any "local is newer" push) uploads the real local state —
+  // never the empty initial object.
+  loadState();
+
   if (cloud && cloud.data) {
     const cloudAt = new Date(cloud.updated_at).getTime() || 0;
     const lastCloudAt = meta.lastCloudAt ? new Date(meta.lastCloudAt).getTime() : 0;
@@ -5992,18 +5997,21 @@ async function startSyncedSession(user) {
       // Cloud is newer (or this device is fresh) → adopt it
       localStorage.setItem(LS_KEY, JSON.stringify(cloud.data));
       setMeta({ lastSyncedAt: new Date().toISOString(), lastCloudAt: cloud.updated_at });
+      loadState(); // re-render from the adopted cloud data
       setStatus('Synced ✓');
     } else {
-      // Local has unsynced changes → push them up
+      // Local has unsynced changes → push them up (state is already loaded)
       await pushToCloud();
     }
   } else if (localRaw) {
     // First sync ever: migrate this browser's data to the cloud
     setStatus('Moving your data to the cloud…');
     await pushToCloud();
+  } else {
+    // No cloud row and nothing local: nothing to migrate yet.
+    setStatus('Synced ✓');
   }
 
-  loadState();
   window.__cloudBooted = true;
 }
 
