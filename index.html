@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shirl's Client Work</title>
+<script>
+/* ============================================================
+   CLOUD SYNC CONFIG — paste your Supabase values below.
+   Find them in your Supabase dashboard: Project Settings → API
+   ============================================================ */
+window.SUPABASE_URL = 'https://bjbtbhldukppinmxzhui.supabase.co';
+window.SUPABASE_ANON_KEY = 'sb_publishable_fGeQFgHZsR2GcqfjlJJrkw_8MDfb0';
+/* Set to false to temporarily go back to local-only mode. */
+window.CLOUD_SYNC_ENABLED = true;
+/* Tells the app script below to wait for the cloud boot manager
+   (at the end of <body>) instead of starting from localStorage. */
+window.__cloudBoot = true;
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -2208,19 +2221,20 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
     <h1 style="font-size:20px; font-weight:600; color:#1A2A3A; margin:0 0 4px;">Shirl's Client Work</h1>
-    <p style="font-size:13px; color:#5B7A95; margin:0 0 24px;">Enter your password to continue.</p>
-    <input id="pw-input" type="password" placeholder="Password" style="
+    <p style="font-size:13px; color:#5B7A95; margin:0 0 24px;">Sign in with your email to sync across devices.</p>
+    <input id="auth-email" type="email" placeholder="you@email.com" autocomplete="email" style="
       width:100%; font-family:'Sora',sans-serif; font-size:14px;
       color:#1A2A3A; background:#F4F9FD;
       border:1px solid #CFE3F1; border-radius:10px;
       padding:11px 14px; box-sizing:border-box; margin-bottom:10px;
-    " onkeydown="if(event.key==='Enter') checkPassword()">
-    <p id="pw-error" style="font-size:12px; color:#D94F4F; margin:0 0 10px; display:none;">Incorrect password — try again.</p>
-    <button onclick="checkPassword()" style="
+    " onkeydown="if(event.key==='Enter') cloudSendLink()">
+    <p id="auth-status" style="font-size:12px; color:#5B7A95; margin:0 0 10px; display:none;"></p>
+    <button id="auth-btn" onclick="cloudSendLink()" style="
       width:100%; background:#243A5E; color:#fff; border:none;
       border-radius:10px; padding:12px; font-size:14px; font-weight:600;
       font-family:'Sora',sans-serif; cursor:pointer;
-    ">Unlock</button>
+    ">Email me a sign-in link</button>
+    <p style="font-size:11px; color:#A8BFD0; margin:14px 0 0; line-height:1.5;">Your first sign-in moves this browser's data to the cloud.<br>After that, every device stays in sync.</p>
   </div>
 </div>
 
@@ -2261,7 +2275,11 @@
         <i class="ti ti-upload"></i> Import data
       </button>
       <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importData(event)">
+      <button class="sidebar-data-btn" id="cloud-signout-btn" onclick="cloudSignOut()" style="display:none;">
+        <i class="ti ti-logout"></i> Sign out
+      </button>
     </div>
+    <div id="cloud-sync-status" style="display:none; font-size:11px; color:#A8BFD0; margin-top:6px;"></div>
     Saved automatically to this browser.
   </div>
 </nav>
@@ -5813,31 +5831,236 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
   });
 });
 
-/* ============== PASSWORD GATE ============== */
-function checkPassword() {
-  const input = document.getElementById('pw-input');
-  const error = document.getElementById('pw-error');
-  if (input.value === 'Thriller') {
-    sessionStorage.setItem('scw-auth', '1');
-    document.getElementById('pw-gate').style.display = 'none';
-    input.value = '';
-    error.style.display = 'none';
-  } else {
-    error.style.display = 'block';
-    input.value = '';
-    input.focus();
+/* ============== BOOT ==============
+   Cloud sync is managed by the module script at the end of <body>.
+   It calls loadState() once sign-in + cloud data are ready
+   (or right away in local-only mode). */
+if (!window.__cloudBoot) {
+  document.getElementById('pw-gate').style.display = 'none';
+  loadState();
+} else {
+  // Safety net: if the cloud module can't load (offline / CDN blocked),
+  // fall back to local-only mode after 8s instead of hanging on the gate.
+  setTimeout(function () {
+    if (!window.__cloudBooted) {
+      window.__cloudBoot = false;
+      document.getElementById('pw-gate').style.display = 'none';
+      loadState();
+    }
+  }, 8000);
+}
+</script>
+<script type="module">
+/* ============================================================
+   CLOUD SYNC — Supabase-backed sync for Shirl's Client Work
+   - Magic-link auth replaces the old password gate
+   - The whole `state` object syncs as one JSON blob
+   - localStorage remains the local cache / offline fallback
+   ============================================================ */
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const LS_KEY = 'studio-desk-state';
+const META_KEY = 'studio-desk-sync-meta';
+const PUSH_DEBOUNCE_MS = 2500;
+
+let supa = null;
+let cloudUser = null;
+let pushTimer = null;
+let pushing = false;
+
+const getMeta = () => { try { return JSON.parse(localStorage.getItem(META_KEY)) || {}; } catch { return {}; } };
+const setMeta = (m) => { try { localStorage.setItem(META_KEY, JSON.stringify(m)); } catch {} };
+
+function setStatus(msg, isError) {
+  const el = document.getElementById('cloud-sync-status');
+  if (!el) return;
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent = msg || '';
+  el.style.color = isError ? '#D94F4F' : '#A8BFD0';
+}
+
+function hideGate() {
+  const gate = document.getElementById('pw-gate');
+  if (gate) gate.style.display = 'none';
+  const btn = document.getElementById('cloud-signout-btn');
+  if (btn) btn.style.display = '';
+}
+
+function authStatus(msg, isError) {
+  const el = document.getElementById('auth-status');
+  if (!el) return;
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent = msg || '';
+  el.style.color = isError ? '#D94F4F' : '#5B7A95';
+}
+
+/* ---------- cloud push (debounced) ---------- */
+function queueCloudPush() {
+  if (!supa || !cloudUser) return;
+  setStatus('Saving…');
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushToCloud, PUSH_DEBOUNCE_MS);
+}
+
+async function pushToCloud() {
+  if (!supa || !cloudUser || pushing) return;
+  pushing = true;
+  try {
+    const now = new Date().toISOString();
+    const { error } = await supa
+      .from('app_state')
+      .upsert({ user_id: cloudUser.id, data: state, updated_at: now }, { onConflict: 'user_id' });
+    if (error) throw error;
+    setMeta({ ...getMeta(), lastSyncedAt: now, lastCloudAt: now });
+    setStatus('Synced ✓');
+  } catch (e) {
+    console.error('[cloud] push failed', e);
+    if (e && e.code === '42P01') {
+      setStatus("Table 'app_state' not found — run the setup SQL in Supabase.", true);
+    } else {
+      setStatus('Sync failed — will retry on next change', true);
+    }
+  } finally {
+    pushing = false;
   }
 }
 
-// If already authenticated this session, skip the gate
-if (sessionStorage.getItem('scw-auth') === '1') {
-  document.getElementById('pw-gate').style.display = 'none';
-} else {
-  // Delay focus so fonts are loaded
-  setTimeout(() => document.getElementById('pw-input').focus(), 100);
+/* ---------- wrap the app's saveState so every change syncs ---------- */
+const _localSaveState = saveState;
+saveState = function () {
+  _localSaveState();
+  queueCloudPush();
+};
+
+/* ---------- auth ---------- */
+async function cloudSendLink() {
+  const input = document.getElementById('auth-email');
+  const btn = document.getElementById('auth-btn');
+  const email = (input.value || '').trim();
+  if (!email || !email.includes('@')) { authStatus('Enter a valid email address.', true); return; }
+  btn.disabled = true;
+  authStatus('Sending your sign-in link…');
+  try {
+    const { error } = await supa.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin }
+    });
+    if (error) throw error;
+    authStatus('Check your email — click the link to sign in on this device.');
+  } catch (e) {
+    console.error('[cloud] sign-in failed', e);
+    authStatus('Could not send the link. Try again in a moment.', true);
+    btn.disabled = false;
+  }
 }
 
-loadState();
+async function cloudSignOut() {
+  try { if (supa) await supa.auth.signOut(); } catch {}
+  location.reload();
+}
+window.cloudSendLink = cloudSendLink;
+window.cloudSignOut = cloudSignOut;
+
+/* ---------- boot ---------- */
+async function startSyncedSession(user) {
+  cloudUser = user;
+  hideGate();
+  setStatus('Syncing…');
+
+  let cloud = null;
+  try {
+    const { data, error } = await supa
+      .from('app_state')
+      .select('data, updated_at')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (error) throw error;
+    cloud = data;
+  } catch (e) {
+    console.warn('[cloud] fetch failed, using local data', e);
+  }
+
+  const meta = getMeta();
+  const localRaw = localStorage.getItem(LS_KEY);
+
+  if (cloud && cloud.data) {
+    const cloudAt = new Date(cloud.updated_at).getTime() || 0;
+    const lastCloudAt = meta.lastCloudAt ? new Date(meta.lastCloudAt).getTime() : 0;
+    if (!localRaw || cloudAt > lastCloudAt) {
+      // Cloud is newer (or this device is fresh) → adopt it
+      localStorage.setItem(LS_KEY, JSON.stringify(cloud.data));
+      setMeta({ lastSyncedAt: new Date().toISOString(), lastCloudAt: cloud.updated_at });
+      setStatus('Synced ✓');
+    } else {
+      // Local has unsynced changes → push them up
+      await pushToCloud();
+    }
+  } else if (localRaw) {
+    // First sync ever: migrate this browser's data to the cloud
+    setStatus('Moving your data to the cloud…');
+    await pushToCloud();
+  }
+
+  loadState();
+  window.__cloudBooted = true;
+}
+
+function bootLocal(reason) {
+  if (reason) console.warn('[cloud] local-only mode:', reason);
+  hideGate();
+  setStatus('');
+  loadState();
+  window.__cloudBooted = true;
+}
+
+async function boot() {
+  const url = window.SUPABASE_URL;
+  const key = window.SUPABASE_ANON_KEY;
+  const configured = url && key && !String(url).includes('PASTE_YOUR') && !String(key).includes('PASTE_YOUR');
+
+  if (window.CLOUD_SYNC_ENABLED === false || !configured) {
+    bootLocal(configured ? 'disabled' : 'not configured');
+    return;
+  }
+
+  try {
+    supa = createClient(url, key);
+  } catch (e) {
+    bootLocal('client init failed');
+    return;
+  }
+
+  // If a magic link just brought us back, the client picks up the session automatically.
+  supa.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session && session.user && !cloudUser) {
+      await startSyncedSession(session.user);
+    }
+  });
+
+  try {
+    const { data } = await supa.auth.getSession();
+    const session = data && data.session;
+    if (session && session.user) {
+      await startSyncedSession(session.user);
+    } else {
+      // Show the sign-in gate (already visible with the email UI)
+      const gate = document.getElementById('pw-gate');
+      if (gate) gate.style.display = 'flex';
+      const input = document.getElementById('auth-email');
+      if (input) setTimeout(() => input.focus(), 100);
+      window.__cloudBooted = true;
+    }
+  } catch (e) {
+    console.error('[cloud] boot failed', e);
+    bootLocal('auth check failed');
+  }
+}
+
+// Best-effort flush when the tab closes
+window.addEventListener('pagehide', () => {
+  if (supa && cloudUser) { clearTimeout(pushTimer); pushToCloud(); }
+});
+
+boot();
 </script>
-</body>
-</html>
+</body></html>
