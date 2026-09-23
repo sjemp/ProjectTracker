@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shirl's Client Work</title>
-<script>
+<script>ƒΩ
 /* ============================================================
    CLOUD SYNC CONFIG — paste your Supabase values below.
    Find them in your Supabase dashboard: Project Settings → API
@@ -5949,8 +5949,7 @@ async function cloudSendLink() {
     authStatus('Check your email — click the link to sign in on this device.');
   } catch (e) {
     console.error('[cloud] sign-in failed', e);
-    authStatus('Could not send the link. Try again in a moment.', true);
-    btn.disabled = false;
+    authStatus('Could not send the link: ' + (e && e.message ? e.message : 'unknown error'), true);
   }
 }
 
