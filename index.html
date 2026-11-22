@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- This site is hosted on Netlify. Anyone can build and deploy a site
-     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=3587d0bb-98dd-4794-9bf2-37ae9d287409
-     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shirl's Client Work</title>
 <script>
@@ -146,50 +143,6 @@ window.__cloudBoot = true;
   }
 
   .nav-item i { font-size: 18px; }
-
-  .nav-item.artistsway {
-    margin-top: 12px;
-    background: var(--studio-deep);
-    color: #fff;
-    border: 1px solid var(--studio-deep);
-    font-style: italic;
-  }
-
-  .nav-item.artistsway:hover {
-    background: var(--studio);
-    color: #fff;
-    border-color: var(--studio);
-  }
-
-  .nav-item.artistsway.active {
-    background: var(--studio);
-    color: #fff;
-    border-color: var(--studio);
-  }
-
-  .nav-item.artistsway i {
-    color: #fff;
-  }
-
-  .nav-item.artistsway-sub {
-    background: var(--studio-light);
-    color: var(--studio-deep);
-    border: 1px solid var(--border);
-    font-size: 13px;
-    padding: 8px 12px 8px 22px;
-    margin-top: 2px;
-  }
-
-  .nav-item.artistsway-sub:hover {
-    background: var(--border-soft);
-    color: var(--studio-deep);
-  }
-
-  .nav-item.artistsway-sub.active {
-    background: var(--studio-light);
-    color: var(--studio-deep);
-    border-color: var(--studio);
-  }
 
   .sidebar-footer {
     margin-top: auto;
@@ -1827,258 +1780,57 @@ window.__cloudBoot = true;
   .timer-day-body { display: none; }
   .timer-day-block.open .timer-day-body { display: block; }
 
-  /* ===== Artist's Way ===== */
-  .aw-header {
-    background: var(--studio-deep);
-    border: 1px solid var(--studio-deep);
-    border-radius: var(--radius-lg);
-    padding: 28px 32px;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
+  /* ===== Health ===== */
+  .health-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+  @media (max-width:900px){ .health-stats{ grid-template-columns:repeat(2,1fr);} }
+  .health-stat { background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 18px; }
+  .health-stat-num { font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:500; color:var(--studio-deep); }
+  .health-stat-num small { font-size:13px; color:var(--ink-soft); font-weight:400; margin-left:3px; }
+  .health-stat-label { font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .health-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+  @media (max-width:1100px){ .health-grid{ grid-template-columns:1fr; } }
+  .health-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 22px; }
+  .health-card h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; color:var(--studio-deep); margin:0 0 14px; display:flex; align-items:center; gap:8px; }
+  .health-form-row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+  .health-form-row .field { margin-bottom:0; flex:1; min-width:110px; }
+  .health-chart { width:100%; height:auto; margin:16px 0 6px; display:block; }
+  .health-chart text { font-family:'IBM Plex Mono',monospace; font-size:10px; fill:var(--ink-soft); }
+  .health-list { margin-top:14px; border-top:1px solid var(--border-soft); }
+  .health-row { display:flex; align-items:center; gap:12px; padding:10px 2px; border-bottom:1px solid var(--border-soft); font-size:13px; }
+  .health-row-date { width:84px; color:var(--ink-soft); flex-shrink:0; }
+  .health-row-main { flex:1; min-width:0; }
+  .health-row-main small { display:block; color:var(--ink-faint); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .health-row-val { font-family:'IBM Plex Mono',monospace; color:var(--studio-deep); }
+  .health-row .icon-btn { font-size:12px; }
+  .health-week-head { font-size:12px; font-weight:600; color:var(--ink-soft); margin:14px 0 2px; display:flex; justify-content:space-between; align-items:center; }
+  .health-dots { display:inline-flex; gap:4px; }
+  .health-dot { width:10px; height:10px; border-radius:50%; background:var(--border); }
+  .health-dot.on { background:var(--u-done); }
+  .health-goals { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:22px; }
+  .health-goals .field { margin-bottom:0; }
+  .health-empty { color:var(--ink-faint); font-style:italic; font-size:13px; padding:14px 0; }
 
-  .aw-week-selector { flex-shrink: 0; }
-
-  .aw-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.6);
-    margin: 0 0 6px;
-  }
-
-  .aw-title {
-    font-family: 'Sora', sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 6px;
-    font-style: italic;
-  }
-
-  .aw-subtitle {
-    font-size: 14px;
-    color: rgba(255,255,255,0.7);
-    margin: 0;
-  }
-
-  .aw-type-toggle {
-    display: flex;
-    gap: 10px;
-  }
-
-  .aw-type-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: var(--radius-md);
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    color: var(--ink-soft);
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-
-  .aw-type-btn:hover {
-    border-color: var(--studio);
-    color: var(--studio-deep);
-  }
-
-  .aw-type-btn.active {
-    background: var(--studio-deep);
-    border-color: var(--studio-deep);
-    color: #fff;
-  }
-
-  /* AW Checklist */
-  .aw-week-block {
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-
-  .aw-week-block.this-week {
-    border-color: var(--studio);
-    border-width: 2px;
-  }
-
-  .aw-week-heading {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.1s;
-  }
-
-  .aw-week-heading:hover { background: var(--surface-2); }
-
-  .aw-week-chevron {
-    color: var(--ink-faint);
-    font-size: 14px;
-    transition: transform 0.18s;
-    flex-shrink: 0;
-  }
-
-  .aw-week-block.collapsed .aw-week-chevron { transform: rotate(-90deg); }
-  .aw-week-block.collapsed .aw-week-body { display: none; }
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    flex: 1;
-  }
-
-  .aw-week-block.this-week .aw-week-title { color: var(--studio-deep); }
-
-  .aw-this-week-badge {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    background: var(--studio-deep);
-    color: #fff;
-    padding: 3px 9px;
-    border-radius: 999px;
-  }
-
-  .aw-week-progress {
-    font-size: 12px;
-    color: var(--ink-faint);
-    font-family: 'IBM Plex Mono', monospace;
-    white-space: nowrap;
-  }
-
-  .aw-week-body { border-top: 1px solid var(--border-soft); }
-
-  .aw-task-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--border-soft);
-    transition: background 0.1s;
-  }
-
-  .aw-task-row:last-child { border-bottom: none; }
-  .aw-task-row:hover { background: var(--surface-2); }
-
-  .aw-task-row.done-task { opacity: 0.55; }
-  .aw-task-row.done-task .aw-task-title { text-decoration: line-through; color: var(--ink-faint); }
-
-  .aw-check {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .aw-check input[type="checkbox"] { display: none; }
-
-  .aw-check-box {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.12s, border-color 0.12s;
-    flex-shrink: 0;
-  }
-
-  .aw-check input:checked + .aw-check-box {
-    background: var(--studio-deep);
-    border-color: var(--studio-deep);
-  }
-
-  .aw-check input:checked + .aw-check-box::after {
-    content: '';
-    display: block;
-    width: 5px;
-    height: 8px;
-    border: 2px solid #fff;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg) translate(-1px, -1px);
-  }
-
-  .aw-task-info { flex: 1; min-width: 0; }
-
-  .aw-task-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    margin: 0 0 3px;
-    line-height: 1.4;
-  }
-
-  .aw-task-details {
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  .aw-task-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .aw-type-pill {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-
-  .aw-type-writing {
-    background: var(--u-easy-bg);
-    color: var(--u-easy-text);
-  }
-
-  .aw-type-activity {
-    background: var(--u-soon-bg);
-    color: var(--u-soon-text);
-  }
-
-  .aw-delete-btn {
-    background: none;
-    border: none;
-    color: var(--ink-faint);
-    cursor: pointer;
-    font-family: 'Sora', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 6px;
-    border-radius: var(--radius-sm);
-    transition: color 0.1s;
-  }
-
-  .aw-delete-btn:hover { color: var(--u-now-text); }
-
-  .aw-empty-week {
-    padding: 20px 18px;
-    font-size: 13px;
-    color: var(--ink-faint);
-    font-style: italic;
-  }
+  .health-cal-card { margin-bottom:18px; }
+  .health-cal-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:6px; }
+  .health-cal-top h2 { margin:0; }
+  .health-cal-summary { font-size:13px; color:var(--ink-soft); margin:0 0 14px; }
+  .hcal-dow, .hcal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .hcal-dow span { font-size:11px; font-weight:600; color:var(--ink-faint); text-align:center; text-transform:uppercase; letter-spacing:.04em; padding-bottom:4px; }
+  .hcal-cell { min-height:62px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-2); padding:6px 7px; font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:3px; cursor:default; font-family:inherit; text-align:left; }
+  .hcal-cell.blank { background:none; border-color:transparent; }
+  .hcal-cell.future { opacity:.45; }
+  .hcal-cell.today { border-color:var(--studio); box-shadow:inset 0 0 0 1px var(--studio); }
+  .hcal-cell.has { background:var(--u-done-bg); border-color:var(--u-done); color:var(--u-done-text); cursor:pointer; }
+  .hcal-cell.has:hover { filter:brightness(.97); }
+  .hcal-cell.sel { outline:2px solid var(--studio-deep); outline-offset:1px; }
+  .hcal-day { font-family:'IBM Plex Mono',monospace; font-size:11px; }
+  .hcal-info { font-size:11px; font-weight:600; line-height:1.25; }
+  .hcal-info small { display:block; font-weight:400; opacity:.85; }
+  .hcal-month { font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; color:var(--studio-deep); margin:20px 0 8px; display:flex; justify-content:space-between; }
+  .hcal-month:first-child { margin-top:4px; }
+  .hcal-month small { font-weight:400; color:var(--ink-soft); font-size:12px; }
+  .hcal-detail { margin-top:16px; border-top:1px solid var(--border-soft); padding-top:10px; }
+  @media (max-width:700px){ .hcal-cell{ min-height:48px; padding:4px;} .hcal-info small{display:none;} }
 
   /* ===== Modal ===== */
   .modal-overlay {
@@ -2262,11 +2014,8 @@ window.__cloudBoot = true;
   <button class="nav-item" data-view="timer" onclick="switchView('timer')">
     <i class="ti ti-clock"></i> Timer
   </button>
-  <button class="nav-item artistsway" data-view="artistsway" onclick="switchView('artistsway')">
-    <i class="ti ti-feather"></i> The Artist's Way
-  </button>
-  <button class="nav-item artistsway-sub" data-view="aw-addtask" onclick="switchView('aw-addtask')">
-    <i class="ti ti-plus"></i> Add Task
+  <button class="nav-item" data-view="health" onclick="switchView('health')">
+    <i class="ti ti-heartbeat"></i> Health
   </button>
 
   <div class="sidebar-footer">
@@ -2550,143 +2299,75 @@ window.__cloudBoot = true;
     </div>
   </section>
 
-<!-- ===== ARTIST'S WAY VIEW ===== -->
-  <section class="view" id="view-artistsway">
-    <div class="aw-header">
-      <div class="aw-title-block">
-        <p class="aw-eyebrow">Julia Cameron</p>
-        <h1 class="aw-title">The Artist's Way</h1>
-        <p class="aw-subtitle">Your creative recovery journal — tasks, reflections, and check-ins.</p>
-      </div>
-      <div class="aw-week-selector">
-        <label style="font-size:12px; color:rgba(255,255,255,0.7); font-weight:500; margin-bottom:6px; display:block;">Current week</label>
-        <select id="aw-current-week" onchange="setAwCurrentWeek(this.value)" style="font-family:'Sora',sans-serif; font-size:13px; font-weight:600; color:var(--studio-deep); background:#fff; border:none; border-radius:var(--radius-md); padding:8px 12px; cursor:pointer; min-width:220px;">
-          <option value="1">Week 1</option>
-          <option value="2">Week 2</option>
-          <option value="3">Week 3</option>
-          <option value="4">Week 4</option>
-          <option value="5">Week 5</option>
-          <option value="6">Week 6</option>
-          <option value="7">Week 7</option>
-          <option value="8">Week 8</option>
-          <option value="9">Week 9</option>
-          <option value="10">Week 10</option>
-          <option value="11">Week 11</option>
-          <option value="12">Week 12</option>
-        </select>
-      </div>
-    </div>
-    <div id="aw-content" style="margin-top: 32px;"></div>
-  </section>
-
-<!-- ===== ARTIST'S WAY ADD TASK VIEW ===== -->
-  <section class="view" id="view-aw-addtask">
-    <div class="aw-header">
-      <div class="aw-title-block">
-        <p class="aw-eyebrow">Julia Cameron</p>
-        <h1 class="aw-title">Add a Task</h1>
-        <p class="aw-subtitle">Type it out — the act of writing it helps it stick.</p>
+<!-- ===== HEALTH VIEW ===== -->
+  <section class="view" id="view-health">
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Health &amp; Fitness</h1>
+        <p class="view-sub">Weight and workouts, one day at a time.</p>
       </div>
     </div>
 
-    <form id="aw-addtask-form" style="max-width: 520px; margin-top: 32px;">
+    <div class="health-goals health-card" style="padding:16px 22px;">
+      <div class="field"><label for="hg-goal-weight">Goal weight (lbs)</label>
+        <input type="number" step="0.1" id="hg-goal-weight" placeholder="e.g. 150" style="width:140px;"></div>
+      <div class="field"><label for="hg-weekly">Workouts per week</label>
+        <input type="number" min="1" max="14" id="hg-weekly" placeholder="e.g. 4" style="width:140px;"></div>
+      <button class="btn-primary" onclick="saveHealthGoals()"><i class="ti ti-check"></i> Save goals</button>
+    </div>
 
-      <div class="field">
-        <label for="aw-week">Week</label>
-        <select id="aw-week">
-          <option value="1">Week 1 — Recovering a Sense of Safety</option>
-          <option value="2">Week 2 — Recovering a Sense of Identity</option>
-          <option value="3">Week 3 — Recovering a Sense of Power</option>
-          <option value="4">Week 4 — Recovering a Sense of Integrity</option>
-          <option value="5">Week 5 — Recovering a Sense of Possibility</option>
-          <option value="6">Week 6 — Recovering a Sense of Abundance</option>
-          <option value="7">Week 7 — Recovering a Sense of Connection</option>
-          <option value="8">Week 8 — Recovering a Sense of Strength</option>
-          <option value="9">Week 9 — Recovering a Sense of Compassion</option>
-          <option value="10">Week 10 — Recovering a Sense of Self-Protection</option>
-          <option value="11">Week 11 — Recovering a Sense of Autonomy</option>
-          <option value="12">Week 12 — Recovering a Sense of Faith</option>
-        </select>
-      </div>
+    <div class="health-stats" id="health-stats"></div>
 
-      <div class="field">
-        <label>Type</label>
-        <div class="aw-type-toggle">
-          <button type="button" class="aw-type-btn active" data-awtype="writing" onclick="selectAwType('writing')">
-            <i class="ti ti-pencil"></i> Writing
-          </button>
-          <button type="button" class="aw-type-btn" data-awtype="activity" onclick="selectAwType('activity')">
-            <i class="ti ti-palette"></i> Activity
-          </button>
+    <div class="health-card health-cal-card">
+      <div class="health-cal-top">
+        <h2><i class="ti ti-calendar"></i> Workout calendar</h2>
+        <div class="seg-group" id="hcal-range-seg">
+          <button class="seg-btn active" data-range="week">This week</button>
+          <button class="seg-btn" data-range="30">Last 30 days</button>
+          <button class="seg-btn" data-range="all">All time</button>
         </div>
       </div>
+      <p class="health-cal-summary" id="hcal-summary"></p>
+      <div id="hcal-body"></div>
+      <div class="hcal-detail" id="hcal-detail" style="display:none;"></div>
+    </div>
 
-      <div class="field">
-        <label for="aw-title-input">Title</label>
-        <input type="text" id="aw-title-input" placeholder="e.g. Morning Pages, Artist Date...">
+    <div class="health-grid">
+      <div class="health-card">
+        <h2><i class="ti ti-scale"></i> Weight</h2>
+        <div class="health-form-row">
+          <div class="field"><label for="hw-date">Date</label><input type="date" id="hw-date"></div>
+          <div class="field"><label for="hw-weight">Weight (lbs)</label><input type="number" step="0.1" id="hw-weight" placeholder="0.0"></div>
+          <button class="btn-primary" id="hw-save-btn" onclick="saveWeight()"><i class="ti ti-plus"></i> Add</button>
+          <button class="btn-secondary" id="hw-cancel-btn" onclick="cancelWeightEdit()" style="display:none;">Cancel</button>
+        </div>
+        <div id="health-chart-wrap"></div>
+        <div class="health-list" id="health-weight-list"></div>
       </div>
 
-      <div class="field">
-        <label for="aw-details-input">Details <span style="color:var(--ink-faint); font-weight:400;">(optional)</span></label>
-        <textarea id="aw-details-input" placeholder="Any notes, prompts, or reflections..." style="min-height: 100px;"></textarea>
+      <div class="health-card">
+        <h2><i class="ti ti-barbell"></i> Workouts</h2>
+        <div class="health-form-row">
+          <div class="field"><label for="hk-date">Date</label><input type="date" id="hk-date"></div>
+          <div class="field"><label for="hk-type">Type</label>
+            <select id="hk-type">
+              <option>Strength</option><option>Cardio</option><option>Walk</option><option>Run</option>
+              <option>Yoga / Stretch</option><option>Class</option><option>Other</option>
+            </select></div>
+          <div class="field" style="max-width:100px;"><label for="hk-min">Minutes</label><input type="number" min="0" id="hk-min" placeholder="30"></div>
+          <div class="field" id="hk-dist-field" style="max-width:100px; display:none;"><label for="hk-dist">Miles</label><input type="number" min="0" step="0.01" id="hk-dist" placeholder="3.1"></div>
+        </div>
+        <div class="health-form-row" style="margin-top:10px;">
+          <div class="field"><label for="hk-notes">Notes <span style="color:var(--ink-faint);font-weight:400;">(optional)</span></label><input type="text" id="hk-notes" placeholder="What did you do?"></div>
+          <button class="btn-primary" id="hk-save-btn" onclick="saveWorkout()"><i class="ti ti-plus"></i> Add</button>
+          <button class="btn-secondary" id="hk-cancel-btn" onclick="cancelWorkoutEdit()" style="display:none;">Cancel</button>
+        </div>
+        <div class="health-list" id="health-workout-list" style="margin-top:18px;"></div>
       </div>
-
-      <div style="display:flex; align-items:center; gap:12px; margin-top: 4px;">
-        <button type="submit" class="btn-primary"><i class="ti ti-check"></i> Add task</button>
-        <p id="aw-success" style="display:none; font-size:13px; color:var(--u-done-text); margin:0;"><i class="ti ti-check"></i> Task added!</p>
-      </div>
-
-    </form>
+    </div>
   </section>
 
 </main>
-
-<!-- ===== ARTIST'S WAY EDIT MODAL ===== -->
-<div class="modal-overlay" id="aw-edit-modal-overlay">
-  <div class="modal">
-    <h2>Edit task</h2>
-    <div class="field">
-      <label for="aw-edit-week">Week</label>
-      <select id="aw-edit-week">
-        <option value="1">Week 1 — Recovering a Sense of Safety</option>
-        <option value="2">Week 2 — Recovering a Sense of Identity</option>
-        <option value="3">Week 3 — Recovering a Sense of Power</option>
-        <option value="4">Week 4 — Recovering a Sense of Integrity</option>
-        <option value="5">Week 5 — Recovering a Sense of Possibility</option>
-        <option value="6">Week 6 — Recovering a Sense of Abundance</option>
-        <option value="7">Week 7 — Recovering a Sense of Connection</option>
-        <option value="8">Week 8 — Recovering a Sense of Strength</option>
-        <option value="9">Week 9 — Recovering a Sense of Compassion</option>
-        <option value="10">Week 10 — Recovering a Sense of Self-Protection</option>
-        <option value="11">Week 11 — Recovering a Sense of Autonomy</option>
-        <option value="12">Week 12 — Recovering a Sense of Faith</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Type</label>
-      <div class="aw-type-toggle">
-        <button type="button" class="aw-type-btn active" data-awtype-edit="writing" onclick="selectAwTypeEdit('writing')">
-          <i class="ti ti-pencil"></i> Writing
-        </button>
-        <button type="button" class="aw-type-btn" data-awtype-edit="activity" onclick="selectAwTypeEdit('activity')">
-          <i class="ti ti-palette"></i> Activity
-        </button>
-      </div>
-    </div>
-    <div class="field">
-      <label for="aw-edit-title">Title</label>
-      <input type="text" id="aw-edit-title" placeholder="Task title">
-    </div>
-    <div class="field">
-      <label for="aw-edit-details">Details <span style="color:var(--ink-faint); font-weight:400;">(optional)</span></label>
-      <textarea id="aw-edit-details" style="min-height:80px;"></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeAwEditModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveAwEdit()"><i class="ti ti-check"></i> Save</button>
-    </div>
-  </div>
-</div>
 
 <!-- ===== TIMER EDIT MODAL ===== -->
 <div class="modal-overlay" id="timer-edit-modal-overlay">
@@ -2825,6 +2506,9 @@ let state = {
   timeLogs: [],
   awTasks: [],
   awCurrentWeek: 1,
+  healthWeights: [],
+  healthWorkouts: [],
+  healthGoals: { goalWeight: null, weeklyWorkouts: null },
   billingGlobalDate: '',      // YYYY-MM-DD global billing start
   billingClientDates: {}      // { clientId: 'YYYY-MM-DD' }
 };
@@ -2848,6 +2532,9 @@ function loadState() {
       state.timeLogs = parsed.timeLogs || [];
       state.awTasks = parsed.awTasks || [];
       state.awCurrentWeek = parsed.awCurrentWeek || 1;
+      state.healthWeights = parsed.healthWeights || [];
+      state.healthWorkouts = parsed.healthWorkouts || [];
+      state.healthGoals = parsed.healthGoals || { goalWeight: null, weeklyWorkouts: null };
       state.billingGlobalDate = parsed.billingGlobalDate || '';
       state.billingClientDates = parsed.billingClientDates || {};
     }
@@ -2877,7 +2564,11 @@ function exportData() {
     clients: state.clients,
     tasks: state.tasks,
     links: state.links,
-    timeLogs: state.timeLogs
+    timeLogs: state.timeLogs,
+    billingClientDates: state.billingClientDates,
+    healthWeights: state.healthWeights,
+    healthWorkouts: state.healthWorkouts,
+    healthGoals: state.healthGoals
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -2907,6 +2598,10 @@ function importData(event) {
       state.tasks = parsed.tasks || [];
       state.links = parsed.links || [];
       state.timeLogs = parsed.timeLogs || [];
+      state.billingClientDates = parsed.billingClientDates || state.billingClientDates || {};
+      state.healthWeights = parsed.healthWeights || [];
+      state.healthWorkouts = parsed.healthWorkouts || [];
+      state.healthGoals = parsed.healthGoals || { goalWeight: null, weeklyWorkouts: null };
       saveState();
       renderAll();
       alert('✓ Data imported successfully!');
@@ -4044,11 +3739,6 @@ function seedExampleData() {
         "note": "Print Graphics & color variations"
     }
 ];
-  state.awCurrentWeek = 1;
-  state.awTasks = [
-    { id: "aw-test-1", week: 1, type: "writing", title: "Morning Pages", details: "Write 3 pages longhand, stream of consciousness, first thing in the morning.", done: false, createdAt: new Date().toISOString() },
-    { id: "aw-test-2", week: 1, type: "activity", title: "Artist Date", details: "Take your inner artist on a solo outing — a museum, a walk, a new coffee shop.", done: false, createdAt: new Date().toISOString() }
-  ];
   state.billingGlobalDate = '';
   state.billingClientDates = {};
 }
@@ -4957,197 +4647,323 @@ function renderAll() {
   populateAddTaskForm();
   renderLinksView();
   renderTimerView();
-  renderAwView();
+  renderHealthView();
 }
 
-/* ============== ARTIST'S WAY ============== */
+/* ============== HEALTH & FITNESS ============== */
 
-let selectedAwType = 'writing';
+let hwEditingId = null;
 
-const AW_WEEK_TITLES = [
-  '', // index 0 unused
-  'Week 1 — Recovering a Sense of Safety',
-  'Week 2 — Recovering a Sense of Identity',
-  'Week 3 — Recovering a Sense of Power',
-  'Week 4 — Recovering a Sense of Integrity',
-  'Week 5 — Recovering a Sense of Possibility',
-  'Week 6 — Recovering a Sense of Abundance',
-  'Week 7 — Recovering a Sense of Connection',
-  'Week 8 — Recovering a Sense of Strength',
-  'Week 9 — Recovering a Sense of Compassion',
-  'Week 10 — Recovering a Sense of Self-Protection',
-  'Week 11 — Recovering a Sense of Autonomy',
-  'Week 12 — Recovering a Sense of Faith',
-];
+function hDistText(w) { return w.distance ? (Math.round(w.distance*100)/100) + ' mi' : ''; }
+function hPaceText(w) {
+  if (!w.distance || !w.minutes) return '';
+  const p = w.minutes / w.distance, m = Math.floor(p), sec = Math.round((p - m) * 60);
+  return (sec === 60 ? (m+1) + ':00' : m + ':' + String(sec).padStart(2,'0')) + ' /mi';
+}
+function hWorkoutLine(w) {
+  return escapeHtml(w.type) + (w.minutes ? ' · ' + w.minutes + ' min' : '') + (w.distance ? ' · ' + hDistText(w) : '');
+}
+function hWorkoutSub(w) {
+  const bits = [hPaceText(w), w.notes ? escapeHtml(w.notes) : ''].filter(Boolean);
+  return bits.length ? `<small>${bits.join(' · ')}</small>` : '';
+}
+function updateWorkoutDistField() {
+  const isRun = document.getElementById('hk-type').value === 'Run';
+  document.getElementById('hk-dist-field').style.display = isRun ? '' : 'none';
+  if (!isRun) document.getElementById('hk-dist').value = '';
+}
+document.getElementById('hk-type').addEventListener('change', updateWorkoutDistField);
 
-function setAwCurrentWeek(week) {
-  state.awCurrentWeek = parseInt(week);
-  saveState();
-  renderAwView();
+let hkEditingId = null;
+
+function hLocalDate(d) {
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function hParse(str) { const [y,m,d] = str.split('-').map(Number); return new Date(y, m-1, d); }
+function hFmt(str) { return hParse(str).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+function hWeekStart(str) { // Monday of that week
+  const d = hParse(str); const off = (d.getDay() + 6) % 7; d.setDate(d.getDate() - off); return hLocalDate(d);
 }
 
-function toggleAwTask(id, checked) {
-  const task = (state.awTasks || []).find(t => t.id === id);
-  if (!task) return;
-  task.done = checked;
-  saveState();
-  // Lightweight update — just toggle class without full re-render
-  const row = document.getElementById('aw-row-' + id);
-  if (row) row.classList.toggle('done-task', checked);
+function saveHealthGoals() {
+  const gw = parseFloat(document.getElementById('hg-goal-weight').value);
+  const wk = parseInt(document.getElementById('hg-weekly').value);
+  state.healthGoals = { goalWeight: isNaN(gw) ? null : gw, weeklyWorkouts: isNaN(wk) ? null : wk };
+  saveState(); renderHealthView();
 }
 
-function deleteAwTask(id) {
-  state.awTasks = (state.awTasks || []).filter(t => t.id !== id);
-  saveState();
-  renderAwView();
+function saveWeight() {
+  const date = document.getElementById('hw-date').value;
+  const w = parseFloat(document.getElementById('hw-weight').value);
+  if (!date || isNaN(w) || w <= 0) return;
+  if (hwEditingId) {
+    const e = state.healthWeights.find(x => x.id === hwEditingId);
+    if (e) { e.date = date; e.weight = w; }
+  } else {
+    state.healthWeights.push({ id: genId(), date, weight: w });
+  }
+  hwEditingId = null;
+  document.getElementById('hw-weight').value = '';
+  saveState(); renderHealthView();
+}
+function editWeight(id) {
+  const e = state.healthWeights.find(x => x.id === id); if (!e) return;
+  hwEditingId = id;
+  document.getElementById('hw-date').value = e.date;
+  document.getElementById('hw-weight').value = e.weight;
+  renderHealthView();
+  document.getElementById('hw-weight').focus();
+}
+function cancelWeightEdit() { hwEditingId = null; document.getElementById('hw-weight').value = ''; renderHealthView(); }
+function deleteWeight(id) {
+  if (!confirm('Delete this weigh-in?')) return;
+  state.healthWeights = state.healthWeights.filter(x => x.id !== id);
+  if (hwEditingId === id) hwEditingId = null;
+  saveState(); renderHealthView();
 }
 
-let awEditingId = null;
-let selectedAwTypeEdit = 'writing';
-
-function openAwEditModal(id) {
-  const task = (state.awTasks || []).find(t => t.id === id);
-  if (!task) return;
-  awEditingId = id;
-  selectedAwTypeEdit = task.type;
-
-  document.getElementById('aw-edit-week').value = task.week;
-  document.getElementById('aw-edit-title').value = task.title;
-  document.getElementById('aw-edit-details').value = task.details || '';
-  document.querySelectorAll('[data-awtype-edit]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.awtypeEdit === task.type);
-  });
-  document.getElementById('aw-edit-modal-overlay').classList.add('active');
-  document.getElementById('aw-edit-title').focus();
+function saveWorkout() {
+  const date = document.getElementById('hk-date').value;
+  if (!date) return;
+  const rec = {
+    date,
+    type: document.getElementById('hk-type').value,
+    minutes: parseInt(document.getElementById('hk-min').value) || 0,
+    distance: document.getElementById('hk-type').value === 'Run' ? (parseFloat(document.getElementById('hk-dist').value) || 0) : 0,
+    notes: document.getElementById('hk-notes').value.trim()
+  };
+  if (hkEditingId) {
+    const e = state.healthWorkouts.find(x => x.id === hkEditingId);
+    if (e) Object.assign(e, rec);
+  } else {
+    state.healthWorkouts.push(Object.assign({ id: genId() }, rec));
+  }
+  hkEditingId = null;
+  document.getElementById('hk-min').value = '';
+  document.getElementById('hk-dist').value = '';
+  document.getElementById('hk-notes').value = '';
+  saveState(); renderHealthView();
+}
+function editWorkout(id) {
+  const e = state.healthWorkouts.find(x => x.id === id); if (!e) return;
+  hkEditingId = id;
+  document.getElementById('hk-date').value = e.date;
+  document.getElementById('hk-type').value = e.type;
+  document.getElementById('hk-min').value = e.minutes || '';
+  updateWorkoutDistField();
+  document.getElementById('hk-dist').value = e.distance || '';
+  document.getElementById('hk-notes').value = e.notes || '';
+  renderHealthView();
+  document.getElementById('hk-notes').focus();
+}
+function cancelWorkoutEdit() {
+  hkEditingId = null;
+  document.getElementById('hk-min').value = ''; document.getElementById('hk-dist').value = ''; document.getElementById('hk-notes').value = '';
+  renderHealthView();
+}
+function deleteWorkout(id) {
+  if (!confirm('Delete this workout?')) return;
+  state.healthWorkouts = state.healthWorkouts.filter(x => x.id !== id);
+  if (hkEditingId === id) hkEditingId = null;
+  saveState(); renderHealthView();
 }
 
-function closeAwEditModal() {
-  document.getElementById('aw-edit-modal-overlay').classList.remove('active');
-  awEditingId = null;
+function renderHealthChart(weights, goal) {
+  if (weights.length < 2) {
+    return `<p class="health-empty">${weights.length ? 'Add one more weigh-in to see your trend.' : 'No weigh-ins yet — add your first above.'}</p>`;
+  }
+  const W = 600, H = 220, L = 40, R = 14, T = 14, B = 26;
+  const t0 = hParse(weights[0].date).getTime();
+  const t1 = hParse(weights[weights.length-1].date).getTime();
+  const span = Math.max(t1 - t0, 1);
+  let vals = weights.map(w => w.weight); if (goal) vals = vals.concat([goal]);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = Math.max((hi - lo) * 0.15, 1); lo -= pad; hi += pad;
+  const x = d => L + (hParse(d).getTime() - t0) / span * (W - L - R);
+  const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  let svg = `<svg class="health-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight over time">`;
+  for (let i = 0; i <= 3; i++) {
+    const v = lo + (hi - lo) * i / 3, yy = y(v);
+    svg += `<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--border-soft)"/><text x="${L-6}" y="${yy+3}" text-anchor="end">${v.toFixed(0)}</text>`;
+  }
+  if (goal) svg += `<line x1="${L}" x2="${W-R}" y1="${y(goal)}" y2="${y(goal)}" stroke="var(--u-done)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-R}" y="${y(goal)-5}" text-anchor="end" style="fill:var(--u-done-text)">goal ${goal}</text>`;
+  svg += `<polyline fill="none" stroke="var(--studio)" stroke-width="2" points="${weights.map(w => x(w.date).toFixed(1)+','+y(w.weight).toFixed(1)).join(' ')}"/>`;
+  weights.forEach(w => { svg += `<circle cx="${x(w.date).toFixed(1)}" cy="${y(w.weight).toFixed(1)}" r="3.5" fill="var(--studio-deep)"><title>${hFmt(w.date)}: ${w.weight} lbs</title></circle>`; });
+  svg += `<text x="${L}" y="${H-6}">${hFmt(weights[0].date)}</text><text x="${W-R}" y="${H-6}" text-anchor="end">${hFmt(weights[weights.length-1].date)}</text></svg>`;
+  return svg;
 }
 
-function selectAwTypeEdit(type) {
-  selectedAwTypeEdit = type;
-  document.querySelectorAll('[data-awtype-edit]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.awtypeEdit === type);
-  });
-}
+let hCalRange = 'week';
+let hCalSelected = null;
 
-function saveAwEdit() {
-  const task = (state.awTasks || []).find(t => t.id === awEditingId);
-  if (!task) return;
-  task.week = parseInt(document.getElementById('aw-edit-week').value);
-  task.title = document.getElementById('aw-edit-title').value.trim();
-  task.details = document.getElementById('aw-edit-details').value.trim();
-  task.type = selectedAwTypeEdit;
-  saveState();
-  renderAwView();
-  closeAwEditModal();
-}
-
-function renderAwView() {
-  const container = document.getElementById('aw-content');
-  if (!container) return;
-
-  // Sync week selector
-  const weekSel = document.getElementById('aw-current-week');
-  if (weekSel) weekSel.value = state.awCurrentWeek;
-
-  const tasks = state.awTasks || [];
-  const currentWeek = state.awCurrentWeek || 1;
-
-  if (tasks.length === 0) {
-    container.innerHTML = `<div class="empty-state" style="border-style:solid; background:var(--studio-light); border-color:var(--border); color:var(--studio-deep);">
-      <i class="ti ti-feather" style="font-size:28px; display:block; margin-bottom:10px; color:var(--studio);"></i>
-      No tasks yet — head to <strong>Add Task</strong> to get started.
-    </div>`;
+document.addEventListener('click', function(e) {
+  const seg = e.target.closest('#hcal-range-seg .seg-btn');
+  if (seg) {
+    hCalRange = seg.dataset.range; hCalSelected = null;
+    document.querySelectorAll('#hcal-range-seg .seg-btn').forEach(b => b.classList.toggle('active', b === seg));
+    renderWorkoutCalendar();
     return;
   }
+  const cell = e.target.closest('.hcal-cell.has');
+  if (cell) { hCalSelected = (hCalSelected === cell.dataset.date) ? null : cell.dataset.date; renderWorkoutCalendar(); }
+});
 
-  // Build blocks for all 12 weeks
-  let html = '';
-  for (let w = 1; w <= 12; w++) {
-    const weekTasks = tasks.filter(t => t.week === w);
-    const isThisWeek = w === currentWeek;
-    const collapsed = isThisWeek ? '' : 'collapsed';
-    const done = weekTasks.filter(t => t.done).length;
-    const total = weekTasks.length;
+function hAddDays(str, n) { const d = hParse(str); d.setDate(d.getDate() + n); return hLocalDate(d); }
 
-    const taskRows = weekTasks.length === 0
-      ? `<div class="aw-empty-week">No tasks added for this week yet.</div>`
-      : weekTasks.map(t => `
-          <div class="aw-task-row ${t.done ? 'done-task' : ''}" id="aw-row-${t.id}">
-            <label class="aw-check">
-              <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleAwTask('${t.id}', this.checked)">
-              <span class="aw-check-box"></span>
-            </label>
-            <div class="aw-task-info">
-              <p class="aw-task-title">${escapeHtml(t.title)}</p>
-              ${t.details ? `<p class="aw-task-details">${escapeHtml(t.details)}</p>` : ''}
-            </div>
-            <div class="aw-task-meta">
-              <span class="aw-type-pill ${t.type === 'writing' ? 'aw-type-writing' : 'aw-type-activity'}">
-                ${t.type === 'writing' ? 'Writing' : 'Activity'}
-              </span>
-              <button class="aw-delete-btn" onclick="openAwEditModal('${t.id}')">Edit</button>
-              <button class="aw-delete-btn" style="color:var(--u-now-text);" onclick="deleteAwTask('${t.id}')">Delete</button>
-            </div>
-          </div>`).join('');
+function renderWorkoutCalendar() {
+  const body = document.getElementById('hcal-body');
+  if (!body) return;
+  const today = hLocalDate();
+  const byDate = {};
+  state.healthWorkouts.forEach(w => { (byDate[w.date] = byDate[w.date] || []).push(w); });
 
-    html += `
-      <div class="aw-week-block ${isThisWeek ? 'this-week' : ''} ${collapsed}" id="aw-week-${w}">
-        <div class="aw-week-heading" onclick="this.parentElement.classList.toggle('collapsed')">
-          <i class="ti ti-chevron-down aw-week-chevron"></i>
-          <span class="aw-week-title">${AW_WEEK_TITLES[w]}</span>
-          ${isThisWeek ? `<span class="aw-this-week-badge">This week</span>` : ''}
-          ${total > 0 ? `<span class="aw-week-progress">${done}/${total}</span>` : ''}
-        </div>
-        <div class="aw-week-body">${taskRows}</div>
-      </div>`;
+  let start, end;
+  if (hCalRange === 'week') { start = hWeekStart(today); end = hAddDays(start, 6); }
+  else if (hCalRange === '30') { end = today; start = hAddDays(today, -29); }
+  else {
+    const dates = state.healthWorkouts.map(w => w.date).sort();
+    start = dates.length ? dates[0] : today; end = today;
+    if (dates.length && dates[dates.length-1] > end) end = dates[dates.length-1];
   }
 
-  container.innerHTML = html;
+  const inRange = state.healthWorkouts.filter(w => w.date >= start && w.date <= end);
+  const mins = inRange.reduce((s, w) => s + (w.minutes || 0), 0);
+  const days = new Set(inRange.map(w => w.date)).size;
+  const miles = inRange.reduce((s, w) => s + (w.distance || 0), 0);
+  document.getElementById('hcal-summary').textContent = inRange.length
+    ? `${inRange.length} workout${inRange.length === 1 ? '' : 's'} on ${days} day${days === 1 ? '' : 's'}${mins ? ' · ' + mins + ' min total' : ''}${miles ? ' · ' + (Math.round(miles*10)/10) + ' mi run' : ''}`
+    : 'No workouts in this range yet.';
+
+  const cellHtml = (date) => {
+    const list = byDate[date] || [];
+    const m = list.reduce((s, w) => s + (w.minutes || 0), 0);
+    const mi = list.reduce((s, w) => s + (w.distance || 0), 0);
+    const cls = ['hcal-cell', list.length ? 'has' : '', date === today ? 'today' : '', date > today ? 'future' : '', date === hCalSelected ? 'sel' : ''].join(' ');
+    const label = list.map(w => w.type + (w.minutes ? ' ' + w.minutes + 'm' : '') + (w.distance ? ' ' + hDistText(w) : '')).join(', ');
+    return `<div class="${cls}" data-date="${date}" ${list.length ? `title="${escapeHtml(label)}"` : ''}>
+      <span class="hcal-day">${hParse(date).getDate()}</span>
+      ${list.length ? `<span class="hcal-info">${list.length > 1 ? list.length + ' workouts' : escapeHtml(list[0].type)}${(m || mi) ? `<small>${[m ? m + ' min' : '', mi ? (Math.round(mi*10)/10) + ' mi' : ''].filter(Boolean).join(' · ')}</small>` : ''}</span>` : ''}
+    </div>`;
+  };
+  const grid = (from, to) => {
+    // pad to Monday–Sunday
+    const first = hWeekStart(from);
+    let html = '', d = first;
+    const lastDow = (hParse(to).getDay() + 6) % 7;
+    const last = hAddDays(to, 6 - lastDow);
+    while (d <= last) {
+      html += (d < from || d > to) ? '<div class="hcal-cell blank"></div>' : cellHtml(d);
+      d = hAddDays(d, 1);
+    }
+    return `<div class="hcal-grid">${html}</div>`;
+  };
+  const dow = '<div class="hcal-dow"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>';
+
+  if (hCalRange === 'all') {
+    // one grid per month, newest first
+    let y = hParse(start).getFullYear(), mo = hParse(start).getMonth();
+    const ey = hParse(end).getFullYear(), em = hParse(end).getMonth();
+    const blocks = [];
+    while (y < ey || (y === ey && mo <= em)) {
+      const mStart = hLocalDate(new Date(y, mo, 1)), mEnd = hLocalDate(new Date(y, mo + 1, 0));
+      const from = mStart < start ? start : mStart, to = mEnd > end ? end : mEnd;
+      const mList = state.healthWorkouts.filter(w => w.date >= mStart && w.date <= mEnd);
+      const title = new Date(y, mo, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      // show whole month for tidy grids
+      blocks.push(`<div class="hcal-month"><span>${title}</span><small>${mList.length} workout${mList.length === 1 ? '' : 's'}</small></div>` + grid(mStart, mEnd));
+      mo++; if (mo > 11) { mo = 0; y++; }
+    }
+    body.innerHTML = dow + blocks.reverse().join('');
+  } else {
+    body.innerHTML = dow + grid(start, end);
+  }
+
+  const det = document.getElementById('hcal-detail');
+  if (hCalSelected && byDate[hCalSelected]) {
+    det.style.display = '';
+    det.innerHTML = `<div class="health-week-head"><span>${hFmt(hCalSelected)}</span></div>` + byDate[hCalSelected].map(w => `
+      <div class="health-row">
+        <span class="health-row-main">${hWorkoutLine(w)}${hWorkoutSub(w)}</span>
+        <button class="icon-btn edit" onclick="editWorkout('${w.id}')">Edit</button>
+        <button class="icon-btn danger" onclick="deleteWorkout('${w.id}')">Delete</button>
+      </div>`).join('');
+  } else { det.style.display = 'none'; det.innerHTML = ''; }
 }
 
-// Add Artist's Way tasks to state
-if (!state.awTasks) state.awTasks = [];
+function renderHealthView() {
+  if (!document.getElementById('view-health')) return;
+  const goals = state.healthGoals || {};
+  const gwEl = document.getElementById('hg-goal-weight'), wkEl = document.getElementById('hg-weekly');
+  if (document.activeElement !== gwEl) gwEl.value = goals.goalWeight != null ? goals.goalWeight : '';
+  if (document.activeElement !== wkEl) wkEl.value = goals.weeklyWorkouts != null ? goals.weeklyWorkouts : '';
+  const dEl = document.getElementById('hw-date'), kEl = document.getElementById('hk-date');
+  if (!dEl.value) dEl.value = hLocalDate();
+  if (!kEl.value) kEl.value = hLocalDate();
 
-function selectAwType(type) {
-  selectedAwType = type;
-  document.querySelectorAll('.aw-type-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.awtype === type);
-  });
+  const weights = state.healthWeights.slice().sort((a,b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+  const workouts = state.healthWorkouts.slice().sort((a,b) => b.date.localeCompare(a.date));
+
+  // Stats
+  const cur = weights.length ? weights[weights.length-1].weight : null;
+  const start = weights.length ? weights[0].weight : null;
+  const thisWeek = hWeekStart(hLocalDate());
+  const weekCount = workouts.filter(w => hWeekStart(w.date) === thisWeek).length;
+  const fmtN = n => (Math.round(n*10)/10).toString();
+  let toGo = '—', toGoLabel = 'To goal';
+  if (cur != null && goals.goalWeight != null) {
+    const diff = cur - goals.goalWeight;
+    if (Math.abs(diff) < 0.05) { toGo = '0'; toGoLabel = 'At goal 🎉'; }
+    else { toGo = fmtN(Math.abs(diff)); toGoLabel = diff > 0 ? 'lbs to lose' : 'lbs below goal'; }
+  } else if (goals.goalWeight == null) toGoLabel = 'Set a goal weight';
+  let change = '—', changeLabel = 'Since first weigh-in';
+  if (cur != null && weights.length > 1) { const c = cur - start; change = (c > 0 ? '+' : c < 0 ? '−' : '') + fmtN(Math.abs(c)); }
+  document.getElementById('health-stats').innerHTML = `
+    <div class="health-stat"><div class="health-stat-num">${cur != null ? fmtN(cur) : '—'}<small>lbs</small></div><div class="health-stat-label">Current weight</div></div>
+    <div class="health-stat"><div class="health-stat-num">${toGo}</div><div class="health-stat-label">${toGoLabel}</div></div>
+    <div class="health-stat"><div class="health-stat-num">${change}</div><div class="health-stat-label">${changeLabel}</div></div>
+    <div class="health-stat"><div class="health-stat-num">${weekCount}${goals.weeklyWorkouts ? '<small>/ ' + goals.weeklyWorkouts + '</small>' : ''}</div><div class="health-stat-label">Workouts this week</div></div>`;
+
+  // Weight form state
+  document.getElementById('hw-save-btn').innerHTML = hwEditingId ? '<i class="ti ti-check"></i> Save' : '<i class="ti ti-plus"></i> Add';
+  document.getElementById('hw-cancel-btn').style.display = hwEditingId ? '' : 'none';
+  document.getElementById('hk-save-btn').innerHTML = hkEditingId ? '<i class="ti ti-check"></i> Save' : '<i class="ti ti-plus"></i> Add';
+  document.getElementById('hk-cancel-btn').style.display = hkEditingId ? '' : 'none';
+
+  document.getElementById('health-chart-wrap').innerHTML = renderHealthChart(weights, goals.goalWeight);
+
+  document.getElementById('health-weight-list').innerHTML = weights.slice().reverse().map(w => `
+    <div class="health-row">
+      <span class="health-row-date">${hFmt(w.date)}</span>
+      <span class="health-row-main health-row-val">${fmtN(w.weight)} lbs</span>
+      <button class="icon-btn edit" onclick="editWeight('${w.id}')">Edit</button>
+      <button class="icon-btn danger" onclick="deleteWeight('${w.id}')">Delete</button>
+    </div>`).join('');
+
+  // Workouts grouped by week
+  if (!workouts.length) {
+    document.getElementById('health-workout-list').innerHTML = '<p class="health-empty">No workouts logged yet.</p>';
+  } else {
+    const groups = {};
+    workouts.forEach(w => { (groups[hWeekStart(w.date)] = groups[hWeekStart(w.date)] || []).push(w); });
+    document.getElementById('health-workout-list').innerHTML = Object.keys(groups).sort().reverse().map(wk => {
+      const list = groups[wk];
+      const target = goals.weeklyWorkouts;
+      const dots = target ? `<span class="health-dots">${Array.from({length: Math.max(target, list.length)}, (_, i) => `<span class="health-dot ${i < list.length ? 'on' : ''}"></span>`).join('')}</span>` : '';
+      const mins = list.reduce((s, w) => s + (w.minutes || 0), 0);
+      const miles = list.reduce((s, w) => s + (w.distance || 0), 0);
+      return `<div class="health-week-head"><span>Week of ${hFmt(wk)} · ${list.length} workout${list.length === 1 ? '' : 's'}${mins ? ' · ' + mins + ' min' : ''}${miles ? ' · ' + (Math.round(miles*10)/10) + ' mi run' : ''}</span>${dots}</div>` +
+        list.map(w => `
+        <div class="health-row">
+          <span class="health-row-date">${hFmt(w.date)}</span>
+          <span class="health-row-main">${hWorkoutLine(w)}${hWorkoutSub(w)}</span>
+          <button class="icon-btn edit" onclick="editWorkout('${w.id}')">Edit</button>
+          <button class="icon-btn danger" onclick="deleteWorkout('${w.id}')">Delete</button>
+        </div>`).join('');
+    }).join('');
+  }
+  renderWorkoutCalendar();
 }
-
-document.getElementById('aw-addtask-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const week = parseInt(document.getElementById('aw-week').value);
-  const title = document.getElementById('aw-title-input').value.trim();
-  const details = document.getElementById('aw-details-input').value.trim();
-  if (!title) return;
-
-  if (!state.awTasks) state.awTasks = [];
-  state.awTasks.push({
-    id: 'aw' + Date.now(),
-    week,
-    type: selectedAwType,
-    title,
-    details,
-    done: false,
-    createdAt: new Date().toISOString()
-  });
-
-  saveState();
-
-  // Reset form but keep week + type selected
-  document.getElementById('aw-title-input').value = '';
-  document.getElementById('aw-details-input').value = '';
-
-  const success = document.getElementById('aw-success');
-  success.style.display = 'inline';
-  setTimeout(() => { success.style.display = 'none'; }, 2000);
-  document.getElementById('aw-title-input').focus();
-});
 
 /* ============== TIMER ============== */
 
@@ -5822,7 +5638,6 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
     if (e.target === overlay) {
       overlay.classList.remove('active');
       if (overlay.id === 'timer-edit-modal-overlay') timerEditingLogId = null;
-      if (overlay.id === 'aw-edit-modal-overlay') awEditingId = null;
     }
   });
 });
@@ -6073,4 +5888,5 @@ window.addEventListener('pagehide', () => {
 
 boot();
 </script>
-</body></html>
+</body>
+</html>
